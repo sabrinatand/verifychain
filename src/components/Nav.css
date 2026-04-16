@@ -72,6 +72,8 @@
   flex-shrink: 0;
 }
 
+.nav-active { color: var(--ink) !important; font-weight: 500; }
+
 @media (max-width: 768px) {
   .nav-links { display: none; }
   .nav-inner { padding: 14px 20px; }

@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import Ticker from "./components/Ticker";
@@ -13,43 +14,67 @@ import Compliance from "./components/Compliance";
 import Simulator from "./components/Simulator";
 import CTA from "./components/CTA";
 import Footer from "./components/Footer";
+import AboutPage from "./pages/AboutPage";
 import "./styles/global.css";
 
-export default function App() {
+function ScrollObserver() {
+  const location = useLocation();
   useEffect(() => {
+    window.scrollTo(0, 0);
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
+      (entries) => entries.forEach((e) => {
+        if (e.isIntersecting) e.target.classList.add("visible");
+      }),
+      { threshold: 0.08 }
     );
-    const els = document.querySelectorAll(".fade-up, .fade-in");
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
+    const timer = setTimeout(() => {
+      document.querySelectorAll(".fade-up, .fade-in, .au-fade")
+        .forEach((el) => observer.observe(el));
+    }, 60);
+    return () => { clearTimeout(timer); observer.disconnect(); };
+  }, [location.pathname]);
+  return null;
+}
 
+function HomePage() {
+  return (
+    <>
+      <Hero />
+      <Ticker />
+      <TrustBar />
+      <Dashboard />
+      <Products />
+      <HowItWorks />
+      <WhyVerifyChain />
+      <UseCases />
+      <Technology />
+      <Compliance />
+      <Simulator />
+      <CTA />
+    </>
+  );
+}
+
+function AppInner() {
   return (
     <div className="site">
+      <ScrollObserver />
       <Nav />
       <main>
-        <Hero />
-        <Ticker />
-        <TrustBar />
-        <Dashboard />
-        <Products />
-        <HowItWorks />
-        <WhyVerifyChain />
-        <UseCases />
-        <Technology />
-        <Compliance />
-        <Simulator />
-        <CTA />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+        </Routes>
       </main>
       <Footer />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppInner />
+    </BrowserRouter>
   );
 }
