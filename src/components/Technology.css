@@ -1,0 +1,19 @@
+.tech-section { background: linear-gradient(180deg, var(--bg-cool) 0%, var(--bg-warm) 100%); }
+.tech-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
+.tech-left { position: sticky; top: 96px; }
+.tech-list { display: flex; flex-direction: column; }
+.tech-row {
+  display: flex; align-items: flex-start; gap: 18px;
+  padding: 20px 12px 20px 0;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s, padding-left 0.25s var(--ease);
+  border-radius: var(--r-sm);
+  cursor: default;
+}
+.tech-row:first-child { border-top: 1px solid var(--border); }
+.tech-row:hover { background: rgba(255,255,255,0.7); padding-left: 12px; }
+.tech-row:hover .tech-num { color: #2a52c9; }
+.tech-num { font-size: 11px; font-weight: 500; color: var(--ink-5); min-width: 22px; padding-top: 2px; font-variant-numeric: tabular-nums; transition: color 0.2s; }
+.tech-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 5px; letter-spacing: -.01em; }
+.tech-desc  { font-size: 12px; font-weight: 300; color: var(--ink-3); line-height: 1.65; }
+@media (max-width: 768px) { .tech-layout { grid-template-columns: 1fr; gap: 40px; } .tech-left { position: static; } }
