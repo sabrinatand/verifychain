@@ -7,19 +7,24 @@ const cases = [
     desc: "Run identity, crime, and qualification checks simultaneously. Candidates self-verify — your team just reviews the result. No paper chasing.",
   },
   {
-    tag: "Age-restricted industries",
-    title: "Age compliance at point of sale",
-    desc: "Alcohol, gambling, adult content — confirm age compliance instantly online or in person, with zero personal data retained post-check.",
+    tag: "Security standards",
+    title: "Security standards compliance",
+    desc: "VerifyChain is developed in consultation with frameworks such as NIST, ISO 27001, architecture frameworks including TOGAF and SABSA — built to what the industry expects.",
   },
   {
     tag: "Financial services",
-    title: "KYC and AML-ready",
-    desc: "Meet Know Your Customer obligations under Australia's new AML legislation. PEP screening and adverse media checks coming mid-2026.",
+    title: "Know Your Customer (KYC)",
+    desc: "Support KYC obligations for banks and financial institutions. Verify customer identity end-to-end, with full audit trail and AML-ready processes — as a separate, dedicated workflow.",
   },
   {
     tag: "Education & childcare",
     title: "Safe staffing, every time",
     desc: "Verify teacher qualifications, Working with Children checks, and academic credentials for every staff member — anywhere in Australia.",
+  },
+  {
+    tag: "Government",
+    title: "Government compliance",
+    desc: "Meet compliance standards expected by government — including ISM, IRAP, and other frameworks that apply to businesses operating in or with the public sector.",
   },
 ];
 
@@ -29,11 +34,10 @@ export default function UseCases() {
       <div className="section-inner">
         <span className="section-eyebrow">Use cases</span>
         <h2 className="section-h2">
-          Why organisations<br /><em>choose us</em>
+          What makes us<br /><em>different</em>
         </h2>
         <p className="section-body">
-          Whether you're onboarding staff, verifying age at scale, or checking
-          credentials across borders — one platform handles it all.
+          Fast, secure, and built to industry standards — here's what sets VerifyChain apart.
         </p>
 
         <div className="uc-grid">

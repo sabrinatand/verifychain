@@ -2,8 +2,8 @@ import "./WhyVerifyChain.css";
 
 const cards = [
   {
-    title: "Blockchain-secured credentials",
-    desc: "Every credential recorded on Hyperledger Fabric — tamper-proof, immutable, instantly verifiable by any party you authorise.",
+    title: "Zero trust, zero knowledge security",
+    desc: "Cryptographically secured credentials — tamper-proof, immutable, instantly verifiable by any party you authorise.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -23,7 +23,7 @@ const cards = [
   },
   {
     title: "Minutes, not weeks",
-    desc: "Checks that used to take days now complete in under five minutes — with a full auditable trail kept on-chain.",
+    desc: "Checks that used to take days now complete in under five minutes — with a full auditable trail maintained securely",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10"/>
@@ -53,7 +53,7 @@ const cards = [
   },
   {
     title: "We never sell your data",
-    desc: "VerifyChain stores nothing off-chain and tracks no user behaviour. Privacy is not a feature — it's the architecture.",
+    desc: "VerifyChain stores nothing externally and tracks no user behaviour. Privacy is not a feature — it's the architecture.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>

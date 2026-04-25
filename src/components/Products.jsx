@@ -86,7 +86,7 @@ export default function Products() {
           More than just<br /><em>identity</em>
         </h2>
         <p className="section-body products-body">
-          Six verification products on a single platform — mix and match
+          All the necessary industry-driven verification products on a single platform — mix and match
           what your organisation needs.
         </p>
 
@@ -97,7 +97,7 @@ export default function Products() {
               <div className="prod-icon">{p.icon}</div>
               <h3 className="prod-name">{p.name}</h3>
               <p className="prod-desc">{p.desc}</p>
-              <span className={`prod-status prod-status--${p.status}`}>{p.statusLabel}</span>
+             <button className="prod-learn-more">Learn more →</button>
             </div>
           ))}
         </div>
