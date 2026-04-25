@@ -38,7 +38,7 @@ export default function Hero() {
               <span className="hero-btn-icon">
                 <svg viewBox="0 0 16 16" fill="none"><path d="M3 8a5 5 0 1 0 10 0A5 5 0 0 0 3 8Z" stroke="currentColor" strokeWidth="1.4"/><path d="M5.5 8l2 2L11 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </span>
-              Go to simulator
+              Go to demo
             </button>
             <button className="btn-ghost btn-lg">See how it works</button>
           </div>
@@ -146,7 +146,7 @@ export default function Hero() {
       {/* Stats strip */}
       <div className="hero-stats-strip">
         {[
-          { num: "6",         label: "Verification products"  },
+          { num: "Any device", label: "Works everywhere" },
           { num: "< 5 min",   label: "Average verify time"    },
           { num: "0",         label: "Data sold or tracked"   },
           { num: "AUS+",      label: "Global coverage"        },

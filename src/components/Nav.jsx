@@ -91,7 +91,7 @@ export default function Nav() {
 
         <div className="nav-right">
           <button className="btn-ghost">Log in</button>
-          <button className="btn-dark">Go to simulator →</button>
+          <button className="btn-dark">Go to demo →</button>
         </div>
       </div>
     </nav>
