@@ -15,6 +15,7 @@ import Simulator from "./components/Simulator";
 import CTA from "./components/CTA";
 import Footer from "./components/Footer";
 import AboutPage from "./pages/AboutPage";
+import RoadmapPage from "./pages/RoadmapPage";
 import "./styles/global.css";
 
 function ScrollObserver() {
@@ -64,6 +65,7 @@ function AppInner() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/roadmap" element={<RoadmapPage />} />
         </Routes>
       </main>
       <Footer />

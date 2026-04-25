@@ -47,6 +47,44 @@ const values = [
   { icon: "🤝", title: "Trust is earned", desc: "Blockchain immutability means every verified credential carries a proof that can't be faked or altered." },
 ];
 
+const timeline = [
+  {
+    year: "March 2018",
+    title: "The spark",
+    desc: "Cambridge Analytica's misuse of personal data inspired the idea — what if identity could be private, portable, and user-controlled?",
+  },
+  {
+    year: "June 2018",
+    title: "Company founded",
+    desc: "VerifyChain Pty Ltd registered in Victoria, Australia.",
+  },
+  {
+    year: "2019",
+    title: "Architecture defined",
+    desc: "Developed the method to best manage a digital identity using blockchain — the foundation everything is built on.",
+  },
+  {
+    year: "2020",
+    title: "Proof of concept",
+    desc: "Built and tested extensively to confirm the concept worked across multiple countries and use cases.",
+  },
+  {
+    year: "2021",
+    title: "Back to the drawing board",
+    desc: "Identified architectural weaknesses and rebuilt — the hardest but most important step.",
+  },
+  {
+    year: "2022",
+    title: "Ready for launch",
+    desc: "A full new operating system using multiple components of blockchain technology, ready for commercial launch.",
+  },
+  {
+    year: "2024–25",
+    title: "Government-tested",
+    desc: "Age verification trialled in Australian Government Age Assurance Technology Trials. AML legislation response in progress.",
+  },
+];
+
 export default function AboutPage() {
   const [activeModal, setActiveModal] = useState(null);
   const modalRef = useRef(null);
@@ -148,6 +186,51 @@ export default function AboutPage() {
                   <h3 className="team-card-name">{member.name}</h3>
                   <p className="team-card-role">{member.role}</p>
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── ORIGIN STORY ── */}
+      <section className="about-origin au-fade">
+        <div className="about-origin-inner">
+          <span className="about-section-eyebrow">Our story</span>
+          <h2 className="about-section-h2">
+            What was<br /><em>the spark?</em>
+          </h2>
+          <blockquote className="origin-quote">
+            "It was the time when Cambridge Analytica was in the news. 
+            That moment defined it — we must protect identity with a 
+            solution that is private, where only you decide who sees 
+            your information."
+            <cite>— Hormuz Vazifdar, Founder & CEO</cite>
+          </blockquote>
+        </div>
+      </section>
+
+      {/* ── TIMELINE ── */}
+      <section className="about-timeline">
+        <div className="about-timeline-inner">
+          <span className="about-section-eyebrow au-fade">Our timeline</span>
+          <h2 className="about-section-h2 au-fade">
+            Seven years in<br /><em>the making</em>
+          </h2>
+
+          <div className="timeline-track">
+            <div className="timeline-line" />
+            {timeline.map((item, i) => (
+              <div
+                key={item.year}
+                className={`timeline-item au-fade ${i % 2 === 0 ? "timeline-item--left" : "timeline-item--right"}`}
+                style={{ transitionDelay: `${i * 0.1}s` }}
+              >
+                <div className="timeline-card">
+                  <span className="timeline-year">{item.year}</span>
+                  <h3 className="timeline-title">{item.title}</h3>
+                  <p className="timeline-desc">{item.desc}</p>
+                </div>
+                <div className="timeline-dot" />
               </div>
             ))}
           </div>
