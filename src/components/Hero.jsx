@@ -28,9 +28,9 @@ export default function Hero() {
           </h1>
 
           <p className="hero-sub">
-            VerifyChain is the blockchain-powered platform that lets organisations
-            confirm identity, age, qualifications and criminal history — in minutes,
-            with zero data exposure.
+            VerifyChain is a secure, flexible verification platform that lets
+            organisations confirm identity, age, qualifications and
+            criminal history - in minutes, on any device, with zero data exposure.
           </p>
 
           <div className="hero-actions">

@@ -37,17 +37,11 @@
   flex-shrink: 0;
 }
 
-.logo-mark {
-  width: 30px;
-  height: 30px;
-  background: var(--ink);
-  border-radius: 7px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.nav-logo-img {
+  height: 40px;
+  width: auto;
+  display: block;
 }
-
-.logo-mark svg { width: 17px; height: 17px; }
 
 .nav-links {
   display: flex;

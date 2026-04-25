@@ -36,14 +36,7 @@ export default function Nav() {
     <nav className={`nav ${scrolled ? "nav--scrolled" : ""}`}>
       <div className="nav-inner">
         <Link to="/" className="nav-logo">
-          <div className="logo-mark">
-            <svg viewBox="0 0 18 18" fill="none">
-              <circle cx="9" cy="9" r="7" stroke="white" strokeWidth="1.5" fill="none"/>
-              <path d="M6.5 9L8 10.5L11.5 7" stroke="white" strokeWidth="1.5"
-                strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-          <span>VerifyChain</span>
+          <img src="/verifychain-logo.png" alt="VerifyChain" className="nav-logo-img" />
         </Link>
 
         <ul className="nav-links">
