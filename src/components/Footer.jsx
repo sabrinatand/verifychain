@@ -1,17 +1,36 @@
+import { Link } from "react-router-dom";
 import "./Footer.css";
 
 const cols = [
   {
     title: "Products",
-    links: ["Identity verification", "Age verification", "Qualification check", "Crime check", "WWCC", "eSeal documents"],
+    links: [
+      { label: "Identity verification", to: "/" },
+      { label: "Age verification", to: "/" },
+      { label: "Qualification check", to: "/" },
+      { label: "Crime check", to: "/" },
+      { label: "WWCC", to: "/" },
+      { label: "eSeal documents", to: "/" },
+    ],
   },
   {
     title: "Technology",
-    links: ["Architecture", "API docs", "Security", "Compliance", "Simulator"],
+    links: [
+      { label: "Architecture", to: "/" },
+      { label: "API docs", to: "/" },
+      { label: "Security", to: "/" },
+      { label: "Compliance", to: "/" },
+      { label: "Demonstration", to: "/demonstration" },
+    ],
   },
   {
     title: "Company",
-    links: ["About us", "Use cases", "Contact sales", "Privacy policy"],
+    links: [
+      { label: "About us", to: "/about" },
+      { label: "Roadmap", to: "/roadmap" },
+      { label: "Contact us", to: "/contact" },
+      { label: "Privacy policy", to: "/" },
+    ],
   },
 ];
 
@@ -19,32 +38,36 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-inner">
+
+        {/* Brand */}
         <div className="footer-brand">
-          <div className="footer-logo">
-            <div className="logo-mark">
-              <svg viewBox="0 0 18 18" fill="none">
-                <circle cx="9" cy="9" r="7" stroke="white" strokeWidth="1.5" fill="none"/>
-                <path d="M6.5 9L8 10.5L11.5 7" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <span>VerifyChain</span>
-          </div>
+          <Link to="/" className="footer-logo">
+            <img src="/verifychain-logo.svg" alt="VerifyChain" className="footer-logo-img" />
+          </Link>
           <p className="footer-tagline">
             Melbourne-based verification platform.<br />
-            Blockchain-powered. Privacy-first.
+            Secure, private, and built to industry standards.
           </p>
+          <div className="footer-contact">
+            <a href="tel:+61407880432" className="footer-contact-link">+61 407 880 432</a>
+            <a href="mailto:enquiry@verifychain.io" className="footer-contact-link">enquiry@verifychain.io</a>
+          </div>
         </div>
 
+        {/* Nav columns */}
         {cols.map((col) => (
           <div key={col.title} className="footer-col">
             <h5 className="footer-col-title">{col.title}</h5>
             <ul>
               {col.links.map((l) => (
-                <li key={l}><a href="#">{l}</a></li>
+                <li key={l.label}>
+                  <Link to={l.to}>{l.label}</Link>
+                </li>
               ))}
             </ul>
           </div>
         ))}
+
       </div>
 
       <div className="footer-bottom">

@@ -76,3 +76,26 @@
 @media (max-width: 768px) {
   .footer-inner { grid-template-columns: 1fr 1fr; }
 }
+
+.footer-logo-img {
+  height: 36px;
+  width: auto;
+  margin-bottom: 14px;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.footer-contact-link {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.footer-contact-link:hover { color: rgba(255,255,255,0.85); }
