@@ -16,6 +16,8 @@ import CTA from "./components/CTA";
 import Footer from "./components/Footer";
 import AboutPage from "./pages/AboutPage";
 import RoadmapPage from "./pages/RoadmapPage";
+import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 import "./styles/global.css";
 
 function ScrollObserver() {
@@ -76,7 +78,14 @@ function AppInner() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AppInner />
+      <Routes>
+        {/* Full screen pages — no nav/footer */}
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+
+        {/* Main site — with nav/footer */}
+        <Route path="/*" element={<AppInner />} />
+      </Routes>
     </BrowserRouter>
   );
 }

@@ -90,7 +90,7 @@ export default function Nav() {
         </ul>
 
         <div className="nav-right">
-          <button className="btn-ghost">Log in</button>
+          <Link to="/register"><button className="btn-ghost">Register</button></Link>
           <button className="btn-dark">Go to demo →</button>
         </div>
       </div>
