@@ -18,6 +18,7 @@ import AboutPage from "./pages/AboutPage";
 import RoadmapPage from "./pages/RoadmapPage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
+import DemonstrationPage from "./pages/DemonstrationPage";
 import "./styles/global.css";
 
 function ScrollObserver() {
@@ -68,6 +69,7 @@ function AppInner() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/roadmap" element={<RoadmapPage />} />
+          <Route path="/demonstration" element={<DemonstrationPage />} />
         </Routes>
       </main>
       <Footer />

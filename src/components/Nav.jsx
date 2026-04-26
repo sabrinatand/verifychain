@@ -91,7 +91,7 @@ export default function Nav() {
 
         <div className="nav-right">
           <Link to="/register"><button className="btn-ghost">Register</button></Link>
-          <button className="btn-dark">Go to demo →</button>
+          <Link to="/demonstration"><button className="btn-dark">Go to demo →</button></Link>
         </div>
       </div>
     </nav>
