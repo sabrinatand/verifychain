@@ -148,12 +148,13 @@ export default function ContactPage() {
         <div className="contact-hero-inner">
           <span className="contact-eyebrow">Get in touch</span>
           <h1 className="contact-h1">
-            We'd love to<br /><em>hear from you</em>
-          </h1>
-          <p className="contact-hero-sub">
-            Whether you're ready to get started, have questions, or need support —
-            our team is here to help.
-          </p>
+            Ready to <em>verify</em> smarter?<br />
+            Our team is here to <strong>help</strong>.
+            </h1>
+         <p className="contact-hero-sub">
+            Whether you're exploring VerifyChain for the first time, ready to get started,
+            or need technical support — select your enquiry type and we'll connect you with the right person.
+            </p>
         </div>
       </div>
 
