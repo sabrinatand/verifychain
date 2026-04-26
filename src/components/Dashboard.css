@@ -8,8 +8,8 @@
   cursor: default;
 }
 .dash-row:last-child { border-bottom: none; }
-.dash-row:hover { background: rgba(42,82,201,0.03); padding-left: 24px; }
-.dash-row:hover .dash-avatar { border-color: rgba(42,82,201,0.2); }
+.dash-row:hover { background: rgba(30,58,138,0.03); padding-left: 24px; }
+.dash-row:hover .dash-avatar { border-color: rgba(30,58,138,0.2); }
 .dash-left { display: flex; align-items: center; gap: 14px; }
 .dash-avatar {
   width: 34px; height: 34px; border-radius: 50%;

@@ -12,7 +12,7 @@
 }
 .tech-row:first-child { border-top: 1px solid var(--border); }
 .tech-row:hover { background: rgba(255,255,255,0.7); padding-left: 12px; }
-.tech-row:hover .tech-num { color: #2a52c9; }
+.tech-row:hover .tech-num { color: #1e3a8a; }
 .tech-num { font-size: 11px; font-weight: 500; color: var(--ink-5); min-width: 22px; padding-top: 2px; font-variant-numeric: tabular-nums; transition: color 0.2s; }
 .tech-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 5px; letter-spacing: -.01em; }
 .tech-desc  { font-size: 12px; font-weight: 300; color: var(--ink-3); line-height: 1.65; }

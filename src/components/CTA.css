@@ -11,8 +11,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 60% at 50% 120%, rgba(160, 195, 240, 0.3) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 40% at 20% 0%, rgba(220, 230, 245, 0.2) 0%, transparent 60%);
+    radial-gradient(ellipse 80% 60% at 50% 120%, rgba(139,195,74,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 20% 0%, rgba(30,58,138,0.08) 0%, transparent 60%);
   pointer-events: none;
 }
 

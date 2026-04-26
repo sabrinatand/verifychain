@@ -5,50 +5,61 @@
   --font-display: 'DM Serif Display', Georgia, serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
 
-  --ink: #0e0e0f;
-  --ink-2: #3d3d40;
-  --ink-3: #7a7a80;
-  --ink-4: #b8b8be;
-  --ink-5: #e2e2e6;
+  /* ── Text ── */
+  --ink:   #0f1e45;
+  --ink-2: #1e3060;
+  --ink-3: #4a5a80;
+  --ink-4: #8a9ab8;
+  --ink-5: #c0ccdd;
 
-  --bg-base:      #f8f7f4;
-  --bg-warm:      #f4f2ee;
-  --bg-cool:      #f2f4f8;
-  --bg-surface:   #eeecea;
-  --bg-surface-2: #e8e6e2;
+  /* ── Backgrounds ── */
+  --bg-base:      #f7f8fc;
+  --bg-warm:      #f2f4f0;
+  --bg-cool:      #edf0f8;
+  --bg-surface:   #e8ecf5;
+  --bg-surface-2: #dde3f0;
 
-  --accent:       #0f4c75;
-  --accent-light: #e8f0f8;
-  --green:        #16a34a;
-  --green-bg:     #f0fdf4;
-  --green-border: #bbf7d0;
-  --green-text:   #14532d;
-  --blue-bg:      #eff6ff;
-  --blue-border:  #bfdbfe;
-  --blue-text:    #1e3a5f;
+  /* ── Brand ── */
+  --accent:       #1e3a8a;
+  --accent-light: #e8edf8;
 
-  --border:       rgba(14,14,15,0.10);
-  --border-strong:rgba(14,14,15,0.18);
+  /* ── Green (logo lime) ── */
+  --green:        #8bc34a;
+  --green-bg:     #f4faeb;
+  --green-border: rgba(139,195,74,0.35);
+  --green-text:   #3a6b0f;
 
-  --gradient-hero: radial-gradient(ellipse 140% 90% at 60% -20%, #d8e8f8 0%, #edf0f8 30%, #f4f2ee 65%, #f8f7f4 100%);
-  --gradient-cta:  radial-gradient(ellipse 100% 120% at 50% 110%, #c8d9f0 0%, #f0ede8 60%, #f8f7f4 100%);
+  /* ── Blue badges ── */
+  --blue-bg:      #eef1fb;
+  --blue-border:  #c0ccee;
+  --blue-text:    #1e3a8a;
 
-  --dark-bg:      #0e0e0f;
-  --dark-surface: #161618;
+  /* ── Borders ── */
+  --border:        rgba(30,58,138,0.10);
+  --border-strong: rgba(30,58,138,0.20);
+
+  /* ── Gradients ── */
+  --gradient-hero: radial-gradient(ellipse 140% 90% at 60% -20%, #c8d8f5 0%, #dde5f5 30%, #eef1f8 65%, #f7f8fc 100%);
+  --gradient-cta:  radial-gradient(ellipse 100% 120% at 50% 110%, #c0d0ee 0%, #edf0f8 60%, #f7f8fc 100%);
+
+  /* ── Dark sections ── */
+  --dark-bg:      #0f1e45;
+  --dark-surface: #162454;
   --dark-border:  rgba(255,255,255,0.08);
   --dark-text:    rgba(255,255,255,0.85);
   --dark-muted:   rgba(255,255,255,0.35);
   --dark-subtle:  rgba(255,255,255,0.12);
 
-  --max-w:        1080px;
-  --section-py:   100px;
-  --section-px:   48px;
+  /* ── Layout ── */
+  --max-w:       1080px;
+  --section-py:  100px;
+  --section-px:  48px;
 
-  --r-sm:  8px;
-  --r-md:  12px;
-  --r-lg:  16px;
-  --r-xl:  20px;
-  --r-pill:999px;
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-xl:   20px;
+  --r-pill: 999px;
 
   --ease:        cubic-bezier(0.4,0,0.2,1);
   --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
@@ -141,7 +152,7 @@ body {
   color: var(--ink);
   margin-bottom: 16px;
 }
-.section-h2 em { font-style: italic; color: var(--ink-2); }
+.section-h2 em { font-style: italic; color: #1e3a8a; }
 .section-body {
   font-size: 16px;
   font-weight: 300;
@@ -156,7 +167,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--ink);
+  background: #182f6f;
   color: #fff;
   border: none;
   padding: 11px 22px;
@@ -165,9 +176,16 @@ body {
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: opacity 0.2s, transform 0.2s var(--ease-spring);
+  transition: background 0.2s, transform 0.2s var(--ease-spring), box-shadow 0.2s;
   text-decoration: none;
+  box-shadow: 0 2px 12px rgba(30,58,138,0.25);
 }
+.btn-dark:hover {
+  background: #162d6e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px rgba(30,58,138,0.35);
+}
+.btn-dark:active { transform: scale(0.97); }
 .btn-dark:hover  { opacity: 0.78; transform: translateY(-1px); }
 .btn-dark:active { transform: scale(0.97); }
 
@@ -176,8 +194,8 @@ body {
   align-items: center;
   gap: 6px;
   background: transparent;
-  color: var(--ink);
-  border: 1px solid var(--border-strong);
+  color: #1e3a8a;
+  border: 1px solid rgba(30,58,138,0.25);
   padding: 10px 22px;
   border-radius: var(--r-md);
   font-family: var(--font-body);
@@ -187,7 +205,11 @@ body {
   transition: background 0.2s, border-color 0.2s, transform 0.2s var(--ease-spring);
   text-decoration: none;
 }
-.btn-ghost:hover  { background: var(--bg-surface); border-color: var(--ink-4); transform: translateY(-1px); }
+.btn-ghost:hover {
+  background: rgba(30,58,138,0.05);
+  border-color: rgba(30,58,138,0.4);
+  transform: translateY(-1px);
+}
 .btn-ghost:active { transform: scale(0.97); }
 
 .btn-lg { padding: 13px 28px; font-size: 15px; border-radius: var(--r-lg); }
@@ -203,10 +225,9 @@ body {
   border-radius: var(--r-pill);
 }
 .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.7; }
-.badge-green { background: var(--green-bg); color: var(--green-text); border: 1px solid var(--green-border); }
-.badge-blue  { background: var(--blue-bg);  color: var(--blue-text);  border: 1px solid var(--blue-border); }
+.badge-green { background: #f4faeb; color: #3a6b0f; border: 1px solid rgba(139,195,74,0.35); }
+.badge-blue  { background: #eef1fb; color: #1e3a8a; border: 1px solid #c0ccee; }
 .badge-gray  { background: var(--bg-surface); color: var(--ink-3); border: 1px solid var(--border); }
-
 /* ── WINDOW CHROME ── */
 .window-chrome {
   background: #fff;
