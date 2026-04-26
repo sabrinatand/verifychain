@@ -1,4 +1,5 @@
 import "./Hero.css";
+import { Link } from "react-router-dom";
 
 const floatItems = [
   { cls: "fi-shield",   label: "Identity verified",      delay: "0s"    },
@@ -34,13 +35,12 @@ export default function Hero() {
           </p>
 
           <div className="hero-actions">
-            <button className="btn-dark btn-lg hero-btn-primary">
-              <span className="hero-btn-icon">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M3 8a5 5 0 1 0 10 0A5 5 0 0 0 3 8Z" stroke="currentColor" strokeWidth="1.4"/><path d="M5.5 8l2 2L11 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              </span>
-              Go to demo
-            </button>
-            <button className="btn-ghost btn-lg">See how it works</button>
+            <Link to="/demonstration">
+              <button className="btn-dark btn-lg hero-btn-primary">
+                Go to demo →
+              </button>
+            </Link>
+            <button className="btn-ghost btn-lg">Talk to Sales</button>
           </div>
 
           <div className="hero-trust">

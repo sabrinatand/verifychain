@@ -13,7 +13,7 @@ const VERIFICATION_TYPES = [
     ),
     title: "Identity Verification",
     desc: "Verify your identity using a government-issued photo ID",
-    duration: 2800,
+    duration: 5000,
     processingSteps: [
       "Uploading document securely...",
       "Extracting document data...",
@@ -33,7 +33,7 @@ const VERIFICATION_TYPES = [
     ),
     title: "Working with Children Check",
     desc: "Validate your Victorian WWC clearance in real time",
-    duration: 3200,
+    duration: 6000,
     processingSteps: [
       "Connecting to Victorian registry...",
       "Validating WWC card number...",
@@ -48,13 +48,38 @@ function generateVerificationId() {
   return "VC-" + Math.random().toString(36).substring(2, 8).toUpperCase() + "-" + Date.now().toString().slice(-4);
 }
 
+const isValidDate = (val) => {
+  const parts = val.split("/");
+  if (parts.length !== 3) return false;
+  const [d, m, y] = parts.map(Number);
+  if (!d || !m || !y || y < 1900 || y > new Date().getFullYear()) return false;
+  const date = new Date(y, m - 1, d);
+  return date.getDate() === d && date.getMonth() === m - 1;
+};
+
+// ── FIELD ERROR component ────────────────────────────────────────
+function FieldError({ message }) {
+  if (!message) return null;
+  return (
+    <div className="demo-field-error">
+      <svg viewBox="0 0 12 12" fill="none">
+        <circle cx="6" cy="6" r="5" stroke="#dc2626" strokeWidth="1.2"/>
+        <path d="M6 4v2.5M6 8h.01" stroke="#dc2626" strokeWidth="1.2" strokeLinecap="round"/>
+      </svg>
+      {message}
+    </div>
+  );
+}
+
 // ── STEP 1: Choose type ──────────────────────────────────────────
 function StepChoose({ onChoose }) {
   return (
     <div className="demo-choose">
       <div className="demo-hero-text">
         <span className="demo-eyebrow">Live demonstration</span>
-        <h1 className="demo-h1">See VerifyChain<br /><em>in action</em></h1>
+        <h1 className="demo-h1">
+          See VerifyChain<br /><em>in action</em>
+        </h1>
         <p className="demo-sub">
           Choose a verification type below and experience how quickly
           and securely VerifyChain processes real-world checks.
@@ -90,6 +115,8 @@ function StepIdentityForm({ onSubmit, onBack }) {
   const [form, setForm] = useState({
     firstName: "", lastName: "", dob: "", docType: "passport", docNumber: "",
   });
+  const [touched, setTouched] = useState({});
+  const [submitted, setSubmitted] = useState(false);
   const fileRef = useRef();
 
   const handleFile = (file) => {
@@ -106,7 +133,56 @@ function StepIdentityForm({ onSubmit, onBack }) {
   }, []);
 
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const canSubmit = photo && form.firstName && form.lastName && form.dob && form.docNumber;
+
+  const handleDobChange = (e) => {
+    let val = e.target.value.replace(/[^\d/]/g, "");
+    if (val.length === 2 && form.dob.length === 1) val += "/";
+    if (val.length === 5 && form.dob.length === 4) val += "/";
+    const parts = val.split("/");
+    if (parts[2] && parts[2].length > 4) return;
+    if (val.length > 10) return;
+    setForm({ ...form, dob: val });
+  };
+
+  const onBlur = (field) => setTouched((t) => ({ ...t, [field]: true }));
+
+  const nameKeyDown = (e) => {
+    if (
+      !/[a-zA-Z\s\-']/.test(e.key) &&
+      !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)
+    ) e.preventDefault();
+  };
+
+  const docKeyDown = (e) => {
+    if (
+      !/[a-zA-Z0-9]/.test(e.key) &&
+      !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)
+    ) e.preventDefault();
+  };
+
+  const errors = {
+    photo: !photo ? "Please upload or take a photo of your ID document" : null,
+    firstName: !form.firstName ? "First name is required" : null,
+    lastName: !form.lastName ? "Last name is required" : null,
+    dob: !form.dob
+      ? "Date of birth is required"
+      : !isValidDate(form.dob)
+      ? "Enter a valid date in DD/MM/YYYY format"
+      : null,
+    docNumber: !form.docNumber ? "Document number is required" : null,
+  };
+
+  const hasErrors = Object.values(errors).some(Boolean);
+
+  const handleSubmit = () => {
+    setSubmitted(true);
+    setTouched({ firstName: true, lastName: true, dob: true, docNumber: true });
+    if (!hasErrors) {
+      onSubmit({ ...form, photo, type: "identity" });
+    }
+  };
+
+  const showError = (field) => (touched[field] || submitted) && errors[field];
 
   return (
     <div className="demo-form-wrap">
@@ -116,7 +192,7 @@ function StepIdentityForm({ onSubmit, onBack }) {
 
       {/* Photo upload */}
       <div
-        className={`demo-dropzone ${dragging ? "demo-dropzone--active" : ""} ${photo ? "demo-dropzone--filled" : ""}`}
+        className={`demo-dropzone ${dragging ? "demo-dropzone--active" : ""} ${photo ? "demo-dropzone--filled" : ""} ${(submitted || touched.photo) && errors.photo ? "demo-dropzone--error" : ""}`}
         onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
@@ -137,7 +213,9 @@ function StepIdentityForm({ onSubmit, onBack }) {
             <button
               className="demo-photo-remove"
               onClick={(e) => { e.stopPropagation(); setPhoto(null); }}
-            >✕ Remove</button>
+            >
+              ✕ Remove
+            </button>
           </div>
         ) : (
           <div className="demo-dropzone-inner">
@@ -149,29 +227,68 @@ function StepIdentityForm({ onSubmit, onBack }) {
               </svg>
             </div>
             <p className="demo-dropzone-label">Drag & drop your ID photo here</p>
-            <p className="demo-dropzone-hint">or click to browse — passport, licence, or national ID</p>
+            <p className="demo-dropzone-hint">click to browse or take a photo — passport, licence, or national ID</p>
           </div>
         )}
-        <input ref={fileRef} type="file" accept="image/*" style={{ display: "none" }}
-          onChange={(e) => handleFile(e.target.files[0])} />
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          style={{ display: "none" }}
+          onChange={(e) => handleFile(e.target.files[0])}
+        />
       </div>
+      {(submitted || touched.photo) && errors.photo && (
+        <FieldError message={errors.photo} />
+      )}
 
       {/* Form fields */}
       <div className="demo-fields">
         <div className="demo-field-row">
           <div className="demo-field">
             <label>First name</label>
-            <input name="firstName" value={form.firstName} onChange={onChange} placeholder="Jane" />
+            <input
+              name="firstName"
+              value={form.firstName}
+              onChange={onChange}
+              onBlur={() => onBlur("firstName")}
+              placeholder="Jane"
+              maxLength={50}
+              onKeyDown={nameKeyDown}
+              className={showError("firstName") ? "demo-input--error" : ""}
+            />
+            <FieldError message={showError("firstName")} />
           </div>
           <div className="demo-field">
             <label>Last name</label>
-            <input name="lastName" value={form.lastName} onChange={onChange} placeholder="Smith" />
+            <input
+              name="lastName"
+              value={form.lastName}
+              onChange={onChange}
+              onBlur={() => onBlur("lastName")}
+              placeholder="Smith"
+              maxLength={50}
+              onKeyDown={nameKeyDown}
+              className={showError("lastName") ? "demo-input--error" : ""}
+            />
+            <FieldError message={showError("lastName")} />
           </div>
         </div>
         <div className="demo-field-row">
           <div className="demo-field">
             <label>Date of birth</label>
-            <input name="dob" type="date" value={form.dob} onChange={onChange} />
+            <input
+              name="dob"
+              type="text"
+              value={form.dob}
+              onChange={handleDobChange}
+              onBlur={() => onBlur("dob")}
+              placeholder="DD/MM/YYYY"
+              maxLength={10}
+              className={showError("dob") ? "demo-input--error" : ""}
+            />
+            <FieldError message={showError("dob")} />
           </div>
           <div className="demo-field">
             <label>Document type</label>
@@ -184,18 +301,23 @@ function StepIdentityForm({ onSubmit, onBack }) {
         </div>
         <div className="demo-field">
           <label>Document number</label>
-          <input name="docNumber" value={form.docNumber} onChange={onChange} placeholder="e.g. PA1234567" />
+          <input
+            name="docNumber"
+            value={form.docNumber}
+            onChange={onChange}
+            onBlur={() => onBlur("docNumber")}
+            placeholder="e.g. PA1234567"
+            maxLength={20}
+            onKeyDown={docKeyDown}
+            className={showError("docNumber") ? "demo-input--error" : ""}
+          />
+          <FieldError message={showError("docNumber")} />
         </div>
       </div>
 
-      <button
-        className="demo-submit"
-        disabled={!canSubmit}
-        onClick={() => onSubmit({ ...form, photo, type: "identity" })}
-      >
+      <button className="demo-submit" onClick={handleSubmit}>
         Run verification →
       </button>
-      {!canSubmit && <p className="demo-submit-hint">Please upload a photo and fill in all fields to continue.</p>}
     </div>
   );
 }
@@ -205,63 +327,148 @@ function StepWWCForm({ onSubmit, onBack }) {
   const [form, setForm] = useState({
     firstName: "", lastName: "", dob: "", wwcNumber: "", employer: "",
   });
+  const [touched, setTouched] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const canSubmit = form.firstName && form.lastName && form.dob && form.wwcNumber;
+
+  const handleDobChange = (e) => {
+    let val = e.target.value.replace(/[^\d/]/g, "");
+    if (val.length === 2 && form.dob.length === 1) val += "/";
+    if (val.length === 5 && form.dob.length === 4) val += "/";
+    const parts = val.split("/");
+    if (parts[2] && parts[2].length > 4) return;
+    if (val.length > 10) return;
+    setForm({ ...form, dob: val });
+  };
+
+  const onBlur = (field) => setTouched((t) => ({ ...t, [field]: true }));
+
+  const nameKeyDown = (e) => {
+    if (
+      !/[a-zA-Z\s\-']/.test(e.key) &&
+      !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)
+    ) e.preventDefault();
+  };
+
+  const wwcKeyDown = (e) => {
+    if (
+      !/[a-zA-Z0-9]/.test(e.key) &&
+      !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)
+    ) e.preventDefault();
+  };
+
+  const errors = {
+    firstName: !form.firstName ? "First name is required" : null,
+    lastName: !form.lastName ? "Last name is required" : null,
+    dob: !form.dob
+      ? "Date of birth is required"
+      : !isValidDate(form.dob)
+      ? "Enter a valid date in DD/MM/YYYY format"
+      : null,
+    wwcNumber: !form.wwcNumber ? "WWC card number is required" : null,
+  };
+
+  const hasErrors = Object.values(errors).some(Boolean);
+
+  const handleSubmit = () => {
+    setSubmitted(true);
+    setTouched({ firstName: true, lastName: true, dob: true, wwcNumber: true });
+    if (!hasErrors) {
+      onSubmit({ ...form, type: "wwc" });
+    }
+  };
+
+  const showError = (field) => (touched[field] || submitted) && errors[field];
 
   return (
     <div className="demo-form-wrap">
       <button className="demo-back" onClick={onBack}>← Back</button>
-      <h2 className="demo-form-title">Working with Children Check</h2>
-      <p className="demo-form-sub">
-        Enter your Victorian WWC card details. We'll validate your clearance against the Victorian registry.
-      </p>
 
-      <div className="demo-wwc-card">
-        <div className="demo-wwc-card-header">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          </svg>
-          <span>Victorian Working with Children Check</span>
+      <div className="demo-wwc-header">
+        <img src="/wwc-logo.png" alt="Working with Children Check Victoria" className="demo-wwc-logo" />
+        <p className="demo-wwc-hero-desc">
+            Enter your WWC card details below. Your clearance will be validated against the Victorian registry in real time.
+        </p>
         </div>
-        <div className="demo-wwc-card-body">
-          <span className="demo-wwc-state">VIC</span>
-          <span className="demo-wwc-label">Enter your card number below</span>
-        </div>
-      </div>
 
       <div className="demo-fields">
         <div className="demo-field-row">
           <div className="demo-field">
             <label>First name</label>
-            <input name="firstName" value={form.firstName} onChange={onChange} placeholder="Jane" />
+            <input
+              name="firstName"
+              value={form.firstName}
+              onChange={onChange}
+              onBlur={() => onBlur("firstName")}
+              placeholder="Jane"
+              maxLength={50}
+              onKeyDown={nameKeyDown}
+              className={showError("firstName") ? "demo-input--error" : ""}
+            />
+            <FieldError message={showError("firstName")} />
           </div>
           <div className="demo-field">
             <label>Last name</label>
-            <input name="lastName" value={form.lastName} onChange={onChange} placeholder="Smith" />
+            <input
+              name="lastName"
+              value={form.lastName}
+              onChange={onChange}
+              onBlur={() => onBlur("lastName")}
+              placeholder="Smith"
+              maxLength={50}
+              onKeyDown={nameKeyDown}
+              className={showError("lastName") ? "demo-input--error" : ""}
+            />
+            <FieldError message={showError("lastName")} />
           </div>
         </div>
         <div className="demo-field">
           <label>Date of birth</label>
-          <input name="dob" type="date" value={form.dob} onChange={onChange} />
+          <input
+            name="dob"
+            type="text"
+            value={form.dob}
+            onChange={handleDobChange}
+            onBlur={() => onBlur("dob")}
+            placeholder="DD/MM/YYYY"
+            maxLength={10}
+            className={showError("dob") ? "demo-input--error" : ""}
+          />
+          <FieldError message={showError("dob")} />
         </div>
         <div className="demo-field">
           <label>WWC Card number</label>
-          <input name="wwcNumber" value={form.wwcNumber} onChange={onChange} placeholder="e.g. WWC1234567A" />
+          <input
+            name="wwcNumber"
+            value={form.wwcNumber}
+            onChange={onChange}
+            onBlur={() => onBlur("wwcNumber")}
+            placeholder="e.g. WWC1234567A"
+            maxLength={15}
+            onKeyDown={wwcKeyDown}
+            className={showError("wwcNumber") ? "demo-input--error" : ""}
+          />
+          <FieldError message={showError("wwcNumber")} />
         </div>
         <div className="demo-field">
-          <label>Employer / Organisation <span className="demo-optional">(optional)</span></label>
-          <input name="employer" value={form.employer} onChange={onChange} placeholder="e.g. Sunshine Primary School" />
+          <label>
+            Employer / Organisation{" "}
+            <span className="demo-optional">(optional)</span>
+          </label>
+          <input
+            name="employer"
+            value={form.employer}
+            onChange={onChange}
+            placeholder="e.g. Sunshine Primary School"
+            maxLength={100}
+          />
         </div>
       </div>
 
-      <button
-        className="demo-submit"
-        disabled={!canSubmit}
-        onClick={() => onSubmit({ ...form, type: "wwc" })}
-      >
+      <button className="demo-submit" onClick={handleSubmit}>
         Run verification →
       </button>
-      {!canSubmit && <p className="demo-submit-hint">Please fill in all required fields to continue.</p>}
     </div>
   );
 }
@@ -274,16 +481,22 @@ function StepProcessing({ verificationType, formData, onComplete }) {
   useState(() => {
     const interval = setInterval(() => {
       setStepIndex((i) => {
-        if (i >= steps.length - 1) { clearInterval(interval); return i; }
+        if (i >= steps.length - 1) {
+          clearInterval(interval);
+          return i;
+        }
         return i + 1;
       });
-    }, verificationType.duration / steps.length);
+    }, (verificationType.duration - 800) / steps.length);
 
     const timeout = setTimeout(() => {
       onComplete(generateVerificationId());
     }, verificationType.duration);
 
-    return () => { clearInterval(interval); clearTimeout(timeout); };
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
   }, []);
 
   return (
@@ -291,9 +504,12 @@ function StepProcessing({ verificationType, formData, onComplete }) {
       <div className="demo-processing-ring">
         <svg viewBox="0 0 100 100">
           <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(30,58,138,0.08)" strokeWidth="6"/>
-          <circle cx="50" cy="50" r="44" fill="none" stroke="#1e3a8a" strokeWidth="6"
+          <circle
+            cx="50" cy="50" r="44"
+            fill="none" stroke="#1e3a8a" strokeWidth="6"
             strokeLinecap="round" strokeDasharray="276" strokeDashoffset="69"
-            className="demo-ring-spin"/>
+            className="demo-ring-spin"
+          />
         </svg>
         <div className="demo-processing-icon">
           {formData.photo ? (
@@ -311,7 +527,10 @@ function StepProcessing({ verificationType, formData, onComplete }) {
 
       <div className="demo-processing-steps">
         {steps.map((step, i) => (
-          <div key={i} className={`demo-processing-step ${i <= stepIndex ? "demo-processing-step--done" : ""} ${i === stepIndex ? "demo-processing-step--active" : ""}`}>
+          <div
+            key={i}
+            className={`demo-processing-step ${i <= stepIndex ? "demo-processing-step--done" : ""} ${i === stepIndex ? "demo-processing-step--active" : ""}`}
+          >
             <div className="demo-step-dot">
               {i < stepIndex ? (
                 <svg viewBox="0 0 12 12" fill="none">
@@ -332,12 +551,15 @@ function StepProcessing({ verificationType, formData, onComplete }) {
 // ── STEP 4: Result ───────────────────────────────────────────────
 function StepResult({ verificationType, formData, verificationId, onReset }) {
   const timestamp = new Date().toLocaleString("en-AU", {
-    day: "2-digit", month: "long", year: "numeric",
-    hour: "2-digit", minute: "2-digit", timeZoneName: "short"
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZoneName: "short",
   });
 
   const fullName = `${formData.firstName} ${formData.lastName}`;
-
   const handlePrint = () => window.print();
 
   return (
@@ -350,7 +572,6 @@ function StepResult({ verificationType, formData, verificationId, onReset }) {
         <span>Verification complete</span>
       </div>
 
-      {/* Certificate card */}
       <div className="demo-certificate" id="demo-certificate">
         <div className="demo-cert-header">
           <img src="/verifychain-logo.png" alt="VerifyChain" className="demo-cert-logo" />
@@ -379,7 +600,7 @@ function StepResult({ verificationType, formData, verificationId, onReset }) {
               <>
                 <div className="demo-cert-row">
                   <span>Date of birth</span>
-                  <span>{new Date(formData.dob).toLocaleDateString("en-AU", { day: "2-digit", month: "long", year: "numeric" })}</span>
+                  <span>{formData.dob}</span>
                 </div>
                 <div className="demo-cert-row">
                   <span>Document type</span>
@@ -396,7 +617,7 @@ function StepResult({ verificationType, formData, verificationId, onReset }) {
               <>
                 <div className="demo-cert-row">
                   <span>Date of birth</span>
-                  <span>{new Date(formData.dob).toLocaleDateString("en-AU", { day: "2-digit", month: "long", year: "numeric" })}</span>
+                  <span>{formData.dob}</span>
                 </div>
                 <div className="demo-cert-row">
                   <span>WWC card number</span>
@@ -428,7 +649,12 @@ function StepResult({ verificationType, formData, verificationId, onReset }) {
           </div>
           <div className="demo-cert-seal">
             <svg viewBox="0 0 24 24" fill="none">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(30,58,138,0.08)" stroke="#1e3a8a" strokeWidth="1.5"/>
+              <path
+                d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+                fill="rgba(30,58,138,0.08)"
+                stroke="#1e3a8a"
+                strokeWidth="1.5"
+              />
               <path d="M9 12l2 2 4-4" stroke="#1e3a8a" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
             <span>Cryptographically secured</span>
@@ -452,7 +678,8 @@ function StepResult({ verificationType, formData, verificationId, onReset }) {
       </div>
 
       <p className="demo-disclaimer">
-        This is a demonstration only. No data has been stored or transmitted. In production, results are cryptographically signed and stored on a distributed ledger.
+        This is a demonstration only. No data has been stored or transmitted.
+        In production, results are cryptographically signed and stored on a distributed ledger.
       </p>
     </div>
   );
@@ -492,15 +719,18 @@ export default function DemonstrationPage() {
       <div className="demo-bg-orb demo-bg-orb--1" />
       <div className="demo-bg-orb demo-bg-orb--2" />
 
-
-      {/* Progress indicator */}
       {step !== "choose" && (
         <div className="demo-progress">
           {["form", "processing", "result"].map((s, i) => (
-            <div key={s} className={`demo-progress-step ${
-              step === s ? "demo-progress-step--active" :
-              ["form", "processing", "result"].indexOf(step) > i ? "demo-progress-step--done" : ""
-            }`}>
+            <div
+              key={s}
+              className={`demo-progress-step ${
+                step === s ? "demo-progress-step--active" :
+                ["form", "processing", "result"].indexOf(step) > i
+                  ? "demo-progress-step--done"
+                  : ""
+              }`}
+            >
               <div className="demo-progress-dot">{i + 1}</div>
               <span>{["Details", "Processing", "Result"][i]}</span>
             </div>
@@ -510,12 +740,15 @@ export default function DemonstrationPage() {
 
       <div className="demo-content">
         {step === "choose" && <StepChoose onChoose={handleChoose} />}
+
         {step === "form" && verificationType?.id === "identity" && (
           <StepIdentityForm onSubmit={handleFormSubmit} onBack={handleReset} />
         )}
+
         {step === "form" && verificationType?.id === "wwc" && (
           <StepWWCForm onSubmit={handleFormSubmit} onBack={handleReset} />
         )}
+
         {step === "processing" && (
           <StepProcessing
             verificationType={verificationType}
@@ -523,6 +756,7 @@ export default function DemonstrationPage() {
             onComplete={handleComplete}
           />
         )}
+
         {step === "result" && (
           <StepResult
             verificationType={verificationType}
