@@ -42,7 +42,7 @@ export default function Footer() {
         {/* Brand */}
         <div className="footer-brand">
           <Link to="/" className="footer-logo">
-            <img src="/verifychain-logo.svg" alt="VerifyChain" className="footer-logo-img" />
+            <img src="/verifychain-logo.png" alt="VerifyChain" className="footer-logo-img" />
           </Link>
           <p className="footer-tagline">
             Melbourne-based verification platform.<br />

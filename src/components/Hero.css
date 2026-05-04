@@ -420,11 +420,10 @@
 .hero-stats-strip {
   position: relative;
   max-width: var(--max-w);
-  margin: 40px auto 0;
+  margin: 40px auto 32px;
   display: flex;
   border: 1px solid var(--border);
-  border-bottom: none;
-  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  border-radius: var(--r-xl);
   background: rgba(255,255,255,0.5);
   backdrop-filter: blur(8px);
   overflow: hidden;

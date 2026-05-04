@@ -40,7 +40,7 @@ export default function Hero() {
                 Go to demo →
               </button>
             </Link>
-            <Link to="/contact"><button className="btn-ghost btn-lg"> Us</button></Link>
+            <Link to="/contact"><button className="btn-ghost btn-lg">Contact Us</button></Link>
           </div>
 
           <div className="hero-trust">

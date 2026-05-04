@@ -1,4 +1,5 @@
 import "./CTA.css";
+import { Link } from "react-router-dom";
 
 export default function CTA() {
   return (
@@ -13,8 +14,12 @@ export default function CTA() {
           their people and their compliance.
         </p>
         <div className="cta-btns">
-          <button className="btn-dark btn-lg">Go to simulator</button>
-          <button className="btn-ghost btn-lg">Talk to sales</button>
+          <Link to="/demonstration">
+            <button className="btn-dark btn-lg">Go to demonstration</button>
+          </Link>
+          <Link to="/contact">
+            <button className="btn-ghost btn-lg">Talk to sales</button>
+          </Link>
         </div>
       </div>
     </section>
