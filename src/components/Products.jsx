@@ -1,8 +1,9 @@
 import "./Products.css";
+import { useNavigate } from "react-router-dom";
 
 const products = [
   {
-    num: "01",
+    num: "01", slug: "identity-verification",
     name: "Identity verification",
     desc: "Validate passports, driver's licences, and national IDs against government databases in real time.",
     status: "live", statusLabel: "Production ready",
@@ -14,7 +15,7 @@ const products = [
     ),
   },
   {
-    num: "02",
+    num: "02", slug: "age-verification",
     name: "Age verification",
     desc: "Confirm age from documents or estimate via AI camera — without revealing a birth date. Tested by the Australian Government.",
     status: "live", statusLabel: "Production ready",
@@ -26,7 +27,7 @@ const products = [
     ),
   },
   {
-    num: "03",
+    num: "03", slug: "qualification-verification",
     name: "Qualification verification",
     desc: "Verify university degrees and trade qualifications. USI integration in progress for complete Australian VET coverage.",
     status: "poc", statusLabel: "Proof of concept",
@@ -38,7 +39,7 @@ const products = [
     ),
   },
   {
-    num: "04",
+    num: "04", slug: "national-crime-check",
     name: "National crime check",
     desc: "Automated background screening via Australian law enforcement databases. Real-time and repeat checks supported.",
     status: "live", statusLabel: "Production ready",
@@ -50,7 +51,7 @@ const products = [
     ),
   },
   {
-    num: "05",
+    num: "05", slug: "working-with-children-check",
     name: "Working with children check",
     desc: "Real-time clearance validation with automatic revocation alerts across multiple Australian jurisdictions.",
     status: "dev", statusLabel: "In development",
@@ -63,7 +64,7 @@ const products = [
     ),
   },
   {
-    num: "06",
+    num: "06", slug: "eseal-document-verification",
     name: "eSeal document verification",
     desc: "Tamper-proof digital notarisation. Cryptographic seals compliant with ESIGN and eIDAS regulations.",
     status: "dev", statusLabel: "In development",
@@ -78,6 +79,8 @@ const products = [
 ];
 
 export default function Products() {
+  const navigate = useNavigate();
+
   return (
     <section className="products-section">
       <div className="products-inner">
@@ -97,7 +100,12 @@ export default function Products() {
               <div className="prod-icon">{p.icon}</div>
               <h3 className="prod-name">{p.name}</h3>
               <p className="prod-desc">{p.desc}</p>
-             <button className="prod-learn-more">Learn more →</button>
+              <button
+                className="prod-learn-more"
+                onClick={() => navigate(`/products/${p.slug}`)}
+              >
+                Learn more →
+              </button>
             </div>
           ))}
         </div>

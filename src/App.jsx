@@ -20,6 +20,7 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import DemonstrationPage from "./pages/DemonstrationPage";
 import ContactPage from "./pages/ContactPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
 import "./styles/global.css";
 
 function ScrollObserver() {
@@ -72,6 +73,7 @@ function AppInner() {
           <Route path="/roadmap" element={<RoadmapPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/demonstration" element={<DemonstrationPage />} />
+          <Route path="/products/:slug" element={<ProductDetailPage />} />
         </Routes>
       </main>
       <Footer />
