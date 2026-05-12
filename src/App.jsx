@@ -21,6 +21,7 @@ import LoginPage from "./pages/LoginPage";
 import DemonstrationPage from "./pages/DemonstrationPage";
 import ContactPage from "./pages/ContactPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
+import AppDashboard from "./pages/AppDashboard";
 import "./styles/global.css";
 
 function ScrollObserver() {
@@ -74,11 +75,12 @@ function AppInner() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/demonstration" element={<DemonstrationPage />} />
           <Route path="/products/:slug" element={<ProductDetailPage />} />
+          <Route path="/dashboard" element={<AppDashboard />} />
         </Routes>
       </main>
       <Footer />
     </div>
-  );
+  );z
 }
 
 export default function App() {
