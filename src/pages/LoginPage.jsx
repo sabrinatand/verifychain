@@ -14,7 +14,7 @@ function validate(form) {
 export default function LoginPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/demonstration";
+  const redirectTo = searchParams.get("redirect") || "/dashboard";
 
   const [showPassword, setShowPassword] = useState(false);
   const [submitted, setSubmitted]       = useState(false);
