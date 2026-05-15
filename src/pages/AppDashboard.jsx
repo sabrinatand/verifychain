@@ -813,7 +813,7 @@ function AppSidebar({ session, onLogout, userType, activeNav, setActiveNav }) {
   return (
     <aside className="app-sidebar">
       <div className="app-sidebar-logo">
-        <img src="/images/verifychain-logo.png" alt="VerifyChain" className="app-sidebar-logo-img" />
+        <img src="/verifychain-logo.png" alt="VerifyChain" className="app-sidebar-logo-img" />
       </div>
 
       <div className="app-sidebar-type-badge">
@@ -879,130 +879,364 @@ function ExpiryBanner({ expiry, onDismiss }) {
 }
 
 // ── ORGANISATION DASHBOARD ────────────────────────────────────────
+// ── Staff table shared component ─────────────────────────────────
+function StaffTable({ onRunCheck }) {
+  return (
+    <div className="app-staff-table">
+      <div className="app-staff-table-head">
+        <span>Staff member</span>
+        <span>Check type</span>
+        <span>Verified date</span>
+        <span>Expiry</span>
+        <span>Status</span>
+      </div>
+      {DUMMY_STAFF.map((s, i) => {
+        const st = STATUS_LABEL[s.status];
+        const nearExpiry = s.daysLeft >= 0 && s.daysLeft <= 60;
+        return (
+          <div key={i} className={`app-staff-row ${nearExpiry ? "app-staff-row--alert" : ""}`}>
+            <span className="app-staff-name">
+              <div className="app-staff-avatar">{s.name.split(" ").map(n=>n[0]).join("")}</div>
+              {s.name}
+            </span>
+            <span className="app-staff-check">{s.check}</span>
+            <span className="app-staff-date">{s.date}</span>
+            <span className="app-staff-expiry">
+              {s.expiry !== "—" && s.daysLeft >= 0 && s.daysLeft <= 60 && (
+                <span className="app-expiry-pill">{s.daysLeft}d left</span>
+              )}
+              {s.daysLeft < 0 && <span className="app-expiry-pill app-expiry-pill--expired">Expired</span>}
+              {s.expiry !== "—" && s.daysLeft > 60 && s.expiry}
+              {s.expiry === "—" && "—"}
+            </span>
+            <span className="app-staff-status" style={{ background: st.bg, color: st.color }}>
+              {st.label}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function OrgDashboard({ session, onLogout }) {
   const [active, setActive]       = useState(null);
   const [dismissed, setDismissed] = useState(false);
-  const expiry = getExpiryInfo();
+  const [activeNav, setActiveNav] = useState("Dashboard");
+  const expiry    = getExpiryInfo();
   const showBanner = expiry && expiry.days <= 60 && !dismissed;
 
   const expiringSoon = DUMMY_STAFF.filter(s => s.daysLeft >= 0 && s.daysLeft <= 60);
   const verified     = DUMMY_STAFF.filter(s => s.status === "verified").length;
   const pending      = DUMMY_STAFF.filter(s => s.status === "pending").length;
   const expired      = DUMMY_STAFF.filter(s => s.status === "expired").length;
+  const greeting     = new Date().getHours() < 12 ? "morning" : new Date().getHours() < 17 ? "afternoon" : "evening";
 
-  const greeting = new Date().getHours() < 12 ? "morning" : new Date().getHours() < 17 ? "afternoon" : "evening";
+  const StatRow = () => (
+    <div className="app-stats-row">
+      {[
+        { label: "Total staff verified", value: verified,             color: "#15803d", bg: "#dcfce7" },
+        { label: "Pending verification", value: pending,              color: "#854d0e", bg: "#fef9c3" },
+        { label: "Expired / lapsed",     value: expired,              color: "#b91c1c", bg: "#fee2e2" },
+        { label: "Expiring within 60d",  value: expiringSoon.length,  color: "#1d4ed8", bg: "#dbeafe" },
+      ].map(s => (
+        <div key={s.label} className="app-stat-card" style={{cursor: s.label === "Expiring within 60d" ? "pointer" : "default"}}
+          onClick={() => s.label === "Expiring within 60d" && setActiveNav("Alerts")}>
+          <span className="app-stat-value" style={{ color: s.color }}>{s.value}</span>
+          <span className="app-stat-label">{s.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+
+  // ── Dashboard view ──
+  const DashboardView = () => (
+    <>
+      <div className="app-topbar app-topbar--simple">
+        <div>
+          <h1 className="app-topbar-title">Good {greeting}, {session.firstName} 👋</h1>
+          <p className="app-topbar-sub">{session.orgName || "Your organisation"} · Verification overview</p>
+        </div>
+        <div className="app-topbar-badge"><span className="app-live-dot" />Demo mode</div>
+      </div>
+
+      <StatRow />
+
+      {expiringSoon.length > 0 && (
+        <div className="app-section-alert">
+          <span>⚠️</span>
+          <div>
+            <strong>{expiringSoon.length} staff member{expiringSoon.length > 1 ? "s" : ""} with checks expiring within 60 days</strong>
+            <p>
+              Review the staff list and prompt them to renew.{" "}
+              <button className="app-section-link" onClick={() => setActiveNav("Alerts")}>View alerts →</button>
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className="app-section-header">
+        <h2 className="app-section-title">Recent staff verifications</h2>
+        <button className="app-section-link" onClick={() => setActiveNav("Staff")}>View all →</button>
+      </div>
+      <StaffTable />
+
+      <div className="app-section-header" style={{ marginTop: 40 }}>
+        <h2 className="app-section-title">Run a verification</h2>
+        <p className="app-section-sub">Select a product to start a new check for a staff member.</p>
+      </div>
+      <div className="app-products-grid">
+        {products.map(p => {
+          const st = STATUS[p.status];
+          return (
+            <div key={p.num} className="app-product-card" onClick={() => setActive(p)}>
+              <div className="app-card-top">
+                <span className="app-card-num">{p.num}</span>
+                <span className="app-card-status" style={{ background: st.bg, color: st.color }}>
+                  <span style={{ width:6, height:6, borderRadius:"50%", background: st.dot, display:"inline-block", marginRight:5 }}/>
+                  {p.statusLabel}
+                </span>
+              </div>
+              <div className="app-card-icon">{p.icon}</div>
+              <h3 className="app-card-name">{p.name}</h3>
+              <p className="app-card-desc">{p.desc}</p>
+              <div className="app-card-footer">
+                <span className="app-card-time">⏱ {p.time}</span>
+                <span className="app-card-cta">Start verification →</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+
+  // ── Staff view ──
+  const StaffView = () => (
+    <>
+      <div className="app-topbar app-topbar--simple">
+        <div>
+          <h1 className="app-topbar-title">Staff</h1>
+          <p className="app-topbar-sub">All staff verifications for {session.orgName || "your organisation"}.</p>
+        </div>
+        <button className="app-section-btn" onClick={() => setActive(products[0])}>+ Run new check</button>
+      </div>
+
+      <div className="app-stats-row" style={{ marginBottom: 24 }}>
+        {[
+          { label: "Verified",          value: verified, color: "#15803d", bg: "#dcfce7" },
+          { label: "Pending",           value: pending,  color: "#854d0e", bg: "#fef9c3" },
+          { label: "Expired",           value: expired,  color: "#b91c1c", bg: "#fee2e2" },
+          { label: "Expiring ≤ 60 days", value: expiringSoon.length, color: "#1d4ed8", bg: "#dbeafe" },
+        ].map(s => (
+          <div key={s.label} className="app-stat-card">
+            <span className="app-stat-value" style={{ color: s.color }}>{s.value}</span>
+            <span className="app-stat-label">{s.label}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="app-section-header">
+        <h2 className="app-section-title">All staff ({DUMMY_STAFF.length})</h2>
+      </div>
+      <StaffTable />
+    </>
+  );
+
+  // ── Reports view ──
+  const ReportsView = () => (
+    <>
+      <div className="app-topbar app-topbar--simple">
+        <div>
+          <h1 className="app-topbar-title">Reports</h1>
+          <p className="app-topbar-sub">Compliance summary and verification activity for {session.orgName || "your organisation"}.</p>
+        </div>
+        <div className="app-topbar-badge"><span className="app-live-dot" />Demo mode</div>
+      </div>
+
+      {/* Compliance summary cards */}
+      <div className="app-section-header">
+        <h2 className="app-section-title">Compliance summary</h2>
+      </div>
+      <div className="app-reports-grid">
+        <div className="app-report-card">
+          <div className="app-report-card-header" style={{ background: "#dcfce7" }}>
+            <span style={{ fontSize: 28 }}>✅</span>
+            <div>
+              <p className="app-report-card-num" style={{ color: "#15803d" }}>{verified}</p>
+              <p className="app-report-card-label">Staff fully verified</p>
+            </div>
+          </div>
+          <p className="app-report-card-desc">All required checks completed and current for these staff members.</p>
+        </div>
+        <div className="app-report-card">
+          <div className="app-report-card-header" style={{ background: "#fef9c3" }}>
+            <span style={{ fontSize: 28 }}>⏳</span>
+            <div>
+              <p className="app-report-card-num" style={{ color: "#854d0e" }}>{pending}</p>
+              <p className="app-report-card-label">Verifications pending</p>
+            </div>
+          </div>
+          <p className="app-report-card-desc">Checks initiated but not yet completed. Follow up with these staff members.</p>
+        </div>
+        <div className="app-report-card">
+          <div className="app-report-card-header" style={{ background: "#fee2e2" }}>
+            <span style={{ fontSize: 28 }}>❌</span>
+            <div>
+              <p className="app-report-card-num" style={{ color: "#b91c1c" }}>{expired}</p>
+              <p className="app-report-card-label">Expired checks</p>
+            </div>
+          </div>
+          <p className="app-report-card-desc">These staff have lapsed credentials. Action required before they can continue working.</p>
+        </div>
+        <div className="app-report-card">
+          <div className="app-report-card-header" style={{ background: "#dbeafe" }}>
+            <span style={{ fontSize: 28 }}>🔔</span>
+            <div>
+              <p className="app-report-card-num" style={{ color: "#1d4ed8" }}>{expiringSoon.length}</p>
+              <p className="app-report-card-label">Expiring within 60 days</p>
+            </div>
+          </div>
+          <p className="app-report-card-desc">Prompt these staff to renew before their credentials lapse.</p>
+        </div>
+      </div>
+
+      {/* Verification breakdown */}
+      <div className="app-section-header" style={{ marginTop: 36 }}>
+        <h2 className="app-section-title">Verification breakdown</h2>
+      </div>
+      <div className="app-breakdown-list">
+        {[
+          { type: "Working with Children Check", count: DUMMY_STAFF.filter(s=>s.check==="Working with Children Check").length, color: "#3b5ccc" },
+          { type: "Identity verification",        count: DUMMY_STAFF.filter(s=>s.check==="Identity verification").length,        color: "#0f6e56" },
+          { type: "National crime check",         count: DUMMY_STAFF.filter(s=>s.check==="National crime check").length,         color: "#854f0b" },
+          { type: "Qualification verification",   count: DUMMY_STAFF.filter(s=>s.check==="Qualification verification").length,   color: "#185fa5" },
+          { type: "Age verification",             count: DUMMY_STAFF.filter(s=>s.check==="Age verification").length,             color: "#7e22ce" },
+        ].map(b => (
+          <div key={b.type} className="app-breakdown-row">
+            <span className="app-breakdown-dot" style={{ background: b.color }} />
+            <span className="app-breakdown-type">{b.type}</span>
+            <div className="app-breakdown-bar-wrap">
+              <div className="app-breakdown-bar" style={{ width: `${(b.count / DUMMY_STAFF.length) * 100}%`, background: b.color }} />
+            </div>
+            <span className="app-breakdown-count">{b.count}</span>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+
+  // ── Alerts view ──
+  const AlertsView = () => {
+    const expiring = DUMMY_STAFF.filter(s => s.daysLeft >= 0 && s.daysLeft <= 60).sort((a,b) => a.daysLeft - b.daysLeft);
+    const lapsed   = DUMMY_STAFF.filter(s => s.daysLeft < 0);
+    const pend     = DUMMY_STAFF.filter(s => s.status === "pending");
+    return (
+      <>
+        <div className="app-topbar app-topbar--simple">
+          <div>
+            <h1 className="app-topbar-title">Alerts</h1>
+            <p className="app-topbar-sub">Items that require your attention.</p>
+          </div>
+          <div className="app-topbar-badge"><span className="app-live-dot" />Demo mode</div>
+        </div>
+
+        {expiring.length === 0 && lapsed.length === 0 && pend.length === 0 && (
+          <div className="app-history-empty">
+            <span>✅</span>
+            <p>No alerts — all staff verifications are current.</p>
+          </div>
+        )}
+
+        {lapsed.length > 0 && (
+          <>
+            <div className="app-section-header">
+              <h2 className="app-section-title">Expired — action required</h2>
+              <span className="app-section-count">{lapsed.length}</span>
+            </div>
+            <div className="app-alert-list">
+              {lapsed.map((s, i) => (
+                <div key={i} className="app-alert-card app-alert-card--expired">
+                  <div className="app-alert-left">
+                    <div className="app-staff-avatar">{s.name.split(" ").map(n=>n[0]).join("")}</div>
+                    <div>
+                      <strong>{s.name}</strong>
+                      <p>{s.check} · Expired</p>
+                    </div>
+                  </div>
+                  <button className="app-alert-btn" onClick={() => setActive(products.find(p => p.name.toLowerCase().includes(s.check.toLowerCase().split(" ")[0])) || products[0])}>
+                    Run new check →
+                  </button>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {expiring.length > 0 && (
+          <>
+            <div className="app-section-header" style={{ marginTop: lapsed.length > 0 ? 32 : 0 }}>
+              <h2 className="app-section-title">Expiring within 60 days</h2>
+              <span className="app-section-count" style={{ background: "#fef9c3", color: "#854d0e" }}>{expiring.length}</span>
+            </div>
+            <div className="app-alert-list">
+              {expiring.map((s, i) => (
+                <div key={i} className="app-alert-card app-alert-card--expiring">
+                  <div className="app-alert-left">
+                    <div className="app-staff-avatar">{s.name.split(" ").map(n=>n[0]).join("")}</div>
+                    <div>
+                      <strong>{s.name}</strong>
+                      <p>{s.check} · Expires in <strong>{s.daysLeft} day{s.daysLeft !== 1 ? "s" : ""}</strong></p>
+                    </div>
+                  </div>
+                  <span className="app-expiry-pill" style={{ flexShrink: 0 }}>{s.daysLeft}d left</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {pend.length > 0 && (
+          <>
+            <div className="app-section-header" style={{ marginTop: 32 }}>
+              <h2 className="app-section-title">Pending verification</h2>
+              <span className="app-section-count" style={{ background: "#fef9c3", color: "#854d0e" }}>{pend.length}</span>
+            </div>
+            <div className="app-alert-list">
+              {pend.map((s, i) => (
+                <div key={i} className="app-alert-card">
+                  <div className="app-alert-left">
+                    <div className="app-staff-avatar">{s.name.split(" ").map(n=>n[0]).join("")}</div>
+                    <div>
+                      <strong>{s.name}</strong>
+                      <p>{s.check} · Awaiting completion</p>
+                    </div>
+                  </div>
+                  <button className="app-alert-btn" onClick={() => setActive(products.find(p => p.name.toLowerCase().includes(s.check.toLowerCase().split(" ")[0])) || products[0])}>
+                    Follow up →
+                  </button>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </>
+    );
+  };
 
   return (
     <div className="app-shell">
-      <AppSidebar session={session} onLogout={onLogout} userType="organisation" />
+      <AppSidebar session={session} onLogout={onLogout} userType="organisation"
+        activeNav={activeNav} setActiveNav={setActiveNav} />
 
       <main className="app-main">
         {showBanner && (
           <ExpiryBanner expiry={expiry} onDismiss={() => { setDismissed(true); localStorage.removeItem("vc_wwcc_expiry"); }}/>
         )}
-
-        <div className="app-topbar">
-          <div>
-            <h1 className="app-topbar-title">Good {greeting}, {session.firstName} 👋</h1>
-            <p className="app-topbar-sub">{session.orgName || "Your organisation"} · Verification overview</p>
-          </div>
-          <div className="app-topbar-badge"><span className="app-live-dot" />Demo mode</div>
-        </div>
-
-        {/* Stats row */}
-        <div className="app-stats-row">
-          {[
-            { label: "Total staff verified", value: verified,          color: "#15803d", bg: "#dcfce7" },
-            { label: "Pending verification", value: pending,           color: "#854d0e", bg: "#fef9c3" },
-            { label: "Expired / lapsed",     value: expired,           color: "#b91c1c", bg: "#fee2e2" },
-            { label: "Expiring within 60d",  value: expiringSoon.length, color: "#1d4ed8", bg: "#dbeafe" },
-          ].map(s => (
-            <div key={s.label} className="app-stat-card">
-              <span className="app-stat-value" style={{ color: s.color }}>{s.value}</span>
-              <span className="app-stat-label">{s.label}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Expiring soon alert */}
-        {expiringSoon.length > 0 && (
-          <div className="app-section-alert">
-            <span>⚠️</span>
-            <div>
-              <strong>{expiringSoon.length} staff member{expiringSoon.length > 1 ? "s" : ""} with checks expiring within 60 days</strong>
-              <p>Review the staff list below and prompt them to renew their clearance.</p>
-            </div>
-          </div>
-        )}
-
-        {/* Staff table */}
-        <div className="app-section-header">
-          <h2 className="app-section-title">Staff verifications</h2>
-          <button className="app-section-btn" onClick={() => setActive(products[0])}>+ Run new check</button>
-        </div>
-
-        <div className="app-staff-table">
-          <div className="app-staff-table-head">
-            <span>Staff member</span>
-            <span>Check type</span>
-            <span>Verified date</span>
-            <span>Expiry</span>
-            <span>Status</span>
-          </div>
-          {DUMMY_STAFF.map((s, i) => {
-            const st = STATUS_LABEL[s.status];
-            const nearExpiry = s.daysLeft >= 0 && s.daysLeft <= 60;
-            return (
-              <div key={i} className={`app-staff-row ${nearExpiry ? "app-staff-row--alert" : ""}`}>
-                <span className="app-staff-name">
-                  <div className="app-staff-avatar">{s.name.split(" ").map(n=>n[0]).join("")}</div>
-                  {s.name}
-                </span>
-                <span className="app-staff-check">{s.check}</span>
-                <span className="app-staff-date">{s.date}</span>
-                <span className="app-staff-expiry">
-                  {s.expiry !== "—" && s.daysLeft >= 0 && s.daysLeft <= 60 && (
-                    <span className="app-expiry-pill">{s.daysLeft}d left</span>
-                  )}
-                  {s.daysLeft < 0 && <span className="app-expiry-pill app-expiry-pill--expired">Expired</span>}
-                  {s.expiry !== "—" && s.daysLeft > 60 && s.expiry}
-                  {s.expiry === "—" && "—"}
-                </span>
-                <span className="app-staff-status" style={{ background: st.bg, color: st.color }}>
-                  {st.label}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Product cards — run a new check */}
-        <div className="app-section-header" style={{ marginTop: 40 }}>
-          <h2 className="app-section-title">Run a verification</h2>
-        </div>
-        <div className="app-products-grid">
-          {products.map(p => {
-            const st = STATUS[p.status];
-            return (
-              <div key={p.num} className="app-product-card" onClick={() => setActive(p)}>
-                <div className="app-card-top">
-                  <span className="app-card-num">{p.num}</span>
-                  <span className="app-card-status" style={{ background: st.bg, color: st.color }}>
-                    <span style={{ width:6, height:6, borderRadius:"50%", background: st.dot, display:"inline-block", marginRight:5 }}/>
-                    {p.statusLabel}
-                  </span>
-                </div>
-                <div className="app-card-icon">{p.icon}</div>
-                <h3 className="app-card-name">{p.name}</h3>
-                <p className="app-card-desc">{p.desc}</p>
-                <div className="app-card-footer">
-                  <span className="app-card-time">⏱ {p.time}</span>
-                  <span className="app-card-cta">Start verification →</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        {activeNav === "Dashboard" && <DashboardView />}
+        {activeNav === "Staff"     && <StaffView />}
+        {activeNav === "Reports"   && <ReportsView />}
+        {activeNav === "Alerts"    && <AlertsView />}
       </main>
 
       {active && <VerifyModal product={active} session={session} onClose={() => setActive(null)} />}
