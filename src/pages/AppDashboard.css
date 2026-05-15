@@ -601,3 +601,166 @@
   .app-products-grid { grid-template-columns: 1fr; }
   .flow-grid { grid-template-columns: 1fr; }
 }
+
+/* ── WWCC option cards ── */
+.flow-section-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 10px;
+}
+
+.flow-option-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.flow-option-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1.5px solid #e2e0d8;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+  background: #fafaf8;
+}
+
+.flow-option-card:hover {
+  border-color: #b0b8e0;
+  background: #f5f7ff;
+}
+
+.flow-option-card--active {
+  border-color: #3b5ccc;
+  background: #f0f3ff;
+}
+
+.flow-option-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  width: 36px;
+  text-align: center;
+}
+
+.flow-option-card > div {
+  flex: 1;
+}
+
+.flow-option-card strong {
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #13151f;
+  margin-bottom: 2px;
+}
+
+.flow-option-card p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #888;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.flow-option-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid #d0cfc8;
+  flex-shrink: 0;
+  transition: border-color 0.15s, background 0.15s;
+  position: relative;
+}
+
+.flow-option-radio--checked {
+  border-color: #3b5ccc;
+  background: #3b5ccc;
+}
+
+.flow-option-radio--checked::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+/* ── Renewal notice ── */
+.flow-renewal-notice {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: #fef9ec;
+  border: 1px solid #f5d87a;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-top: 20px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.flow-renewal-notice span {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.flow-renewal-notice strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #7a5200;
+  margin-bottom: 4px;
+}
+
+.flow-renewal-notice p {
+  font-size: 12px;
+  color: #a06800;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Expiry alert opt-in ── */
+.flow-alert-optin {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: #f0f8ff;
+  border: 1px solid #b8d8f5;
+  border-radius: 10px;
+}
+
+.flow-alert-optin input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: #3b5ccc;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.flow-alert-optin label {
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+}
+
+.flow-alert-optin strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0c407a;
+  margin-bottom: 2px;
+}
+
+.flow-alert-optin span {
+  font-size: 12px;
+  color: #4a7fa5;
+  line-height: 1.5;
+}

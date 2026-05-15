@@ -230,38 +230,167 @@ const FLOWS = {
     }
   },
   "working-with-children-check": {
-    steps: ["Your details", "Card number", "Verification", "Certificate"],
+    steps: ["Check type", "Your details", "Application", "Verification", "Certificate"],
     render: (step, form, setForm) => {
+
+      // ── Step 0: Check type selection ──
       if (step === 0) return (
         <div className="flow-step">
-          <h3 className="flow-step-title">Confirm your details</h3>
-          <div className="flow-grid">
-            {[["First name","firstName"],["Last name","lastName"],["Date of birth","dob"],["Email","email"]].map(([l,k])=>(
-              <div key={k} className="flow-field">
-                <label>{l}</label>
-                <input className="flow-input" value={form[k]||""} type={k==="dob"?"date":"text"} onChange={e=>setForm(f=>({...f,[k]:e.target.value}))}/>
+          <h3 className="flow-step-title">What would you like to do?</h3>
+          <p className="flow-step-sub">Select the type of Working with Children Check you need.</p>
+
+          {/* Purpose: Volunteer or Employee */}
+          <p className="flow-section-label">I am applying as a…</p>
+          <div className="flow-option-group">
+            {[
+              { k: "volunteer", icon: "🤝", title: "Volunteer",  desc: "Unpaid or voluntary work involving children." },
+              { k: "employee",  icon: "💼", title: "Employee",   desc: "Paid work or employment involving children." },
+            ].map(o => (
+              <div key={o.k}
+                className={`flow-option-card ${form.purpose === o.k ? "flow-option-card--active" : ""}`}
+                onClick={() => setForm(f => ({ ...f, purpose: o.k }))}>
+                <span className="flow-option-icon">{o.icon}</span>
+                <div>
+                  <strong>{o.title}</strong>
+                  <p>{o.desc}</p>
+                </div>
+                <div className={`flow-option-radio ${form.purpose === o.k ? "flow-option-radio--checked" : ""}`} />
+              </div>
+            ))}
+          </div>
+
+          {/* Application type */}
+          <p className="flow-section-label" style={{ marginTop: 24 }}>Application type</p>
+          <div className="flow-option-group">
+            {[
+              { k: "new",    icon: "✨", title: "New application",   desc: "I don't currently hold a WWCC card." },
+              { k: "renew",  icon: "🔄", title: "Renewal",           desc: "My existing card is expiring or has expired." },
+              { k: "status", icon: "🔍", title: "Check status",      desc: "I've already applied and want to check my application." },
+            ].map(o => (
+              <div key={o.k}
+                className={`flow-option-card ${form.appType === o.k ? "flow-option-card--active" : ""}`}
+                onClick={() => setForm(f => ({ ...f, appType: o.k }))}>
+                <span className="flow-option-icon">{o.icon}</span>
+                <div>
+                  <strong>{o.title}</strong>
+                  <p>{o.desc}</p>
+                </div>
+                <div className={`flow-option-radio ${form.appType === o.k ? "flow-option-radio--checked" : ""}`} />
               </div>
             ))}
           </div>
         </div>
       );
+
+      // ── Step 1: Personal details ──
       if (step === 1) return (
         <div className="flow-step">
-          <h3 className="flow-step-title">Enter your WWCC card number</h3>
-          <p className="flow-step-sub">Your card number will be validated in real time against the relevant state authority.</p>
-          <div className="flow-field" style={{marginBottom:16}}>
-            <label>Card number</label>
-            <input className="flow-input flow-input--lg" placeholder="e.g. WWC1234567E"
-              value={form.cardNo||""} onChange={e=>setForm(f=>({...f,cardNo:e.target.value}))}/>
-          </div>
-          <div className="flow-field">
-            <label>State issued</label>
-            <select className="flow-input" value={form.state||"Victoria"} onChange={e=>setForm(f=>({...f,state:e.target.value}))}>
-              {["Victoria","New South Wales","Queensland","Western Australia","South Australia","Tasmania","ACT","Northern Territory"].map(s=><option key={s}>{s}</option>)}
-            </select>
+          <h3 className="flow-step-title">Your details</h3>
+          <p className="flow-step-sub">
+            {form.appType === "status"
+              ? "We'll use these details to locate your existing application."
+              : "Confirm your personal information before we proceed."}
+          </p>
+          <div className="flow-grid">
+            {[["First name","firstName"],["Last name","lastName"],["Date of birth","dob"],["Email","email"]].map(([l,k]) => (
+              <div key={k} className="flow-field">
+                <label>{l}</label>
+                <input className="flow-input" value={form[k]||""}
+                  type={k==="dob"?"date":"text"}
+                  onChange={e => setForm(f => ({...f,[k]:e.target.value}))}/>
+              </div>
+            ))}
           </div>
         </div>
       );
+
+      // ── Step 2: Application-specific step ──
+      if (step === 2) {
+
+        // Status check
+        if (form.appType === "status") return (
+          <div className="flow-step">
+            <h3 className="flow-step-title">Check your application status</h3>
+            <p className="flow-step-sub">Enter your existing card or application number to look up your current status.</p>
+            <div className="flow-field" style={{marginBottom:16}}>
+              <label>Card / application number</label>
+              <input className="flow-input flow-input--lg" placeholder="e.g. WWC1234567E or APP-98765"
+                value={form.cardNo||""} onChange={e=>setForm(f=>({...f,cardNo:e.target.value}))}/>
+            </div>
+            <div className="flow-field">
+              <label>State issued</label>
+              <select className="flow-input" value={form.state||"Victoria"} onChange={e=>setForm(f=>({...f,state:e.target.value}))}>
+                {["Victoria","New South Wales","Queensland","Western Australia","South Australia","Tasmania","ACT","Northern Territory"].map(s=><option key={s}>{s}</option>)}
+              </select>
+            </div>
+          </div>
+        );
+
+        // Renewal
+        if (form.appType === "renew") return (
+          <div className="flow-step">
+            <h3 className="flow-step-title">Renew your WWCC</h3>
+            <p className="flow-step-sub">Renewal is processed through the government. VerifyChain will redirect you and record the outcome for your organisation.</p>
+            <div className="flow-field" style={{marginBottom:16}}>
+              <label>Current card number</label>
+              <input className="flow-input flow-input--lg" placeholder="e.g. WWC1234567E"
+                value={form.cardNo||""} onChange={e=>setForm(f=>({...f,cardNo:e.target.value}))}/>
+            </div>
+            <div className="flow-field" style={{marginBottom:16}}>
+              <label>Card expiry date</label>
+              <input className="flow-input" type="date" value={form.expiryDate||""}
+                onChange={e=>setForm(f=>({...f,expiryDate:e.target.value}))}/>
+            </div>
+            <div className="flow-field">
+              <label>State issued</label>
+              <select className="flow-input" value={form.state||"Victoria"} onChange={e=>setForm(f=>({...f,state:e.target.value}))}>
+                {["Victoria","New South Wales","Queensland","Western Australia","South Australia","Tasmania","ACT","Northern Territory"].map(s=><option key={s}>{s}</option>)}
+              </select>
+            </div>
+            <div className="flow-renewal-notice">
+              <span>🏛️</span>
+              <div>
+                <strong>Renewal is completed via the government portal</strong>
+                <p>After verification, you'll be redirected to the relevant state authority to complete your renewal. VerifyChain will record your request and alert your organisation when the renewal is confirmed.</p>
+              </div>
+            </div>
+          </div>
+        );
+
+        // New application
+        return (
+          <div className="flow-step">
+            <h3 className="flow-step-title">Your WWCC card number</h3>
+            <p className="flow-step-sub">Enter the card number from your Working with Children Check card to validate your clearance.</p>
+            <div className="flow-field" style={{marginBottom:16}}>
+              <label>Card number</label>
+              <input className="flow-input flow-input--lg" placeholder="e.g. WWC1234567E"
+                value={form.cardNo||""} onChange={e=>setForm(f=>({...f,cardNo:e.target.value}))}/>
+            </div>
+            <div className="flow-field" style={{marginBottom:16}}>
+              <label>Card expiry date</label>
+              <input className="flow-input" type="date" value={form.expiryDate||""}
+                onChange={e=>setForm(f=>({...f,expiryDate:e.target.value}))}/>
+            </div>
+            <div className="flow-field">
+              <label>State issued</label>
+              <select className="flow-input" value={form.state||"Victoria"} onChange={e=>setForm(f=>({...f,state:e.target.value}))}>
+                {["Victoria","New South Wales","Queensland","Western Australia","South Australia","Tasmania","ACT","Northern Territory"].map(s=><option key={s}>{s}</option>)}
+              </select>
+            </div>
+
+            {/* Expiry alert opt-in */}
+            <div className="flow-alert-optin">
+              <input type="checkbox" id="wwcc-alert" defaultChecked
+                onChange={e=>setForm(f=>({...f,alertEnabled:e.target.checked}))}/>
+              <label htmlFor="wwcc-alert">
+                <strong>Enable expiry alerts</strong>
+                <span>Notify me and my organisation 60 days before this card expires.</span>
+              </label>
+            </div>
+          </div>
+        );
+      }
     }
   },
 };
