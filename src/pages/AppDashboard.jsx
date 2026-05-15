@@ -159,11 +159,114 @@ function downloadCert(productName, firstName, lastName) {
   URL.revokeObjectURL(url);
 }
 
+// ── Photo guidance tips ───────────────────────────────────────────
+const DOC_TIPS = [
+  { icon: "💡", title: "Use natural light", desc: "Place the document near a window. Avoid overhead lighting that creates glare on laminated surfaces." },
+  { icon: "📐", title: "Fill the frame", desc: "The document should occupy at least 80% of the image. All four corners must be visible." },
+  { icon: "🔍", title: "Keep it sharp", desc: "Hold the camera steady. Tap to focus before capturing. Blurred text will be rejected." },
+  { icon: "🚫", title: "No obstructions", desc: "Fingers, shadows, and objects must not cover any part of the document, including the photo and MRZ strip." },
+];
+
+const FACE_TIPS = [
+  { icon: "👤", title: "Face the camera directly", desc: "Look straight at the camera. Your full face — forehead to chin — must be clearly visible." },
+  { icon: "💡", title: "Even lighting on your face", desc: "Avoid strong backlighting (e.g. sitting in front of a window). A well-lit wall behind you works best." },
+  { icon: "🕶️", title: "Remove glasses and hats", desc: "Glasses, sunglasses, caps, and anything that covers part of your face must be removed." },
+  { icon: "😐", title: "Neutral expression", desc: "Keep a neutral expression with your mouth closed. Do not tilt or turn your head." },
+];
+
+function PhotoGuidance({ tips, title, sub }) {
+  return (
+    <div className="photo-guidance">
+      <p className="photo-guidance-title">{title}</p>
+      <p className="photo-guidance-sub">{sub}</p>
+      <div className="photo-tips-grid">
+        {tips.map(t => (
+          <div key={t.title} className="photo-tip">
+            <span className="photo-tip-icon">{t.icon}</span>
+            <div>
+              <strong>{t.title}</strong>
+              <p>{t.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FaceCaptureStep({ attempts, setAttempts, onCapture, captured, setCaptured }) {
+  const MAX = 3;
+  const remaining = MAX - attempts;
+  const isLocked = attempts >= MAX;
+
+  const simulateCapture = () => {
+    if (isLocked) return;
+    const success = Math.random() > 0.35;
+    if (success) {
+      setCaptured(true);
+    } else {
+      setAttempts(a => a + 1);
+    }
+  };
+
+  if (isLocked) return (
+    <div className="face-locked">
+      <div className="face-locked-icon">🔒</div>
+      <h4>Maximum attempts reached</h4>
+      <p>You have used all {MAX} attempts. For security purposes, this verification session has been locked.</p>
+      <p className="face-locked-sub">Please wait 10 minutes before trying again, or contact your organisation's administrator.</p>
+    </div>
+  );
+
+  if (captured) return (
+    <div className="face-captured">
+      <div className="face-captured-icon">✓</div>
+      <h4>Photo accepted</h4>
+      <p>Your facial photo has been matched against your identity document. Liveness check passed.</p>
+    </div>
+  );
+
+  return (
+    <div className="face-capture">
+      <div className="face-viewfinder">
+        <div className="face-viewfinder-oval" />
+        <div className="face-viewfinder-corner face-corner--tl" />
+        <div className="face-viewfinder-corner face-corner--tr" />
+        <div className="face-viewfinder-corner face-corner--bl" />
+        <div className="face-viewfinder-corner face-corner--br" />
+        <p className="face-viewfinder-hint">Position your face within the oval</p>
+      </div>
+
+      {attempts > 0 && (
+        <div className="face-attempt-warning">
+          <strong>Photo not accepted</strong> — {remaining} attempt{remaining !== 1 ? "s" : ""} remaining.
+          {attempts === 2 && " This is your final attempt."}
+        </div>
+      )}
+
+      <div className="face-attempt-dots">
+        {Array.from({ length: MAX }).map((_, i) => (
+          <div key={i} className={`face-dot ${i < attempts ? "face-dot--used" : ""}`} />
+        ))}
+        <span className="face-dot-label">{MAX - attempts} of {MAX} attempts remaining</span>
+      </div>
+
+      <button className="face-capture-btn" onClick={simulateCapture}>
+        Take photo
+      </button>
+      <p className="flow-disclaimer">In the live app, your camera opens automatically. This is a simulated capture.</p>
+    </div>
+  );
+}
+
 // ── Per-product step configs ──────────────────────────────────────
 const FLOWS = {
   "identity-verification": {
-    steps: ["Your details", "Upload ID", "Verification", "Certificate"],
-    render: (step, form, setForm, file, setFile, fileRef) => {
+    steps: ["Your details", "Document", "Face photo", "Verification", "Certificate"],
+    render: (step, form, setForm, file, setFile, fileRef, extraState) => {
+      const { attempts = 0, setAttempts, captured = false, setCaptured } = extraState || {};
+
+      // Step 0 — Personal details
       if (step === 0) return (
         <div className="flow-step">
           <h3 className="flow-step-title">Confirm your details</h3>
@@ -172,17 +275,27 @@ const FLOWS = {
             {[["First name","firstName"],["Last name","lastName"],["Date of birth","dob"],["Email","email"]].map(([l,k])=>(
               <div key={k} className="flow-field">
                 <label>{l}</label>
-                <input className="flow-input" value={form[k]||""} type={k==="dob"?"date":"text"} onChange={e=>setForm(f=>({...f,[k]:e.target.value}))}/>
+                <input className="flow-input" value={form[k]||""} type={k==="dob"?"date":"text"}
+                  onChange={e=>setForm(f=>({...f,[k]:e.target.value}))}/>
               </div>
             ))}
           </div>
         </div>
       );
+
+      // Step 1 — Document upload with guidance
       if (step === 1) return (
         <div className="flow-step">
-          <h3 className="flow-step-title">Upload your ID</h3>
-          <p className="flow-step-sub">Passport or driver's licence. Your image is never stored.</p>
-          <div className="flow-upload" onClick={()=>fileRef.current?.click()}>
+          <h3 className="flow-step-title">Upload your identity document</h3>
+          <p className="flow-step-sub">Passport or driver's licence. Your image is processed securely and never stored.</p>
+
+          <PhotoGuidance
+            tips={DOC_TIPS}
+            title="How to photograph your document"
+            sub="Poor quality images are the most common cause of rejection. Follow these guidelines to ensure your document is accepted first time."
+          />
+
+          <div className="flow-upload" style={{marginTop:16}} onClick={()=>fileRef.current?.click()}>
             {file ? (
               <><span className="flow-upload-icon">✓</span><p className="flow-upload-name">{file.name}</p><span className="flow-upload-change">Click to change</span></>
             ) : (
@@ -190,7 +303,33 @@ const FLOWS = {
             )}
             <input ref={fileRef} type="file" accept="image/*,.pdf" style={{display:"none"}} onChange={e=>setFile(e.target.files[0])}/>
           </div>
-          <p className="flow-disclaimer">No file required for this demonstration.</p>
+          <p className="flow-disclaimer">No file is required for this demonstration — click Continue to proceed.</p>
+        </div>
+      );
+
+      // Step 2 — Face photo with guidance + attempt limit
+      if (step === 2) return (
+        <div className="flow-step">
+          <h3 className="flow-step-title">Live facial photo</h3>
+          <p className="flow-step-sub">
+            As required by current Australian legislation, a live photo of your face must be taken during this session.
+            This is matched against your identity document to confirm you are the document holder.
+          </p>
+
+          <PhotoGuidance
+            tips={FACE_TIPS}
+            title="How to take your facial photo"
+            sub="Your photo will be compared against the document you uploaded. You have 3 attempts — the session locks if all are used."
+          />
+
+          <div style={{marginTop:20}}>
+            <FaceCaptureStep
+              attempts={attempts}
+              setAttempts={setAttempts}
+              captured={captured}
+              setCaptured={setCaptured}
+            />
+          </div>
         </div>
       );
     }
@@ -420,16 +559,28 @@ function VerifyModal({ product, session, onClose }) {
   const verifyStep = totalSteps - 2; // second-to-last
   const certStep   = totalSteps - 1;
 
-  const [step, setStep]       = useState(0);
+  const [step, setStep]         = useState(0);
   const [verified, setVerified] = useState(false);
-  const [form, setForm]       = useState({
+  const [form, setForm]         = useState({
     firstName: session?.firstName || "",
     lastName:  session?.lastName  || "",
     email:     session?.email     || "",
     dob: "1990-04-12",
   });
-  const [file, setFile]       = useState(null);
-  const fileRef               = { current: null };
+  const [file, setFile]         = useState(null);
+  const fileRef                 = { current: null };
+  const [faceAttempts, setFaceAttempts] = useState(0);
+  const [faceCaptured, setFaceCaptured] = useState(false);
+
+  const extraState = {
+    attempts: faceAttempts,
+    setAttempts: setFaceAttempts,
+    captured: faceCaptured,
+    setCaptured: setFaceCaptured,
+  };
+
+  const isFaceStep = product.slug === "identity-verification" && step === 2;
+  const canContinue = !isFaceStep || (faceCaptured);
 
   const next = () => setStep(s => s + 1);
   const back = () => setStep(s => s - 1);
@@ -467,7 +618,7 @@ function VerifyModal({ product, session, onClose }) {
 
         {/* Body */}
         <div className="modal-body">
-          {step < verifyStep && flow.render(step, form, setForm, file, setFile, fileRef)}
+          {step < verifyStep && flow.render(step, form, setForm, file, setFile, fileRef, extraState)}
 
           {step === verifyStep && (
             !verified ? (
@@ -504,11 +655,23 @@ function VerifyModal({ product, session, onClose }) {
             <button className="modal-btn-ghost" onClick={back}>← Back</button>
           )}
           {step < verifyStep && (
-            <button className="modal-btn-primary" onClick={next}>Continue →</button>
+            <button
+              className={`modal-btn-primary ${!canContinue ? "modal-btn-primary--disabled" : ""}`}
+              onClick={canContinue ? next : undefined}
+              style={!canContinue ? {opacity:0.4,cursor:"not-allowed"} : {}}>
+              {isFaceStep && !faceCaptured && faceAttempts < 3 ? "Take photo to continue" : "Continue →"}
+            </button>
           )}
           {step === verifyStep && verified && (
-            <button className="modal-btn-primary" onClick={next}>View certificate →</button>
-          )}
+            <button className="modal-btn-primary" onClick={() => {
+                if (product.slug === "working-with-children-check" && form.expiryDate) {
+                localStorage.setItem("vc_wwcc_expiry", form.expiryDate);
+                }
+                next();
+            }}>
+                View certificate →
+            </button>
+            )}
           {step === certStep && (
             <button className="modal-btn-primary"
               onClick={() => downloadCert(product.name, form.firstName, form.lastName)}>
@@ -522,88 +685,224 @@ function VerifyModal({ product, session, onClose }) {
 }
 
 // ── Main dashboard ────────────────────────────────────────────────
-export default function AppDashboard() {
-  const navigate  = useNavigate();
-  const session   = getSession();
-  const [active, setActive] = useState(null);
 
-  const handleLogout = () => {
-    clearSession();
-    navigate("/");
-  };
+// ── Dummy staff data for org dashboard ───────────────────────────
+const DUMMY_STAFF = [
+  { name: "Sarah Chen",    check: "Identity verification",       status: "verified",  date: "12 May 2026",  expiry: "2028-05-12", daysLeft: 730 },
+  { name: "James Wu",      check: "Working with Children Check", status: "verified",  date: "03 Apr 2026",  expiry: "2026-06-15", daysLeft: 31  },
+  { name: "Mark O'Brien",  check: "National crime check",        status: "verified",  date: "28 Mar 2026",  expiry: "2027-03-28", daysLeft: 317 },
+  { name: "Lisa Park",     check: "Working with Children Check", status: "pending",   date: "—",            expiry: "2026-05-20", daysLeft: 5   },
+  { name: "Tom Nguyen",    check: "Qualification verification",  status: "verified",  date: "01 Feb 2026",  expiry: "2029-02-01", daysLeft: 992 },
+  { name: "Amy Roberts",   check: "Age verification",            status: "expired",   date: "10 Jan 2026",  expiry: "2026-01-10", daysLeft: -125 },
+];
 
-  if (!session) {
-    navigate("/login");
-    return null;
-  }
+const STATUS_LABEL = {
+  verified: { label: "Verified",  bg: "#dcfce7", color: "#15803d" },
+  pending:  { label: "Pending",   bg: "#fef9c3", color: "#854d0e" },
+  expired:  { label: "Expired",   bg: "#fee2e2", color: "#b91c1c" },
+};
+
+// ── Expiry alert helpers ──────────────────────────────────────────
+function getExpiryInfo() {
+  try {
+    const raw = localStorage.getItem("vc_wwcc_expiry");
+    if (!raw) return null;
+    const expiry = new Date(raw);
+    const today  = new Date();
+    const days   = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+    return { days, dateStr: expiry.toLocaleDateString("en-AU", { day:"numeric", month:"long", year:"numeric" }) };
+  } catch { return null; }
+}
+
+// ── Sidebar (shared) ─────────────────────────────────────────────
+function AppSidebar({ session, onLogout, userType }) {
+  const orgNavItems = [
+    { label: "Dashboard",   icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg> },
+    { label: "Staff",       icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 17a6 6 0 00-12 0"/><path d="M18 12a3 3 0 11-6 0 3 3 0 016 0M18 17a3 3 0 00-6 0" opacity="0.4"/></svg> },
+    { label: "Reports",     icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 5H7a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="2" height="4" rx="1"/><path d="M7 10h6M7 13h4"/></svg> },
+    { label: "Alerts",      icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M10 2a6 6 0 016 6v3l1 2H3l1-2V8a6 6 0 016-6z"/><path d="M8 15a2 2 0 004 0"/></svg> },
+  ];
+  const indNavItems = [
+    { label: "Dashboard",      icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg> },
+    { label: "My checks",      icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 5H7a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="2" height="4" rx="1"/><path d="M7 10h6M7 13h4"/></svg> },
+    { label: "Certificates",   icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 3h10a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/><path d="M7 8h6M7 11h4"/><circle cx="13" cy="14" r="2"/><path d="M13 16v2l1-1-1-1"/></svg> },
+  ];
+  const navItems = userType === "organisation" ? orgNavItems : indNavItems;
+
+  return (
+    <aside className="app-sidebar">
+      <div className="app-sidebar-logo">
+        <div className="app-logo-icon">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path d="M10 2L3 5.5V10c0 4.4 3.1 7.9 7 9 3.9-1.1 7-4.6 7-9V5.5L10 2z" stroke="white" strokeWidth="1.4" strokeLinejoin="round"/>
+            <path d="M7 10l2 2 4-4" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+        <span>VerifyChain</span>
+      </div>
+
+      <div className="app-sidebar-type-badge">
+        {userType === "organisation" ? "🏢 Organisation" : "👤 Individual"}
+      </div>
+
+      <nav className="app-nav">
+        {navItems.map((item, i) => (
+          <div key={item.label} className={`app-nav-item ${i === 0 ? "app-nav-item--active" : ""}`}>
+            {item.icon}
+            {item.label}
+          </div>
+        ))}
+      </nav>
+
+      <div className="app-sidebar-user">
+        <div className="app-user-avatar">
+          {session.firstName?.[0]}{session.lastName?.[0]}
+        </div>
+        <div className="app-user-info">
+          <p className="app-user-name">{session.firstName} {session.lastName}</p>
+          <p className="app-user-type">
+            {userType === "organisation" ? (session.orgName || "Organisation") : "Individual account"}
+          </p>
+        </div>
+        <button className="app-logout-btn" onClick={onLogout} title="Log out">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4">
+            <path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M10 11l3-3-3-3M13 8H6" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+// ── Expiry alert banner ───────────────────────────────────────────
+function ExpiryBanner({ expiry, onDismiss }) {
+  const urgent = expiry.days <= 14;
+  return (
+    <div className={`app-expiry-banner ${urgent ? "app-expiry-banner--urgent" : ""}`}>
+      <span className="app-expiry-banner-icon">{urgent ? "🔴" : "🟡"}</span>
+      <div className="app-expiry-banner-body">
+        <strong>
+          {urgent
+            ? `Your Working with Children Check expires in ${expiry.days} day${expiry.days !== 1 ? "s" : ""} — action required`
+            : `Your Working with Children Check expires on ${expiry.dateStr}`}
+        </strong>
+        <p>
+          {urgent
+            ? "Your clearance is about to expire. Renew now to avoid a gap in your verification status."
+            : `You have ${expiry.days} days remaining. We recommend renewing at least 2 weeks before the expiry date.`}
+          {" "}
+          <a href="https://www.service.vic.gov.au/find-services/work-and-volunteering/working-with-children-check/renew-your-working-with-children-check" target="_blank" rel="noreferrer" className="app-expiry-link">
+            Renew through the government portal →
+          </a>
+        </p>
+      </div>
+      <button className="app-expiry-dismiss" onClick={onDismiss}>✕</button>
+    </div>
+  );
+}
+
+// ── ORGANISATION DASHBOARD ────────────────────────────────────────
+function OrgDashboard({ session, onLogout }) {
+  const [active, setActive]       = useState(null);
+  const [dismissed, setDismissed] = useState(false);
+  const expiry = getExpiryInfo();
+  const showBanner = expiry && expiry.days <= 60 && !dismissed;
+
+  const expiringSoon = DUMMY_STAFF.filter(s => s.daysLeft >= 0 && s.daysLeft <= 60);
+  const verified     = DUMMY_STAFF.filter(s => s.status === "verified").length;
+  const pending      = DUMMY_STAFF.filter(s => s.status === "pending").length;
+  const expired      = DUMMY_STAFF.filter(s => s.status === "expired").length;
+
+  const greeting = new Date().getHours() < 12 ? "morning" : new Date().getHours() < 17 ? "afternoon" : "evening";
 
   return (
     <div className="app-shell">
-      {/* Sidebar */}
-      <aside className="app-sidebar">
-        <div className="app-sidebar-logo">
-          <div className="app-logo-icon">
-            <svg viewBox="0 0 20 20" fill="none">
-              <path d="M10 2L3 5.5V10c0 4.4 3.1 7.9 7 9 3.9-1.1 7-4.6 7-9V5.5L10 2z" stroke="white" strokeWidth="1.4" strokeLinejoin="round"/>
-              <path d="M7 10l2 2 4-4" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-          <span>VerifyChain</span>
-        </div>
+      <AppSidebar session={session} onLogout={onLogout} userType="organisation" />
 
-        <nav className="app-nav">
-          <div className="app-nav-item app-nav-item--active">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/>
-              <rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/>
-            </svg>
-            Dashboard
-          </div>
-          <div className="app-nav-item">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h0a2 2 0 002-2M9 5a2 2 0 012-2h0a2 2 0 012 2"/>
-            </svg>
-            History
-          </div>
-          <div className="app-nav-item">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <circle cx="10" cy="10" r="7"/><path d="M10 7v4l2 2"/>
-            </svg>
-            Reports
-          </div>
-        </nav>
-
-        <div className="app-sidebar-user">
-          <div className="app-user-avatar">
-            {session.firstName?.[0]}{session.lastName?.[0]}
-          </div>
-          <div className="app-user-info">
-            <p className="app-user-name">{session.firstName} {session.lastName}</p>
-            <p className="app-user-type">{session.userType === "organisation" ? session.orgName || "Organisation" : "Individual"}</p>
-          </div>
-          <button className="app-logout-btn" onClick={handleLogout} title="Log out">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4">
-              <path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M10 11l3-3-3-3M13 8H6" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-        </div>
-      </aside>
-
-      {/* Main content */}
       <main className="app-main">
+        {showBanner && (
+          <ExpiryBanner expiry={expiry} onDismiss={() => { setDismissed(true); localStorage.removeItem("vc_wwcc_expiry"); }}/>
+        )}
+
         <div className="app-topbar">
           <div>
-            <h1 className="app-topbar-title">
-              Good {new Date().getHours() < 12 ? "morning" : new Date().getHours() < 17 ? "afternoon" : "evening"}, {session.firstName} 👋
-            </h1>
-            <p className="app-topbar-sub">Select a verification product to begin.</p>
+            <h1 className="app-topbar-title">Good {greeting}, {session.firstName} 👋</h1>
+            <p className="app-topbar-sub">{session.orgName || "Your organisation"} · Verification overview</p>
           </div>
-          <div className="app-topbar-badge">
-            <span className="app-live-dot" />
-            Demo mode
-          </div>
+          <div className="app-topbar-badge"><span className="app-live-dot" />Demo mode</div>
         </div>
 
+        {/* Stats row */}
+        <div className="app-stats-row">
+          {[
+            { label: "Total staff verified", value: verified,          color: "#15803d", bg: "#dcfce7" },
+            { label: "Pending verification", value: pending,           color: "#854d0e", bg: "#fef9c3" },
+            { label: "Expired / lapsed",     value: expired,           color: "#b91c1c", bg: "#fee2e2" },
+            { label: "Expiring within 60d",  value: expiringSoon.length, color: "#1d4ed8", bg: "#dbeafe" },
+          ].map(s => (
+            <div key={s.label} className="app-stat-card">
+              <span className="app-stat-value" style={{ color: s.color }}>{s.value}</span>
+              <span className="app-stat-label">{s.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Expiring soon alert */}
+        {expiringSoon.length > 0 && (
+          <div className="app-section-alert">
+            <span>⚠️</span>
+            <div>
+              <strong>{expiringSoon.length} staff member{expiringSoon.length > 1 ? "s" : ""} with checks expiring within 60 days</strong>
+              <p>Review the staff list below and prompt them to renew their clearance.</p>
+            </div>
+          </div>
+        )}
+
+        {/* Staff table */}
+        <div className="app-section-header">
+          <h2 className="app-section-title">Staff verifications</h2>
+          <button className="app-section-btn" onClick={() => setActive(products[0])}>+ Run new check</button>
+        </div>
+
+        <div className="app-staff-table">
+          <div className="app-staff-table-head">
+            <span>Staff member</span>
+            <span>Check type</span>
+            <span>Verified date</span>
+            <span>Expiry</span>
+            <span>Status</span>
+          </div>
+          {DUMMY_STAFF.map((s, i) => {
+            const st = STATUS_LABEL[s.status];
+            const nearExpiry = s.daysLeft >= 0 && s.daysLeft <= 60;
+            return (
+              <div key={i} className={`app-staff-row ${nearExpiry ? "app-staff-row--alert" : ""}`}>
+                <span className="app-staff-name">
+                  <div className="app-staff-avatar">{s.name.split(" ").map(n=>n[0]).join("")}</div>
+                  {s.name}
+                </span>
+                <span className="app-staff-check">{s.check}</span>
+                <span className="app-staff-date">{s.date}</span>
+                <span className="app-staff-expiry">
+                  {s.expiry !== "—" && s.daysLeft >= 0 && s.daysLeft <= 60 && (
+                    <span className="app-expiry-pill">{s.daysLeft}d left</span>
+                  )}
+                  {s.daysLeft < 0 && <span className="app-expiry-pill app-expiry-pill--expired">Expired</span>}
+                  {s.expiry !== "—" && s.daysLeft > 60 && s.expiry}
+                  {s.expiry === "—" && "—"}
+                </span>
+                <span className="app-staff-status" style={{ background: st.bg, color: st.color }}>
+                  {st.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Product cards — run a new check */}
+        <div className="app-section-header" style={{ marginTop: 40 }}>
+          <h2 className="app-section-title">Run a verification</h2>
+        </div>
         <div className="app-products-grid">
           {products.map(p => {
             const st = STATUS[p.status];
@@ -612,7 +911,7 @@ export default function AppDashboard() {
                 <div className="app-card-top">
                   <span className="app-card-num">{p.num}</span>
                   <span className="app-card-status" style={{ background: st.bg, color: st.color }}>
-                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: st.dot, display: "inline-block", marginRight: 5 }} />
+                    <span style={{ width:6, height:6, borderRadius:"50%", background: st.dot, display:"inline-block", marginRight:5 }}/>
                     {p.statusLabel}
                   </span>
                 </div>
@@ -632,4 +931,139 @@ export default function AppDashboard() {
       {active && <VerifyModal product={active} session={session} onClose={() => setActive(null)} />}
     </div>
   );
+}
+
+// ── INDIVIDUAL DASHBOARD ──────────────────────────────────────────
+function IndividualDashboard({ session, onLogout }) {
+  const [active, setActive]       = useState(null);
+  const [dismissed, setDismissed] = useState(false);
+  const expiry = getExpiryInfo();
+  const showBanner = expiry && expiry.days <= 60 && !dismissed;
+
+  const greeting = new Date().getHours() < 12 ? "morning" : new Date().getHours() < 17 ? "afternoon" : "evening";
+
+  // Dummy requested checks (from an employer)
+  const requested = [
+    { from: "Sunshine Primary School", check: "Working with Children Check", due: "20 May 2026", urgent: true },
+    { from: "Melbourne City Council",  check: "National crime check",         due: "30 May 2026", urgent: false },
+  ];
+
+  // Dummy completed checks
+  const completed = [
+    { check: "Identity verification", date: "12 May 2026", id: "VC-A1B2C3-7842", status: "Verified" },
+    { check: "Age verification",      date: "03 Apr 2026", id: "VC-D4E5F6-3310", status: "Verified" },
+  ];
+
+  return (
+    <div className="app-shell">
+      <AppSidebar session={session} onLogout={onLogout} userType="individual" />
+
+      <main className="app-main">
+        {showBanner && (
+          <ExpiryBanner expiry={expiry} onDismiss={() => { setDismissed(true); localStorage.removeItem("vc_wwcc_expiry"); }}/>
+        )}
+
+        <div className="app-topbar">
+          <div>
+            <h1 className="app-topbar-title">Good {greeting}, {session.firstName} 👋</h1>
+            <p className="app-topbar-sub">Here's what you need to complete and your verification history.</p>
+          </div>
+          <div className="app-topbar-badge"><span className="app-live-dot" />Demo mode</div>
+        </div>
+
+        {/* Requested checks */}
+        {requested.length > 0 && (
+          <>
+            <div className="app-section-header">
+              <h2 className="app-section-title">Action required</h2>
+              <span className="app-section-count">{requested.length} pending</span>
+            </div>
+            <div className="app-requested-list">
+              {requested.map((r, i) => (
+                <div key={i} className={`app-requested-card ${r.urgent ? "app-requested-card--urgent" : ""}`}>
+                  <div className="app-requested-left">
+                    <div className="app-requested-from">
+                      <span className="app-requested-org-icon">🏢</span>
+                      <strong>{r.from}</strong>
+                    </div>
+                    <p className="app-requested-check">{r.check}</p>
+                    <p className="app-requested-due">
+                      Due by {r.due}
+                      {r.urgent && <span className="app-requested-urgent-tag">Action soon</span>}
+                    </p>
+                  </div>
+                  <button className="app-requested-btn"
+                    onClick={() => setActive(products.find(p => p.name.toLowerCase().includes(r.check.toLowerCase().split(" ")[0])) || products[0])}>
+                    Start check →
+                  </button>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Start a check yourself */}
+        <div className="app-section-header" style={{ marginTop: 36 }}>
+          <h2 className="app-section-title">Start a verification</h2>
+          <p className="app-section-sub">Run a check yourself and share the certificate with any organisation.</p>
+        </div>
+        <div className="app-products-grid">
+          {products.map(p => {
+            const st = STATUS[p.status];
+            return (
+              <div key={p.num} className="app-product-card" onClick={() => setActive(p)}>
+                <div className="app-card-top">
+                  <span className="app-card-num">{p.num}</span>
+                  <span className="app-card-status" style={{ background: st.bg, color: st.color }}>
+                    <span style={{ width:6, height:6, borderRadius:"50%", background: st.dot, display:"inline-block", marginRight:5 }}/>
+                    {p.statusLabel}
+                  </span>
+                </div>
+                <div className="app-card-icon">{p.icon}</div>
+                <h3 className="app-card-name">{p.name}</h3>
+                <p className="app-card-desc">{p.desc}</p>
+                <div className="app-card-footer">
+                  <span className="app-card-time">⏱ {p.time}</span>
+                  <span className="app-card-cta">Start verification →</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Completed checks history */}
+        <div className="app-section-header" style={{ marginTop: 40 }}>
+          <h2 className="app-section-title">My verifications</h2>
+        </div>
+        <div className="app-history-list">
+          {completed.map((c, i) => (
+            <div key={i} className="app-history-row">
+              <div className="app-history-icon">✓</div>
+              <div className="app-history-body">
+                <strong>{c.check}</strong>
+                <span>{c.date} · {c.id}</span>
+              </div>
+              <span className="app-history-status">{c.status}</span>
+            </div>
+          ))}
+        </div>
+      </main>
+
+      {active && <VerifyModal product={active} session={session} onClose={() => setActive(null)} />}
+    </div>
+  );
+}
+
+// ── MAIN ENTRY ────────────────────────────────────────────────────
+export default function AppDashboard() {
+  const navigate = useNavigate();
+  const session  = getSession();
+
+  const handleLogout = () => { clearSession(); navigate("/"); };
+
+  if (!session) { navigate("/login"); return null; }
+
+  return session.userType === "organisation"
+    ? <OrgDashboard  session={session} onLogout={handleLogout} />
+    : <IndividualDashboard session={session} onLogout={handleLogout} />;
 }
