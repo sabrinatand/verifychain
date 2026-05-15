@@ -14,9 +14,17 @@
   display: flex;
   flex-direction: column;
   padding: 24px 16px;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
   height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+/* Push main content right so it doesn't hide behind fixed sidebar */
+.app-main {
+  margin-left: 220px;
 }
 
 .app-sidebar-logo {
@@ -111,7 +119,7 @@
 .app-logout-btn svg { width: 15px; height: 15px; }
 
 /* ── Main ── */
-.app-main { flex: 1; padding: 40px 40px 60px; overflow-y: auto; }
+.app-main { flex: 1; padding: 40px 40px 60px; min-height: 100vh; }
 
 .app-topbar {
   display: flex;
@@ -648,8 +656,18 @@
   text-align: center;
 }
 
-.flow-option-card > div {
+.flow-option-card > div:not(.flow-option-radio) {
   flex: 1;
+}
+
+.flow-option-radio {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px;
+  min-height: 18px;
+  flex: 0 0 18px !important;
+  align-self: center;
+  border-radius: 50% !important;
 }
 
 .flow-option-card strong {
@@ -1432,4 +1450,242 @@
   .app-staff-status { grid-column: 2; grid-row: 1; }
   .app-requested-card { flex-direction: column; align-items: flex-start; }
   .app-requested-btn { width: 100%; text-align: center; }
+}
+
+/* ── Logo image in sidebar ── */
+.app-sidebar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 8px;
+  margin-bottom: 20px;
+}
+
+.app-sidebar-logo-img {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  /* invert to white since sidebar is dark navy */
+  filter: brightness(0) invert(1);
+}
+
+/* ── Individual dashboard — no top nav bar ── */
+.app-shell--no-topnav .app-topbar {
+  padding-top: 0;
+}
+
+/* Simpler topbar for individual (no extra right-side nav) */
+.app-topbar--simple {
+  border-bottom: 1px solid #f0eee8;
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+
+/* ── History empty state ── */
+.app-history-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 20px;
+  background: #fff;
+  border: 1px solid #e8e6df;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.app-history-empty span { font-size: 28px; }
+
+.app-history-empty p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: #aaa;
+  margin: 0;
+}
+
+/* ── Responsive sidebar fix ── */
+@media (max-width: 640px) {
+  .app-sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 16px;
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+  .app-main {
+    margin-left: 0;
+  }
+  .app-shell {
+    flex-direction: column;
+  }
+}
+
+/* ── Centered success state in modal ── */
+.flow-success--centered {
+  min-height: 200px;
+  justify-content: center;
+}
+
+/* ── Section link button (View all →) ── */
+.app-section-link {
+  background: none;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3b5ccc;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+.app-section-link:hover { color: #2a4ab8; text-decoration: underline; }
+
+/* ── Certificate grid ── */
+.app-cert-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.app-cert-card {
+  background: #fff;
+  border: 1px solid #e8e6df;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+.app-cert-card:hover {
+  box-shadow: 0 8px 24px rgba(59,92,204,0.1);
+  transform: translateY(-2px);
+}
+
+.app-cert-card-stripe {
+  height: 4px;
+  background: linear-gradient(90deg, #3b5ccc, #6b8aff);
+}
+
+.app-cert-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.app-cert-card-icon { font-size: 28px; margin-bottom: 4px; }
+
+.app-cert-card-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #13151f;
+  line-height: 1.3;
+}
+
+.app-cert-card-date {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #888;
+}
+
+.app-cert-card-id {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #bbb;
+  letter-spacing: 0.04em;
+}
+
+.app-cert-card-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #dcfce7;
+  color: #15803d;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-top: 4px;
+  width: fit-content;
+}
+
+.app-cert-card-btn {
+  margin-top: auto;
+  padding-top: 14px;
+  background: none;
+  border: 1px solid #e2e0d8;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3b5ccc;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  text-align: center;
+  margin-top: 12px;
+}
+.app-cert-card-btn:hover { background: #f0f3ff; border-color: #3b5ccc; }
+
+@media (max-width: 900px) {
+  .app-cert-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 580px) {
+  .app-cert-grid { grid-template-columns: 1fr; }
+}
+
+/* ── SVG icons in WWCC option cards ── */
+.flow-option-icon--svg {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f2ff;
+  border-radius: 8px;
+  color: #3b5ccc;
+  flex-shrink: 0;
+}
+
+.flow-option-card--active .flow-option-icon--svg {
+  background: #3b5ccc;
+  color: #fff;
+}
+
+.flow-option-icon--svg svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Renewal notice with SVG icon */
+.flow-renewal-notice {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: #fefce8;
+  border: 1px solid #fde047;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-top: 16px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.flow-renewal-notice strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #7a5200;
+  margin-bottom: 4px;
+}
+
+.flow-renewal-notice p {
+  font-size: 12px;
+  color: #a06800;
+  line-height: 1.6;
+  margin: 0;
 }

@@ -1,5 +1,7 @@
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom"; // ✓ keep useLocation here
+// ✗ REMOVE the duplicate line below — useLocation is already imported above
+// import { useLocation } from "react-router-dom";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import Ticker from "./components/Ticker";
@@ -63,10 +65,14 @@ function HomePage() {
 }
 
 function AppInner() {
+  const location = useLocation();
+  const isDashboard = location.pathname === "/dashboard";
+
   return (
     <div className="site">
       <ScrollObserver />
-      <Nav />
+      {!isDashboard && <Nav />}
+      {/* ✗ REMOVE the bare <Nav /> below — it was rendering Nav twice */}
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -78,9 +84,11 @@ function AppInner() {
           <Route path="/dashboard" element={<AppDashboard />} />
         </Routes>
       </main>
-      <Footer />
+      {!isDashboard && <Footer />}
+      {/* ✗ REMOVE the bare <Footer /> below — it was rendering Footer twice */}
     </div>
-  );z
+  );
+  // ✗ REMOVE the stray "z" that was here — it causes a syntax error
 }
 
 export default function App() {

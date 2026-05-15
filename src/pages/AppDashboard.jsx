@@ -376,19 +376,29 @@ const FLOWS = {
       if (step === 0) return (
         <div className="flow-step">
           <h3 className="flow-step-title">What would you like to do?</h3>
-          <p className="flow-step-sub">Select the type of Working with Children Check you need.</p>
+          <p className="flow-step-sub">VerifyChain validates your existing Working with Children card in real time against the state registry.</p>
 
-          {/* Purpose: Volunteer or Employee */}
+          {/* Purpose */}
           <p className="flow-section-label">I am applying as a…</p>
           <div className="flow-option-group">
             {[
-              { k: "volunteer", icon: "🤝", title: "Volunteer",  desc: "Unpaid or voluntary work involving children." },
-              { k: "employee",  icon: "💼", title: "Employee",   desc: "Paid work or employment involving children." },
+              {
+                k: "volunteer",
+                title: "Volunteer",
+                desc: "Unpaid or voluntary work involving children.",
+                icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 17s-7-4-7-9a4 4 0 018 0 4 4 0 018 0c0 5-7 9-7 9z"/></svg>
+              },
+              {
+                k: "employee",
+                title: "Employee",
+                desc: "Paid work or employment involving children.",
+                icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="7" width="14" height="10" rx="1.5"/><path d="M7 7V5a3 3 0 016 0v2"/><path d="M10 11v2"/></svg>
+              },
             ].map(o => (
               <div key={o.k}
                 className={`flow-option-card ${form.purpose === o.k ? "flow-option-card--active" : ""}`}
                 onClick={() => setForm(f => ({ ...f, purpose: o.k }))}>
-                <span className="flow-option-icon">{o.icon}</span>
+                <span className="flow-option-icon flow-option-icon--svg">{o.icon}</span>
                 <div>
                   <strong>{o.title}</strong>
                   <p>{o.desc}</p>
@@ -398,18 +408,33 @@ const FLOWS = {
             ))}
           </div>
 
-          {/* Application type */}
-          <p className="flow-section-label" style={{ marginTop: 24 }}>Application type</p>
+          {/* What do you need to do */}
+          <p className="flow-section-label" style={{ marginTop: 24 }}>What do you need?</p>
           <div className="flow-option-group">
             {[
-              { k: "new",    icon: "✨", title: "New application",   desc: "I don't currently hold a WWCC card." },
-              { k: "renew",  icon: "🔄", title: "Renewal",           desc: "My existing card is expiring or has expired." },
-              { k: "status", icon: "🔍", title: "Check status",      desc: "I've already applied and want to check my application." },
+              {
+                k: "verify",
+                title: "Verify my card",
+                desc: "I have a WWCC card and want to validate it is current and not revoked.",
+                icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 2L3 5.5V10c0 4 3 7.5 7 8.5 4-1 7-4.5 7-8.5V5.5L10 2z"/><path d="M7 10l2 2 4-4"/></svg>
+              },
+              {
+                k: "renew",
+                title: "Renew my card",
+                desc: "My card is expiring soon. VerifyChain will guide me to the government portal to renew.",
+                icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 10a6 6 0 016-6 6 6 0 014.24 1.76L16 8"/><path d="M16 4v4h-4"/><path d="M16 10a6 6 0 01-6 6 6 6 0 01-4.24-1.76L4 12"/><path d="M4 16v-4h4"/></svg>
+              },
+              {
+                k: "status",
+                title: "Check application status",
+                desc: "I have applied but haven't received my card yet. Check where my application is up to.",
+                icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="9" r="6"/><path d="M15 15l3 3"/><path d="M9 6v3l2 2"/></svg>
+              },
             ].map(o => (
               <div key={o.k}
                 className={`flow-option-card ${form.appType === o.k ? "flow-option-card--active" : ""}`}
                 onClick={() => setForm(f => ({ ...f, appType: o.k }))}>
-                <span className="flow-option-icon">{o.icon}</span>
+                <span className="flow-option-icon flow-option-icon--svg">{o.icon}</span>
                 <div>
                   <strong>{o.title}</strong>
                   <p>{o.desc}</p>
@@ -443,33 +468,42 @@ const FLOWS = {
         </div>
       );
 
-      // ── Step 2: Application-specific step ──
+      // ── Step 2: Action-specific step ──
       if (step === 2) {
 
-        // Status check
+        // Check application status
         if (form.appType === "status") return (
           <div className="flow-step">
             <h3 className="flow-step-title">Check your application status</h3>
-            <p className="flow-step-sub">Enter your existing card or application number to look up your current status.</p>
+            <p className="flow-step-sub">Enter your application number to look up where your WWCC application is currently up to.</p>
             <div className="flow-field" style={{marginBottom:16}}>
-              <label>Card / application number</label>
-              <input className="flow-input flow-input--lg" placeholder="e.g. WWC1234567E or APP-98765"
+              <label>Application reference number</label>
+              <input className="flow-input flow-input--lg" placeholder="e.g. APP-98765 or WWC1234567E"
                 value={form.cardNo||""} onChange={e=>setForm(f=>({...f,cardNo:e.target.value}))}/>
             </div>
             <div className="flow-field">
-              <label>State issued</label>
+              <label>State applied in</label>
               <select className="flow-input" value={form.state||"Victoria"} onChange={e=>setForm(f=>({...f,state:e.target.value}))}>
                 {["Victoria","New South Wales","Queensland","Western Australia","South Australia","Tasmania","ACT","Northern Territory"].map(s=><option key={s}>{s}</option>)}
               </select>
             </div>
+            <div className="flow-renewal-notice" style={{marginTop:16}}>
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" style={{width:18,height:18,flexShrink:0,color:"#92400e"}}>
+                <circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5M8 11v.5"/>
+              </svg>
+              <div>
+                <strong>Status check only</strong>
+                <p>This will query the state registry for your application status. No verification result will be issued — only a status report.</p>
+              </div>
+            </div>
           </div>
         );
 
-        // Renewal
+        // Renewal guidance
         if (form.appType === "renew") return (
           <div className="flow-step">
             <h3 className="flow-step-title">Renew your WWCC</h3>
-            <p className="flow-step-sub">Renewal is processed through the government. VerifyChain will redirect you and record the outcome for your organisation.</p>
+            <p className="flow-step-sub">Renewal must be completed directly with the relevant state government. VerifyChain will record the renewal request and alert your organisation once confirmed.</p>
             <div className="flow-field" style={{marginBottom:16}}>
               <label>Current card number</label>
               <input className="flow-input flow-input--lg" placeholder="e.g. WWC1234567E"
@@ -487,20 +521,22 @@ const FLOWS = {
               </select>
             </div>
             <div className="flow-renewal-notice">
-              <span>🏛️</span>
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" style={{width:18,height:18,flexShrink:0,color:"#92400e"}}>
+                <path d="M8 2L14 5.5V10c0 3-2.5 5.5-6 6-3.5-.5-6-3-6-6V5.5L8 2z"/>
+              </svg>
               <div>
-                <strong>Renewal is completed via the government portal</strong>
-                <p>After verification, you'll be redirected to the relevant state authority to complete your renewal. VerifyChain will record your request and alert your organisation when the renewal is confirmed.</p>
+                <strong>Renewal happens via the government portal</strong>
+                <p>After this step, you will be directed to the relevant state authority to complete your renewal. VerifyChain records the request and notifies your organisation when your new card is confirmed.</p>
               </div>
             </div>
           </div>
         );
 
-        // New application
+        // Verify existing card (was "new")
         return (
           <div className="flow-step">
-            <h3 className="flow-step-title">Your WWCC card number</h3>
-            <p className="flow-step-sub">Enter the card number from your Working with Children Check card to validate your clearance.</p>
+            <h3 className="flow-step-title">Enter your WWCC card details</h3>
+            <p className="flow-step-sub">VerifyChain will check your card number against the {form.state || "Victorian"} registry in real time to confirm it is current and not revoked.</p>
             <div className="flow-field" style={{marginBottom:16}}>
               <label>Card number</label>
               <input className="flow-input flow-input--lg" placeholder="e.g. WWC1234567E"
@@ -511,14 +547,12 @@ const FLOWS = {
               <input className="flow-input" type="date" value={form.expiryDate||""}
                 onChange={e=>setForm(f=>({...f,expiryDate:e.target.value}))}/>
             </div>
-            <div className="flow-field">
+            <div className="flow-field" style={{marginBottom:16}}>
               <label>State issued</label>
               <select className="flow-input" value={form.state||"Victoria"} onChange={e=>setForm(f=>({...f,state:e.target.value}))}>
                 {["Victoria","New South Wales","Queensland","Western Australia","South Australia","Tasmania","ACT","Northern Territory"].map(s=><option key={s}>{s}</option>)}
               </select>
             </div>
-
-            {/* Expiry alert opt-in */}
             <div className="flow-alert-optin">
               <input type="checkbox" id="wwcc-alert" defaultChecked
                 onChange={e=>setForm(f=>({...f,alertEnabled:e.target.checked}))}/>
@@ -624,7 +658,7 @@ function VerifyModal({ product, session, onClose }) {
             !verified ? (
               <VerifyAnimation onDone={() => setVerified(true)} />
             ) : (
-              <div className="flow-success">
+              <div className="flow-success flow-success--centered">
                 <div className="flow-success-icon">✓</div>
                 <h3>Verification complete</h3>
                 <p>All checks passed successfully.</p>
@@ -654,24 +688,71 @@ function VerifyModal({ product, session, onClose }) {
           {step > 0 && step !== verifyStep && (
             <button className="modal-btn-ghost" onClick={back}>← Back</button>
           )}
-          {step < verifyStep && (
-            <button
-              className={`modal-btn-primary ${!canContinue ? "modal-btn-primary--disabled" : ""}`}
-              onClick={canContinue ? next : undefined}
-              style={!canContinue ? {opacity:0.4,cursor:"not-allowed"} : {}}>
-              {isFaceStep && !faceCaptured && faceAttempts < 3 ? "Take photo to continue" : "Continue →"}
-            </button>
-          )}
+          {step < verifyStep && (() => {
+            // WWCC special routing: after step 2 (Application), skip verification
+            const isWWCC = product.slug === "working-with-children-check";
+            const isRenew  = isWWCC && form.appType === "renew";
+            const isStatus = isWWCC && form.appType === "status";
+            const isActionStep = isWWCC && step === 2;
+
+            if (isActionStep && isRenew) return (
+              <a
+                href="https://www.service.vic.gov.au/find-services/work-and-volunteering/working-with-children-check/renew-your-working-with-children-check"
+                target="_blank" rel="noreferrer"
+                className="modal-btn-primary"
+                style={{textDecoration:"none", display:"inline-flex", alignItems:"center", gap:6}}>
+                Go to government portal →
+              </a>
+            );
+
+            if (isActionStep && isStatus) return (
+              <button className="modal-btn-primary" onClick={() => {
+                // Save a status-check record and close — no verification
+                const key = "vc_completed_checks";
+                const existing = JSON.parse(localStorage.getItem(key) || "[]");
+                const newCheck = {
+                  id: "VC-" + Math.random().toString(36).slice(2,8).toUpperCase() + "-" + Date.now().toString().slice(-4),
+                  check: "Working with Children Check (Status check)",
+                  date: new Date().toLocaleDateString("en-AU", { day:"numeric", month:"short", year:"numeric" }),
+                  status: "Status checked",
+                  slug: product.slug,
+                };
+                localStorage.setItem(key, JSON.stringify([newCheck, ...existing]));
+                onClose();
+              }}>
+                Submit status check →
+              </button>
+            );
+
+            return (
+              <button
+                className={`modal-btn-primary ${!canContinue ? "modal-btn-primary--disabled" : ""}`}
+                onClick={canContinue ? next : undefined}
+                style={!canContinue ? {opacity:0.4,cursor:"not-allowed"} : {}}>
+                {isFaceStep && !faceCaptured && faceAttempts < 3 ? "Take photo to continue" : "Continue →"}
+              </button>
+            );
+          })()}
           {step === verifyStep && verified && (
             <button className="modal-btn-primary" onClick={() => {
-                if (product.slug === "working-with-children-check" && form.expiryDate) {
+              // Save completed check to localStorage for real-time history
+              const key = "vc_completed_checks";
+              const existing = JSON.parse(localStorage.getItem(key) || "[]");
+              const newCheck = {
+                id: "VC-" + Math.random().toString(36).slice(2,8).toUpperCase() + "-" + Date.now().toString().slice(-4),
+                check: product.name,
+                date: new Date().toLocaleDateString("en-AU", { day:"numeric", month:"short", year:"numeric" }),
+                status: "Verified",
+                slug: product.slug,
+              };
+              localStorage.setItem(key, JSON.stringify([newCheck, ...existing]));
+              // Also save WWCC expiry if applicable
+              if (product.slug === "working-with-children-check" && form.expiryDate) {
                 localStorage.setItem("vc_wwcc_expiry", form.expiryDate);
-                }
-                next();
-            }}>
-                View certificate →
-            </button>
-            )}
+              }
+              next();
+            }}>View certificate →</button>
+          )}
           {step === certStep && (
             <button className="modal-btn-primary"
               onClick={() => downloadCert(product.name, form.firstName, form.lastName)}>
@@ -715,7 +796,7 @@ function getExpiryInfo() {
 }
 
 // ── Sidebar (shared) ─────────────────────────────────────────────
-function AppSidebar({ session, onLogout, userType }) {
+function AppSidebar({ session, onLogout, userType, activeNav, setActiveNav }) {
   const orgNavItems = [
     { label: "Dashboard",   icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg> },
     { label: "Staff",       icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 17a6 6 0 00-12 0"/><path d="M18 12a3 3 0 11-6 0 3 3 0 016 0M18 17a3 3 0 00-6 0" opacity="0.4"/></svg> },
@@ -732,13 +813,7 @@ function AppSidebar({ session, onLogout, userType }) {
   return (
     <aside className="app-sidebar">
       <div className="app-sidebar-logo">
-        <div className="app-logo-icon">
-          <svg viewBox="0 0 20 20" fill="none">
-            <path d="M10 2L3 5.5V10c0 4.4 3.1 7.9 7 9 3.9-1.1 7-4.6 7-9V5.5L10 2z" stroke="white" strokeWidth="1.4" strokeLinejoin="round"/>
-            <path d="M7 10l2 2 4-4" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
-        <span>VerifyChain</span>
+        <img src="/images/verifychain-logo.png" alt="VerifyChain" className="app-sidebar-logo-img" />
       </div>
 
       <div className="app-sidebar-type-badge">
@@ -746,8 +821,10 @@ function AppSidebar({ session, onLogout, userType }) {
       </div>
 
       <nav className="app-nav">
-        {navItems.map((item, i) => (
-          <div key={item.label} className={`app-nav-item ${i === 0 ? "app-nav-item--active" : ""}`}>
+        {navItems.map((item) => (
+          <div key={item.label}
+            className={`app-nav-item ${activeNav === item.label ? "app-nav-item--active" : ""}`}
+            onClick={() => setActiveNav && setActiveNav(item.label)}>
             {item.icon}
             {item.label}
           </div>
@@ -791,7 +868,7 @@ function ExpiryBanner({ expiry, onDismiss }) {
             ? "Your clearance is about to expire. Renew now to avoid a gap in your verification status."
             : `You have ${expiry.days} days remaining. We recommend renewing at least 2 weeks before the expiry date.`}
           {" "}
-          <a href="https://www.service.vic.gov.au/find-services/work-and-volunteering/working-with-children-check/renew-your-working-with-children-check" target="_blank" rel="noreferrer" className="app-expiry-link">
+          <a href="https://www.vic.gov.au/working-children-check" target="_blank" rel="noreferrer" className="app-expiry-link">
             Renew through the government portal →
           </a>
         </p>
@@ -934,110 +1011,77 @@ function OrgDashboard({ session, onLogout }) {
 }
 
 // ── INDIVIDUAL DASHBOARD ──────────────────────────────────────────
+function useCompletedChecks() {
+  const [checks, setChecks] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("vc_completed_checks") || "[]"); }
+    catch { return []; }
+  });
+
+  // Refresh when modal closes (parent calls this via onClose)
+  const refresh = () => {
+    try { setChecks(JSON.parse(localStorage.getItem("vc_completed_checks") || "[]")); }
+    catch { setChecks([]); }
+  };
+
+  return [checks, refresh];
+}
+
 function IndividualDashboard({ session, onLogout }) {
-  const [active, setActive]       = useState(null);
-  const [dismissed, setDismissed] = useState(false);
-  const expiry = getExpiryInfo();
-  const showBanner = expiry && expiry.days <= 60 && !dismissed;
+  const [active, setActive]         = useState(null);
+  const [dismissed, setDismissed]   = useState(false);
+  const [completed, refreshChecks]  = useCompletedChecks();
+  const [activeNav, setActiveNav]   = useState("Dashboard");
+  // Keep expiry as state so it updates immediately without a page refresh
+  const [expiryInfo, setExpiryInfo] = useState(() => getExpiryInfo());
+  const showBanner = expiryInfo && expiryInfo.days <= 60 && !dismissed;
+
+  const refreshExpiry = () => setExpiryInfo(getExpiryInfo());
 
   const greeting = new Date().getHours() < 12 ? "morning" : new Date().getHours() < 17 ? "afternoon" : "evening";
 
-  // Dummy requested checks (from an employer)
   const requested = [
     { from: "Sunshine Primary School", check: "Working with Children Check", due: "20 May 2026", urgent: true },
     { from: "Melbourne City Council",  check: "National crime check",         due: "30 May 2026", urgent: false },
   ];
 
-  // Dummy completed checks
-  const completed = [
+  const dummyCompleted = [
     { check: "Identity verification", date: "12 May 2026", id: "VC-A1B2C3-7842", status: "Verified" },
     { check: "Age verification",      date: "03 Apr 2026", id: "VC-D4E5F6-3310", status: "Verified" },
   ];
+  const allCompleted = [
+    ...completed,
+    ...dummyCompleted.filter(d => !completed.find(c => c.id === d.id)),
+  ];
 
-  return (
-    <div className="app-shell">
-      <AppSidebar session={session} onLogout={onLogout} userType="individual" />
+  const handleClose = () => {
+    setActive(null);
+    refreshChecks();
+    refreshExpiry(); // re-read expiry immediately — no page refresh needed
+  };
 
-      <main className="app-main">
-        {showBanner && (
-          <ExpiryBanner expiry={expiry} onDismiss={() => { setDismissed(true); localStorage.removeItem("vc_wwcc_expiry"); }}/>
-        )}
-
-        <div className="app-topbar">
-          <div>
-            <h1 className="app-topbar-title">Good {greeting}, {session.firstName} 👋</h1>
-            <p className="app-topbar-sub">Here's what you need to complete and your verification history.</p>
-          </div>
-          <div className="app-topbar-badge"><span className="app-live-dot" />Demo mode</div>
+  // ── My Checks view ──
+  const MyChecksView = () => (
+    <>
+      <div className="app-topbar app-topbar--simple">
+        <div>
+          <h1 className="app-topbar-title">My checks</h1>
+          <p className="app-topbar-sub">All verifications you have completed.</p>
         </div>
-
-        {/* Requested checks */}
-        {requested.length > 0 && (
-          <>
-            <div className="app-section-header">
-              <h2 className="app-section-title">Action required</h2>
-              <span className="app-section-count">{requested.length} pending</span>
-            </div>
-            <div className="app-requested-list">
-              {requested.map((r, i) => (
-                <div key={i} className={`app-requested-card ${r.urgent ? "app-requested-card--urgent" : ""}`}>
-                  <div className="app-requested-left">
-                    <div className="app-requested-from">
-                      <span className="app-requested-org-icon">🏢</span>
-                      <strong>{r.from}</strong>
-                    </div>
-                    <p className="app-requested-check">{r.check}</p>
-                    <p className="app-requested-due">
-                      Due by {r.due}
-                      {r.urgent && <span className="app-requested-urgent-tag">Action soon</span>}
-                    </p>
-                  </div>
-                  <button className="app-requested-btn"
-                    onClick={() => setActive(products.find(p => p.name.toLowerCase().includes(r.check.toLowerCase().split(" ")[0])) || products[0])}>
-                    Start check →
-                  </button>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Start a check yourself */}
-        <div className="app-section-header" style={{ marginTop: 36 }}>
-          <h2 className="app-section-title">Start a verification</h2>
-          <p className="app-section-sub">Run a check yourself and share the certificate with any organisation.</p>
+        <div className="app-topbar-badge"><span className="app-live-dot" />Demo mode</div>
+      </div>
+      <div className="app-section-header">
+        <h2 className="app-section-title">Verification history</h2>
+        <span className="app-section-sub">{allCompleted.length} check{allCompleted.length !== 1 ? "s" : ""} completed</span>
+      </div>
+      {allCompleted.length === 0 ? (
+        <div className="app-history-empty">
+          <span>📋</span>
+          <p>No verifications yet. Go to Dashboard and complete a check to see it here.</p>
         </div>
-        <div className="app-products-grid">
-          {products.map(p => {
-            const st = STATUS[p.status];
-            return (
-              <div key={p.num} className="app-product-card" onClick={() => setActive(p)}>
-                <div className="app-card-top">
-                  <span className="app-card-num">{p.num}</span>
-                  <span className="app-card-status" style={{ background: st.bg, color: st.color }}>
-                    <span style={{ width:6, height:6, borderRadius:"50%", background: st.dot, display:"inline-block", marginRight:5 }}/>
-                    {p.statusLabel}
-                  </span>
-                </div>
-                <div className="app-card-icon">{p.icon}</div>
-                <h3 className="app-card-name">{p.name}</h3>
-                <p className="app-card-desc">{p.desc}</p>
-                <div className="app-card-footer">
-                  <span className="app-card-time">⏱ {p.time}</span>
-                  <span className="app-card-cta">Start verification →</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Completed checks history */}
-        <div className="app-section-header" style={{ marginTop: 40 }}>
-          <h2 className="app-section-title">My verifications</h2>
-        </div>
+      ) : (
         <div className="app-history-list">
-          {completed.map((c, i) => (
-            <div key={i} className="app-history-row">
+          {allCompleted.map((c, i) => (
+            <div key={c.id || i} className="app-history-row">
               <div className="app-history-icon">✓</div>
               <div className="app-history-body">
                 <strong>{c.check}</strong>
@@ -1047,9 +1091,179 @@ function IndividualDashboard({ session, onLogout }) {
             </div>
           ))}
         </div>
+      )}
+    </>
+  );
+
+  // ── Certificates view ──
+  const CertificatesView = () => (
+    <>
+      <div className="app-topbar app-topbar--simple">
+        <div>
+          <h1 className="app-topbar-title">Certificates</h1>
+          <p className="app-topbar-sub">Download or share your verification certificates.</p>
+        </div>
+        <div className="app-topbar-badge"><span className="app-live-dot" />Demo mode</div>
+      </div>
+      {allCompleted.length === 0 ? (
+        <div className="app-history-empty">
+          <span>🏅</span>
+          <p>No certificates yet. Complete a verification to generate your first certificate.</p>
+        </div>
+      ) : (
+        <div className="app-cert-grid">
+          {allCompleted.map((c, i) => (
+            <div key={c.id || i} className="app-cert-card">
+              <div className="app-cert-card-stripe" />
+              <div className="app-cert-card-body">
+                <div className="app-cert-card-icon">🏅</div>
+                <h4 className="app-cert-card-name">{c.check}</h4>
+                <p className="app-cert-card-date">Verified {c.date}</p>
+                <p className="app-cert-card-id">{c.id}</p>
+                <span className="app-cert-card-badge">✓ Verified</span>
+                <button className="app-cert-card-btn"
+                  onClick={() => {
+                    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="794" height="562" viewBox="0 0 794 562">
+  <rect width="794" height="562" fill="#f8f7f3"/>
+  <rect x="0" y="0" width="6" height="562" fill="#3b5ccc"/>
+  <rect x="40" y="40" width="714" height="482" rx="8" fill="none" stroke="#e2e0d8" stroke-width="1"/>
+  <text x="397" y="95" font-family="Georgia,serif" font-size="11" fill="#999" text-anchor="middle" letter-spacing="3">VERIFYCHAIN · CERTIFICATE OF VERIFICATION</text>
+  <text x="397" y="155" font-family="Georgia,serif" font-size="30" fill="#13151f" text-anchor="middle">${c.check}</text>
+  <line x1="200" y1="175" x2="594" y2="175" stroke="#e2e0d8" stroke-width="1"/>
+  <text x="397" y="230" font-family="Georgia,serif" font-size="14" fill="#555" text-anchor="middle">This certifies that</text>
+  <text x="397" y="275" font-family="Georgia,serif" font-size="26" fill="#13151f" text-anchor="middle" font-weight="bold">${session.firstName} ${session.lastName}</text>
+  <text x="397" y="315" font-family="Georgia,serif" font-size="14" fill="#555" text-anchor="middle">has successfully completed verification on ${c.date}</text>
+  <rect x="247" y="340" width="300" height="36" rx="18" fill="#3b5ccc"/>
+  <text x="397" y="364" font-family="Georgia,serif" font-size="13" fill="#fff" text-anchor="middle">✓ Verified — Zero data retained</text>
+  <text x="397" y="420" font-family="monospace" font-size="11" fill="#aaa" text-anchor="middle">Certificate ID: ${c.id}</text>
+  <text x="397" y="458" font-family="Georgia,serif" font-size="11" fill="#aaa" text-anchor="middle">VerifyChain Pty Ltd · Melbourne, Australia · verifychain.io</text>
+</svg>`;
+                    const blob = new Blob([svg], { type: "image/svg+xml" });
+                    const url  = URL.createObjectURL(blob);
+                    const a    = document.createElement("a");
+                    a.href = url; a.download = `VerifyChain-${c.id}.svg`; a.click();
+                    URL.revokeObjectURL(url);
+                  }}>
+                  Download ↓
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  );
+
+  // ── Dashboard view (default) ──
+  const DashboardView = () => (
+    <>
+      <div className="app-topbar app-topbar--simple">
+        <div>
+          <h1 className="app-topbar-title">Good {greeting}, {session.firstName} 👋</h1>
+          <p className="app-topbar-sub">Here's what you need to complete and your verification history.</p>
+        </div>
+        <div className="app-topbar-badge"><span className="app-live-dot" />Demo mode</div>
+      </div>
+
+      {requested.length > 0 && (
+        <>
+          <div className="app-section-header">
+            <h2 className="app-section-title">Action required</h2>
+            <span className="app-section-count">{requested.length} pending</span>
+          </div>
+          <div className="app-requested-list">
+            {requested.map((r, i) => (
+              <div key={i} className={`app-requested-card ${r.urgent ? "app-requested-card--urgent" : ""}`}>
+                <div className="app-requested-left">
+                  <div className="app-requested-from">
+                    <span className="app-requested-org-icon">🏢</span>
+                    <strong>{r.from}</strong>
+                  </div>
+                  <p className="app-requested-check">{r.check}</p>
+                  <p className="app-requested-due">
+                    Due by {r.due}
+                    {r.urgent && <span className="app-requested-urgent-tag">Action soon</span>}
+                  </p>
+                </div>
+                <button className="app-requested-btn"
+                  onClick={() => setActive(products.find(p => p.name.toLowerCase().includes(r.check.toLowerCase().split(" ")[0])) || products[0])}>
+                  Start check →
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      <div className="app-section-header" style={{ marginTop: 36 }}>
+        <h2 className="app-section-title">Start a verification</h2>
+        <p className="app-section-sub">Run a check yourself and share the certificate with any organisation.</p>
+      </div>
+      <div className="app-products-grid">
+        {products.map(p => {
+          const st = STATUS[p.status];
+          return (
+            <div key={p.num} className="app-product-card" onClick={() => setActive(p)}>
+              <div className="app-card-top">
+                <span className="app-card-num">{p.num}</span>
+                <span className="app-card-status" style={{ background: st.bg, color: st.color }}>
+                  <span style={{ width:6, height:6, borderRadius:"50%", background: st.dot, display:"inline-block", marginRight:5 }}/>
+                  {p.statusLabel}
+                </span>
+              </div>
+              <div className="app-card-icon">{p.icon}</div>
+              <h3 className="app-card-name">{p.name}</h3>
+              <p className="app-card-desc">{p.desc}</p>
+              <div className="app-card-footer">
+                <span className="app-card-time">⏱ {p.time}</span>
+                <span className="app-card-cta">Start verification →</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="app-section-header" style={{ marginTop: 40 }}>
+        <h2 className="app-section-title">Recent verifications</h2>
+        <button className="app-section-link" onClick={() => setActiveNav("My checks")}>View all →</button>
+      </div>
+      {allCompleted.length === 0 ? (
+        <div className="app-history-empty">
+          <span>📋</span>
+          <p>No verifications yet. Complete a check above to see it here.</p>
+        </div>
+      ) : (
+        <div className="app-history-list">
+          {allCompleted.slice(0, 3).map((c, i) => (
+            <div key={c.id || i} className="app-history-row">
+              <div className="app-history-icon">✓</div>
+              <div className="app-history-body">
+                <strong>{c.check}</strong>
+                <span>{c.date} · {c.id}</span>
+              </div>
+              <span className="app-history-status">{c.status}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  );
+
+  return (
+    <div className="app-shell app-shell--no-topnav">
+      <AppSidebar session={session} onLogout={onLogout} userType="individual"
+        activeNav={activeNav} setActiveNav={setActiveNav} />
+
+      <main className="app-main">
+        {showBanner && (
+          <ExpiryBanner expiry={expiryInfo} onDismiss={() => { setDismissed(true); localStorage.removeItem("vc_wwcc_expiry"); refreshExpiry(); }}/>
+        )}
+        {activeNav === "Dashboard"    && <DashboardView />}
+        {activeNav === "My checks"    && <MyChecksView />}
+        {activeNav === "Certificates" && <CertificatesView />}
       </main>
 
-      {active && <VerifyModal product={active} session={session} onClose={() => setActive(null)} />}
+      {active && <VerifyModal product={active} session={session} onClose={handleClose} />}
     </div>
   );
 }
@@ -1059,7 +1273,7 @@ export default function AppDashboard() {
   const navigate = useNavigate();
   const session  = getSession();
 
-  const handleLogout = () => { clearSession(); navigate("/"); };
+  const handleLogout = () => { clearSession(); navigate("/login"); };
 
   if (!session) { navigate("/login"); return null; }
 
