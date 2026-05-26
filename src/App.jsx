@@ -24,6 +24,8 @@ import DemonstrationPage from "./pages/DemonstrationPage";
 import ContactPage from "./pages/ContactPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import AppDashboard from "./pages/AppDashboard";
+import TechnologyPage from "./pages/TechnologyPage";
+import UseCasesPage from "./pages/UseCasesPage";
 import "./styles/global.css";
 
 function ScrollObserver() {
@@ -82,6 +84,8 @@ function AppInner() {
           <Route path="/demonstration" element={<DemonstrationPage />} />
           <Route path="/products/:slug" element={<ProductDetailPage />} />
           <Route path="/dashboard" element={<AppDashboard />} />
+          <Route path="/technology" element={<TechnologyPage />} />
+          <Route path="/use-cases" element={<UseCasesPage />} />
         </Routes>
       </main>
       {!isDashboard && <Footer />}

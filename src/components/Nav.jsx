@@ -1,11 +1,26 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Nav.css";
 
+const PRODUCTS = [
+  { slug: "identity-verification",        label: "Identity verification",        desc: "Validate passports, licences and national IDs in real time." },
+  { slug: "age-verification",             label: "Age verification",             desc: "Confirm age without revealing a birth date — tested by the Australian Government." },
+  { slug: "qualification-verification",   label: "Qualification verification",   desc: "Verify university degrees and trade qualifications." },
+  { slug: "national-crime-check",         label: "National crime check",         desc: "Automated background screening via Australian law enforcement." },
+  { slug: "working-with-children-check",  label: "Working with Children Check",  desc: "Real-time clearance validation across all Australian jurisdictions." },
+  { slug: "eseal-document-verification",  label: "eSeal document verification",  desc: "Tamper-proof digital notarisation compliant with ESIGN and eIDAS." },
+];
+
+const COMPANY = [
+  { to: "/about",   label: "About us" },
+  { to: "/roadmap", label: "Roadmap" },
+];
+
 export default function Nav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [scrolled, setScrolled]         = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null); // "products" | "company" | null
+  const navRef = useRef();
+  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -14,84 +29,117 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close dropdown when clicking outside
+  // Close dropdown on route change
+  useEffect(() => { setOpenDropdown(null); }, [location.pathname]);
+
+  // Close dropdown on outside click
   useEffect(() => {
     const handler = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false);
-      }
+      if (navRef.current && !navRef.current.contains(e.target)) setOpenDropdown(null);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Close dropdown on route change
-  useEffect(() => {
-    setDropdownOpen(false);
-  }, [location.pathname]);
-
-  const isCompany = ["/about", "/roadmap"].includes(location.pathname);
+  const toggle = (name) => setOpenDropdown(prev => prev === name ? null : name);
 
   return (
-    <nav className={`nav ${scrolled ? "nav--scrolled" : ""}`}>
+    <nav ref={navRef} className={`nav ${scrolled ? "nav--scrolled" : ""}`}>
       <div className="nav-inner">
-        <Link to="/" className="nav-logo">
+
+        {/* Logo */}
+        <Link to="/" className="nav-logo" onClick={() => setOpenDropdown(null)}>
           <img src="/verifychain-logo.png" alt="VerifyChain" className="nav-logo-img" />
         </Link>
 
+        {/* Links */}
         <ul className="nav-links">
-          <li><Link to="/" className={location.pathname === "/" ? "nav-active" : ""}>Products</Link></li>
-          <li><Link to="/">Technology</Link></li>
-          <li><Link to="/">Use cases</Link></li>
 
-          {/* Company dropdown */}
-          <li className="nav-dropdown-wrap" ref={dropdownRef}>
+          {/* Products dropdown */}
+          <li className="nav-item nav-item--dropdown">
             <button
-              className={`nav-dropdown-trigger ${isCompany ? "nav-active" : ""} ${dropdownOpen ? "nav-dropdown-trigger--open" : ""}`}
-              onClick={() => setDropdownOpen((prev) => !prev)}
+              className={`nav-link nav-link--btn ${openDropdown === "products" ? "nav-link--active" : ""}`}
+              onClick={() => toggle("products")}
             >
-              Company
-              <svg className="nav-chevron" viewBox="0 0 12 12" fill="none">
-                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.4"
-                  strokeLinecap="round" strokeLinejoin="round"/>
+              Products
+              <svg className={`nav-chevron ${openDropdown === "products" ? "nav-chevron--open" : ""}`} viewBox="0 0 12 12" fill="none">
+                <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
+            {openDropdown === "products" && (
+              <div className="nav-dropdown nav-dropdown--wide">
+                <div className="nav-dropdown-header">
+                  <p className="nav-dropdown-label">Verification products</p>
+                  <p className="nav-dropdown-sub">All checks on a single platform — mix and match what your organisation needs.</p>
+                </div>
+                <div className="nav-dropdown-grid">
+                  {PRODUCTS.map(p => (
+                    <Link
+                      key={p.slug}
+                      to={`/products/${p.slug}`}
+                      className="nav-dropdown-item"
+                      onClick={() => setOpenDropdown(null)}
+                    >
+                      <span className="nav-dropdown-item-label">{p.label}</span>
+                      <span className="nav-dropdown-item-desc">{p.desc}</span>
+                    </Link>
+                  ))}
+                </div>
+                <div className="nav-dropdown-footer">
+                  <Link to="/#products" className="nav-dropdown-footer-link" onClick={() => setOpenDropdown(null)}>
+                    See all products →
+                  </Link>
+                </div>
+              </div>
+            )}
+          </li>
 
-            {dropdownOpen && (
+          {/* Technology */}
+          <li className="nav-item">
+            <Link to="/technology" className="nav-link" onClick={() => setOpenDropdown(null)}>
+              Technology
+            </Link>
+          </li>
+
+          {/* Use cases */}
+          <li className="nav-item">
+            <Link to="/use-cases" className="nav-link" onClick={() => setOpenDropdown(null)}>
+              Use cases
+            </Link>
+          </li>
+
+          {/* Company dropdown */}
+          <li className="nav-item nav-item--dropdown">
+            <button
+              className={`nav-link nav-link--btn ${openDropdown === "company" ? "nav-link--active" : ""}`}
+              onClick={() => toggle("company")}
+            >
+              Company
+              <svg className={`nav-chevron ${openDropdown === "company" ? "nav-chevron--open" : ""}`} viewBox="0 0 12 12" fill="none">
+                <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            {openDropdown === "company" && (
               <div className="nav-dropdown">
-                <Link to="/about" className="nav-dropdown-item">
-                  <div className="nav-dropdown-icon">
-                    <svg viewBox="0 0 16 16" fill="none">
-                      <circle cx="8" cy="5" r="3" stroke="currentColor" strokeWidth="1.3"/>
-                      <path d="M2 14c0-3 2.7-5 6-5s6 2 6 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="nav-dropdown-label">About us</div>
-                    <div className="nav-dropdown-sub">Team, mission & story</div>
-                  </div>
-                </Link>
-
-                <Link to="/roadmap" className="nav-dropdown-item">
-                  <div className="nav-dropdown-icon">
-                    <svg viewBox="0 0 16 16" fill="none">
-                      <path d="M2 12h3M2 8h6M2 4h10" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                      <circle cx="13" cy="4" r="1.5" fill="currentColor"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="nav-dropdown-label">Roadmap</div>
-                    <div className="nav-dropdown-sub">What we're building next</div>
-                  </div>
-                </Link>
+                {COMPANY.map(c => (
+                  <Link
+                    key={c.to}
+                    to={c.to}
+                    className="nav-dropdown-item"
+                    onClick={() => setOpenDropdown(null)}
+                  >
+                    <span className="nav-dropdown-item-label">{c.label}</span>
+                  </Link>
+                ))}
               </div>
             )}
           </li>
         </ul>
 
+        {/* CTA buttons */}
         <div className="nav-right">
-          <Link to="/register"><button className="btn-ghost">Register</button></Link>
-          <Link to="/demonstration"><button className="btn-dark">Go to demo →</button></Link>
+          <Link to="/register" className="btn-ghost">Register</Link>
+          <Link to="/demonstration" className="btn-dark">Go to demo →</Link>
         </div>
       </div>
     </nav>
