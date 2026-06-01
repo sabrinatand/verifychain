@@ -139,7 +139,7 @@ export default function Nav() {
         {/* CTA buttons */}
         <div className="nav-right">
           <Link to="/register" className="btn-ghost">Register</Link>
-          <Link to="/demonstration" className="btn-dark">Go to demo →</Link>
+          <Link to="/contact?inquiry=demo" className="btn-dark">Book a demo →</Link>
         </div>
       </div>
     </nav>

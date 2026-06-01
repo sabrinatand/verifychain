@@ -1,4 +1,5 @@
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import "./ProductDetailPage.css";
 
 // ── Product data ─────────────────────────────────────────────────
@@ -100,9 +101,270 @@ const STATUS_STYLES = {
   dev:  { bg: "#f3e8ff", color: "#7e22ce", dot: "#a855f7" },
 };
 
+// ── Product simulation component ─────────────────────────────────
+const SIMULATION_SCREENS = {
+  "identity-verification": [
+    {
+      label: "Upload document",
+      desc: "The user uploads a photo of their passport or licence from any device — mobile or desktop.",
+      screen: (
+        <div className="sim-screen">
+          <div className="sim-screen-header">
+            <div className="sim-dot sim-dot--red"/><div className="sim-dot sim-dot--yellow"/><div className="sim-dot sim-dot--green"/>
+            <span className="sim-url">app.verifychain.io / identity / upload</span>
+          </div>
+          <div className="sim-body sim-upload-body">
+            <p className="sim-step-label">Step 1 of 4 — Upload your document</p>
+            <div className="sim-upload-zone">
+              <div className="sim-upload-icon">📄</div>
+              <p className="sim-upload-main">Drag and drop your ID here</p>
+              <p className="sim-upload-hint">Passport · Driver's licence · National ID · JPG or PNG</p>
+              <div className="sim-upload-btn">Choose file</div>
+            </div>
+            <div className="sim-tip-row">
+              <span>💡</span> Use natural light · Fill the frame · No glare or obstruction
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      label: "Live face check",
+      desc: "The user takes a live selfie — matched against their document to confirm they are the holder. Required by Australian legislation.",
+      screen: (
+        <div className="sim-screen">
+          <div className="sim-screen-header">
+            <div className="sim-dot sim-dot--red"/><div className="sim-dot sim-dot--yellow"/><div className="sim-dot sim-dot--green"/>
+            <span className="sim-url">app.verifychain.io / identity / face-check</span>
+          </div>
+          <div className="sim-body sim-face-body">
+            <p className="sim-step-label">Step 2 of 4 — Live facial photo</p>
+            <div className="sim-face-viewfinder">
+              <div className="sim-face-oval"/>
+              <p className="sim-face-hint">Centre your face in the oval</p>
+              <div className="sim-face-corner sim-fc--tl"/><div className="sim-face-corner sim-fc--tr"/>
+              <div className="sim-face-corner sim-fc--bl"/><div className="sim-face-corner sim-fc--br"/>
+            </div>
+            <div className="sim-face-attempts">
+              <div className="sim-face-dot"/><div className="sim-face-dot"/><div className="sim-face-dot"/>
+              <span>3 of 3 attempts remaining</span>
+            </div>
+            <div className="sim-face-btn">Take photo</div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      label: "Verification in progress",
+      desc: "VerifyChain cross-checks against government databases in real time. The whole process takes under 30 seconds.",
+      screen: (
+        <div className="sim-screen">
+          <div className="sim-screen-header">
+            <div className="sim-dot sim-dot--red"/><div className="sim-dot sim-dot--yellow"/><div className="sim-dot sim-dot--green"/>
+            <span className="sim-url">app.verifychain.io / identity / verifying</span>
+          </div>
+          <div className="sim-body sim-processing-body">
+            <div className="sim-spinner-ring">
+              <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" stroke="#e8ecff" strokeWidth="5" fill="none"/><circle cx="40" cy="40" r="34" stroke="#1e3a8a" strokeWidth="5" fill="none" strokeDasharray="120 214" strokeLinecap="round" className="sim-ring-spin"/></svg>
+              <span className="sim-pct">72%</span>
+            </div>
+            <p className="sim-processing-title">Verifying identity…</p>
+            <div className="sim-processing-steps">
+              {["✓ Document uploaded","✓ OCR extraction complete","✓ Fraud detection passed","⟳ Government database check…"].map((s,i)=>(<div key={i} className={`sim-proc-step ${s.startsWith("✓") ? "sim-proc-step--done" : "sim-proc-step--active"}`}>{s}</div>))}
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      label: "Certificate issued",
+      desc: "A cryptographically signed certificate is issued instantly. The organisation sees the result — not any personal data.",
+      screen: (
+        <div className="sim-screen">
+          <div className="sim-screen-header">
+            <div className="sim-dot sim-dot--red"/><div className="sim-dot sim-dot--yellow"/><div className="sim-dot sim-dot--green"/>
+            <span className="sim-url">app.verifychain.io / identity / certificate</span>
+          </div>
+          <div className="sim-body sim-cert-body">
+            <div className="sim-cert-badge">✓ Verified</div>
+            <div className="sim-cert-card">
+              <div className="sim-cert-stripe"/>
+              <div className="sim-cert-inner">
+                <p className="sim-cert-eyebrow">VerifyChain · Certificate of Verification</p>
+                <p className="sim-cert-type">Identity verification</p>
+                <p className="sim-cert-name">Jane Smith</p>
+                <div className="sim-cert-rows">
+                  <div className="sim-cert-row"><span>Document type</span><span>Passport</span></div>
+                  <div className="sim-cert-row"><span>Facial match</span><span className="sim-cert-pass">✓ Confirmed</span></div>
+                  <div className="sim-cert-row"><span>Fraud check</span><span className="sim-cert-pass">✓ Passed</span></div>
+                  <div className="sim-cert-row"><span>Verification ID</span><span>VC-A8F2C1-7741</span></div>
+                </div>
+              </div>
+            </div>
+            <p className="sim-cert-note">Zero personal data transmitted to the requesting organisation.</p>
+          </div>
+        </div>
+      ),
+    },
+  ],
+  "working-with-children-check": [
+    {
+      label: "Enter card details",
+      desc: "The cardholder enters their WWCC card number and selects the issuing state. VerifyChain knows which state registry to query.",
+      screen: (
+        <div className="sim-screen">
+          <div className="sim-screen-header">
+            <div className="sim-dot sim-dot--red"/><div className="sim-dot sim-dot--yellow"/><div className="sim-dot sim-dot--green"/>
+            <span className="sim-url">app.verifychain.io / wwcc / card-details</span>
+          </div>
+          <div className="sim-body sim-form-body">
+            <p className="sim-step-label">Working with Children Check — Verify my card</p>
+            <div className="sim-form-fields">
+              <div className="sim-form-field"><label>Card number</label><div className="sim-form-input">WWC1234567A</div></div>
+              <div className="sim-form-field"><label>State issued</label><div className="sim-form-input sim-form-select">Victoria ▾</div></div>
+              <div className="sim-form-field"><label>Card expiry date</label><div className="sim-form-input">15 / 06 / 2027</div></div>
+            </div>
+            <div className="sim-alert-opt"><span>🔔</span> Notify me 60 days before this card expires</div>
+            <div className="sim-submit-btn">Verify card →</div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      label: "Registry check",
+      desc: "VerifyChain queries the Victorian WWCC registry in real time. The check includes revocation and condition scans.",
+      screen: (
+        <div className="sim-screen">
+          <div className="sim-screen-header">
+            <div className="sim-dot sim-dot--red"/><div className="sim-dot sim-dot--yellow"/><div className="sim-dot sim-dot--green"/>
+            <span className="sim-url">app.verifychain.io / wwcc / checking</span>
+          </div>
+          <div className="sim-body sim-processing-body">
+            <div className="sim-spinner-ring">
+              <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" stroke="#e8ecff" strokeWidth="5" fill="none"/><circle cx="40" cy="40" r="34" stroke="#1e3a8a" strokeWidth="5" fill="none" strokeDasharray="150 214" strokeLinecap="round" className="sim-ring-spin"/></svg>
+              <span className="sim-pct">85%</span>
+            </div>
+            <p className="sim-processing-title">Checking registry…</p>
+            <div className="sim-processing-steps">
+              {["✓ Card number validated","✓ Connected to Victorian registry","✓ Identity matched","⟳ Scanning for revocations…"].map((s,i)=>(<div key={i} className={`sim-proc-step ${s.startsWith("✓") ? "sim-proc-step--done" : "sim-proc-step--active"}`}>{s}</div>))}
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      label: "Clearance confirmed",
+      desc: "Certificate issued immediately. The organisation dashboard is updated. Ongoing monitoring is configured — any future revocation triggers an instant alert.",
+      screen: (
+        <div className="sim-screen">
+          <div className="sim-screen-header">
+            <div className="sim-dot sim-dot--red"/><div className="sim-dot sim-dot--yellow"/><div className="sim-dot sim-dot--green"/>
+            <span className="sim-url">app.verifychain.io / wwcc / certificate</span>
+          </div>
+          <div className="sim-body sim-cert-body">
+            <div className="sim-cert-badge">✓ Clearance confirmed</div>
+            <div className="sim-cert-card">
+              <div className="sim-cert-stripe"/>
+              <div className="sim-cert-inner">
+                <p className="sim-cert-eyebrow">VerifyChain · WWCC Verification</p>
+                <p className="sim-cert-type">Working with Children Check</p>
+                <p className="sim-cert-name">James Wu</p>
+                <div className="sim-cert-rows">
+                  <div className="sim-cert-row"><span>Card number</span><span>WWC1234567A</span></div>
+                  <div className="sim-cert-row"><span>State</span><span>Victoria</span></div>
+                  <div className="sim-cert-row"><span>Clearance status</span><span className="sim-cert-pass">✓ Current</span></div>
+                  <div className="sim-cert-row"><span>Revocation check</span><span className="sim-cert-pass">✓ None found</span></div>
+                  <div className="sim-cert-row"><span>Expiry alerts</span><span className="sim-cert-pass">✓ Enabled</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+  ],
+};
+
+// Generic simulation for products without custom screens
+function GenericSimulation({ product }) {
+  return (
+    <div className="sim-generic">
+      <div className="sim-screen sim-screen--wide">
+        <div className="sim-screen-header">
+          <div className="sim-dot sim-dot--red"/><div className="sim-dot sim-dot--yellow"/><div className="sim-dot sim-dot--green"/>
+          <span className="sim-url">app.verifychain.io / {product.num} / {product.name.toLowerCase().replace(/ /g,"-")}</span>
+        </div>
+        <div className="sim-body sim-dashboard-body">
+          <div className="sim-dash-topbar">
+            <p className="sim-dash-title">{product.name}</p>
+            <div className="sim-dash-actions">
+              <div className="sim-dash-btn">+ New check</div>
+            </div>
+          </div>
+          <div className="sim-dash-stats">
+            {[{label:"Verified this month",val:"14"},{label:"Pending",val:"3"},{label:"Average time",val:product.time},{label:"Pass rate",val:"96%"}].map(s=>(
+              <div key={s.label} className="sim-dash-stat"><p className="sim-dash-stat-val">{s.val}</p><p className="sim-dash-stat-label">{s.label}</p></div>
+            ))}
+          </div>
+          <div className="sim-dash-table">
+            <div className="sim-dash-thead"><span>Name</span><span>Status</span><span>Date</span><span>Result</span></div>
+            {[
+              {name:"Sarah Chen",   status:"Verified",  date:"12 May 2026", result:"Pass"},
+              {name:"James Wu",     status:"Pending",   date:"27 May 2026", result:"—"},
+              {name:"Mark O'Brien", status:"Verified",  date:"10 May 2026", result:"Pass"},
+            ].map((r,i)=>(
+              <div key={i} className="sim-dash-row">
+                <span>{r.name}</span>
+                <span className={`sim-dash-status ${r.status==="Verified"?"sim-dash-status--verified":r.status==="Pending"?"sim-dash-status--pending":""}`}>{r.status}</span>
+                <span>{r.date}</span>
+                <span className={r.result==="Pass"?"sim-cert-pass":""}>{r.result}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProductSimulation({ product }) {
+  const [activeStep, setActiveStep] = useState(0);
+  const screens = SIMULATION_SCREENS[product.num === "01" ? "identity-verification" : product.num === "05" ? "working-with-children-check" : null];
+
+  if (!screens) return <GenericSimulation product={product} />;
+
+  return (
+    <div className="sim-layout">
+      {/* Step selector */}
+      <div className="sim-steps-nav">
+        {screens.map((s, i) => (
+          <button key={i} className={`sim-step-btn ${activeStep === i ? "sim-step-btn--active" : ""}`} onClick={() => setActiveStep(i)}>
+            <div className="sim-step-btn-num">{i + 1}</div>
+            <div>
+              <p className="sim-step-btn-label">{s.label}</p>
+              <p className="sim-step-btn-desc">{s.desc}</p>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {/* Screen preview */}
+      <div className="sim-preview">
+        <div className="sim-preview-inner">
+          {screens[activeStep].screen}
+        </div>
+        <div className="sim-preview-nav">
+          <button className="sim-nav-btn" onClick={() => setActiveStep(i => Math.max(0, i-1))} disabled={activeStep === 0}>← Previous</button>
+          <span className="sim-nav-counter">{activeStep + 1} / {screens.length}</span>
+          <button className="sim-nav-btn" onClick={() => setActiveStep(i => Math.min(screens.length-1, i+1))} disabled={activeStep === screens.length-1}>Next →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ProductDetailPage() {
   const { slug } = useParams();
-  const navigate  = useNavigate();
   const product   = PRODUCTS[slug];
 
   if (!product) {
@@ -115,10 +377,6 @@ export default function ProductDetailPage() {
   }
 
   const st = STATUS_STYLES[product.status];
-
-  const handleStartVerification = () => {
-    navigate(`/register?redirect=/demonstration`);
-  };
 
   return (
     <div className="pdp-page">
@@ -153,12 +411,12 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="pdp-hero-actions">
-            <button className="btn-pdp-primary" onClick={handleStartVerification}>
-              Start verification →
-            </button>
-            <Link to="/demonstration" className="btn-pdp-ghost">
-              See demo first
+            <Link to="/contact?inquiry=demo" className="btn-pdp-primary">
+              Book a demo →
             </Link>
+            <a href="#pdp-simulation" className="btn-pdp-ghost">
+              See how it works ↓
+            </a>
           </div>
         </div>
       </div>
@@ -195,6 +453,21 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
+      {/* ── Product simulation ── */}
+      <div className="pdp-simulation" id="pdp-simulation">
+        <div className="pdp-section-inner">
+          <span className="section-eyebrow">Product preview</span>
+          <h2 className="pdp-section-title">
+            What the experience<br /><em>looks like</em>
+          </h2>
+          <p className="pdp-section-sub">
+            This is a preview of how {product.name.toLowerCase()} works inside VerifyChain.
+            Each screen below represents a step in the actual product.
+          </p>
+          <ProductSimulation product={product} />
+        </div>
+      </div>
+
       {/* ── Compliance strip ── */}
       <div className="pdp-compliance">
         <div className="pdp-section-inner">
@@ -211,15 +484,15 @@ export default function ProductDetailPage() {
       <div className="pdp-cta">
         <div className="pdp-section-inner pdp-cta-inner">
           <div>
-            <h3 className="pdp-cta-title">Ready to run your first check?</h3>
-            <p className="pdp-cta-sub">Create an account to get started. Results in under 5 minutes.</p>
+            <h3 className="pdp-cta-title">Want to see this in action?</h3>
+            <p className="pdp-cta-sub">Book a personalised demo with our team. We'll walk you through the full verification flow for your industry.</p>
           </div>
           <div className="pdp-cta-actions">
-            <button className="btn-pdp-primary" onClick={handleStartVerification}>
-              Create an account →
-            </button>
-            <Link to="/demonstration" className="btn-pdp-ghost">
-              Try the demo
+            <Link to="/contact?inquiry=demo" className="btn-pdp-primary">
+              Book a demo →
+            </Link>
+            <Link to="/contact" className="btn-pdp-ghost">
+              Talk to our team
             </Link>
           </div>
         </div>
