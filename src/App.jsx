@@ -25,6 +25,7 @@ import ContactPage from "./pages/ContactPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import AppDashboard from "./pages/AppDashboard";
 import TechnologyPage from "./pages/TechnologyPage";
+import DemoPage from "./pages/DemoPage";
 import UseCasesPage from "./pages/UseCasesPage";
 import "./styles/global.css";
 
@@ -86,6 +87,7 @@ function AppInner() {
           <Route path="/dashboard" element={<AppDashboard />} />
           <Route path="/technology" element={<TechnologyPage />} />
           <Route path="/use-cases" element={<UseCasesPage />} />
+          <Route path="/demo" element={<DemoPage />} />
         </Routes>
       </main>
       {!isDashboard && <Footer />}

@@ -239,7 +239,7 @@ export default function RegisterPage() {
 
         <p className="auth-switch">
           Already have an account?{" "}
-          <Link to={`/login${redirectTo !== "/demonstration" ? `?redirect=${redirectTo}` : ""}`} className="auth-switch-link">
+          <Link to={`/login${redirectTo !== "/dashboard" ? `?redirect=${redirectTo}` : ""}`} className="auth-switch-link">
             Log in
           </Link>
         </p>

@@ -104,7 +104,7 @@ export default function TechnologyPage() {
             personal data to the organisations requesting checks.
           </p>
           <div className="tech-hero-ctas">
-            <Link to="/demonstration" className="tech-cta-primary">See a live demonstration →</Link>
+            <Link to="/contact?inquiry=demo" className="tech-cta-primary">Book a demo →</Link>
             <Link to="/contact" className="tech-cta-ghost">Talk to our team</Link>
           </div>
         </div>
@@ -225,7 +225,7 @@ export default function TechnologyPage() {
           <h2>Ready to see it in action?</h2>
           <p>Run a live verification in under 5 minutes — no sign-up required.</p>
           <div className="tech-hero-ctas">
-            <Link to="/demonstration" className="tech-cta-primary">Try the demonstration →</Link>
+            <Link to="/contact?inquiry=demo" className="tech-cta-primary">Book a demo →</Link>
             <Link to="/contact" className="tech-cta-ghost">Contact us</Link>
           </div>
         </div>

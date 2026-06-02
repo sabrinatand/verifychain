@@ -1,0 +1,178 @@
+/* ════════════════════════════════════════
+   DemoPage.css — Token-gated animated demo
+════════════════════════════════════════ */
+.ademo-page { padding-top: 64px; background: #f0f2fa; min-height: 100vh; }
+
+/* ── Page header ── */
+.ademo-page-header { background: linear-gradient(135deg, #0f1a3d 0%, #1a2f6b 100%); padding: 48px 32px 0; }
+.ademo-page-header-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; margin-bottom: 32px; }
+.ademo-eyebrow { display: inline-block; background: rgba(139,195,74,0.15); border: 1px solid rgba(139,195,74,0.3); color: #a8d860; font-family: 'DM Sans',sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; margin-bottom: 14px; }
+.ademo-page-title { font-family: 'DM Serif Display',serif; font-size: clamp(28px,4vw,42px); color: #fff; letter-spacing: -0.02em; margin-bottom: 10px; }
+.ademo-page-sub { font-family: 'DM Sans',sans-serif; font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.65; max-width: 480px; }
+.ademo-book-btn { display: inline-block; background: #8bc34a; color: #0f1a3d; text-decoration: none; font-family: 'DM Sans',sans-serif; font-size: 14px; font-weight: 700; padding: 13px 26px; border-radius: 50px; white-space: nowrap; transition: opacity 0.2s, transform 0.15s; flex-shrink: 0; }
+.ademo-book-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* Selector tabs */
+.ademo-selector { max-width: 1100px; margin: 0 auto; display: flex; gap: 4px; }
+.ademo-selector-btn { display: flex; align-items: center; gap: 8px; font-family: 'DM Sans',sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.55); background: none; border: none; border-bottom: 2px solid transparent; padding: 10px 16px; cursor: pointer; margin-bottom: 0; transition: color 0.15s, border-color 0.15s; }
+.ademo-selector-btn:hover { color: rgba(255,255,255,0.9); }
+.ademo-selector-btn--active { color: #fff; border-bottom-color: #8bc34a; }
+.ademo-selector-icon { width: 18px; height: 18px; }
+.ademo-selector-icon svg { width: 18px; height: 18px; }
+
+/* ── Content ── */
+.ademo-content { max-width: 1100px; margin: 0 auto; padding: 40px 32px; }
+
+/* ── Layout ── */
+.ademo-layout { display: grid; grid-template-columns: 240px 1fr; gap: 28px; align-items: start; }
+
+/* ── Step nav ── */
+.ademo-steps-nav { background: #fff; border: 1px solid #e8e6df; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 4px; }
+.ademo-demo-label { display: flex; align-items: center; gap: 8px; font-family: 'DM Sans',sans-serif; font-size: 12px; font-weight: 700; color: #1a2f6b; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 0 12px; border-bottom: 1px solid #f0eee8; margin-bottom: 8px; }
+.ademo-demo-icon { width: 16px; height: 16px; color: #1a2f6b; }
+.ademo-demo-icon svg { width: 16px; height: 16px; }
+
+.ademo-step-btn { display: flex; align-items: center; gap: 10px; background: none; border: 1px solid transparent; border-radius: 10px; padding: 10px 12px; text-align: left; cursor: pointer; transition: all 0.15s; width: 100%; }
+.ademo-step-btn:hover { background: #f5f4f0; }
+.ademo-step-btn--active { background: #fff; border-color: rgba(30,58,138,0.15); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.ademo-step-btn--done .ademo-step-btn-num { background: #8bc34a; border-color: #8bc34a; color: #fff; }
+
+.ademo-step-btn-num { width: 24px; height: 24px; border-radius: 50%; background: #edf0f8; border: 1px solid #dde3f0; color: #1e3a8a; font-family: 'DM Sans',sans-serif; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+.ademo-step-btn--active .ademo-step-btn-num { background: #1e3a8a; border-color: #1e3a8a; color: #fff; }
+.ademo-step-btn span:last-child { font-family: 'DM Sans',sans-serif; font-size: 13px; font-weight: 500; color: #13151f; }
+
+.ademo-overall-progress { height: 3px; background: #f0eee8; border-radius: 999px; margin: 14px 0 10px; overflow: hidden; }
+.ademo-overall-bar { height: 100%; background: #1e3a8a; border-radius: 999px; transition: width 0.1s linear; }
+
+.ademo-controls { display: flex; gap: 6px; }
+.ademo-control-btn { flex: 1; font-family: 'DM Sans',sans-serif; font-size: 12px; font-weight: 500; color: #555; background: #f5f4f0; border: 1px solid #e8e6df; border-radius: 8px; padding: 7px; cursor: pointer; transition: background 0.15s; }
+.ademo-control-btn:hover { background: #e8e6df; }
+
+/* ── Screen wrap ── */
+.ademo-screen-wrap { background: #e4e8f5; border-radius: 20px; padding: 28px; min-height: 480px; display: flex; align-items: center; justify-content: center; }
+.ademo-screen-anim { width: 100%; max-width: 520px; animation: screenFadeIn 0.3s ease both; }
+@keyframes screenFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Screen chrome ── */
+.ademo-screen { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.14); width: 100%; }
+.ademo-chrome { background: #f5f4f0; padding: 10px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e8e6df; }
+.ademo-chrome-dots { display: flex; gap: 5px; }
+.ademo-dot-r { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; }
+.ademo-dot-y { width: 10px; height: 10px; border-radius: 50%; background: #febc2e; }
+.ademo-dot-g { width: 10px; height: 10px; border-radius: 50%; background: #28c840; }
+.ademo-chrome-url { font-family: 'DM Mono','Courier New',monospace; font-size: 10px; color: #888; background: #ebe9e2; border-radius: 6px; padding: 3px 10px; margin-left: 4px; }
+
+/* ── Screen body ── */
+.ademo-body { padding: 20px; }
+.ademo-body--center { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.ademo-step-eyebrow { font-family: 'DM Sans',sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3b5ccc; }
+.ademo-step-title { font-family: 'DM Serif Display',serif; font-size: 18px; color: #13151f; margin-bottom: 4px; }
+.ademo-step-sub { font-family: 'DM Sans',sans-serif; font-size: 12px; color: #777; line-height: 1.55; margin-bottom: 12px; }
+
+/* Upload */
+.ademo-upload-zone { border: 2px dashed #c0cadf; border-radius: 12px; background: #f7f8fc; padding: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; overflow: hidden; min-height: 120px; justify-content: center; transition: border-color 0.3s, background 0.3s; }
+.ademo-upload-zone--filled { border-style: solid; border-color: #1e3a8a; background: #edf0f8; }
+.ademo-upload-icon, .ademo-upload-filled-icon { font-size: 24px; }
+.ademo-upload-main { font-family: 'DM Sans',sans-serif; font-size: 13px; font-weight: 600; color: #13151f; }
+.ademo-upload-hint { font-family: 'DM Sans',sans-serif; font-size: 11px; color: #aaa; }
+.ademo-upload-filename { font-family: 'DM Mono',monospace; font-size: 12px; color: #1e3a8a; font-weight: 600; }
+.ademo-upload-size { font-family: 'DM Sans',sans-serif; font-size: 11px; color: #888; }
+.ademo-upload-btn { background: #1e3a8a; color: #fff; font-family: 'DM Sans',sans-serif; font-size: 12px; font-weight: 600; padding: 7px 18px; border-radius: 6px; }
+.ademo-scan-line { position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg,transparent,#1e3a8a,transparent); animation: scanLine 1.5s ease-in-out infinite; opacity: 0.7; }
+@keyframes scanLine { 0%{top:10%;opacity:0} 10%{opacity:1} 90%{opacity:1} 100%{top:90%;opacity:0} }
+.ademo-tips-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
+.ademo-tips-row span { font-family: 'DM Sans',sans-serif; font-size: 11px; color: #666; background: #fff; border: 1px solid #e8e6df; padding: 4px 10px; border-radius: 999px; }
+
+/* Face */
+.ademo-viewfinder { position: relative; width: 140px; height: 160px; background: #eef0f8; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
+.ademo-viewfinder--captured { background: #dcfce7; }
+.ademo-oval { width: 88px; height: 120px; border: 2px dashed #1e3a8a; border-radius: 50%; opacity: 0.5; }
+.ademo-viewfinder-hint { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-family: 'DM Sans',sans-serif; font-size: 9px; color: #1e3a8a; font-weight: 600; }
+.ademo-corner { position: absolute; width: 12px; height: 12px; border-color: #1e3a8a; border-style: solid; opacity: 0.7; }
+.ademo-corner--tl { top:8px;left:8px;   border-width:2px 0 0 2px; border-radius:3px 0 0 0; }
+.ademo-corner--tr { top:8px;right:8px;  border-width:2px 2px 0 0; border-radius:0 3px 0 0; }
+.ademo-corner--bl { bottom:8px;left:8px;  border-width:0 0 2px 2px; border-radius:0 0 0 3px; }
+.ademo-corner--br { bottom:8px;right:8px; border-width:0 2px 2px 0; border-radius:0 0 3px 0; }
+.ademo-captured-overlay { position: absolute; inset: 0; background: rgba(72,187,120,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #15803d; font-weight: bold; animation: screenFadeIn 0.3s ease; }
+.ademo-attempt-row { display: flex; align-items: center; gap: 6px; font-family: 'DM Sans',sans-serif; font-size: 11px; color: #888; }
+.ademo-dot { width: 8px; height: 8px; border-radius: 50%; background: #c8d0e8; }
+.ademo-face-btn { background: #1e3a8a; color: #fff; font-family: 'DM Sans',sans-serif; font-size: 13px; font-weight: 600; padding: 10px 28px; border-radius: 50px; transition: background 0.3s; }
+.ademo-face-btn--done { background: #15803d; }
+
+/* Verification spinner */
+.ademo-spinner-wrap { position: relative; width: 80px; height: 80px; }
+.ademo-spinner-wrap svg { width: 80px; height: 80px; }
+.ademo-pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans',sans-serif; font-size: 15px; font-weight: 700; color: #1e3a8a; }
+.ademo-verifying-title { font-family: 'DM Serif Display',serif; font-size: 18px; color: #13151f; }
+.ademo-proc-steps { display: flex; flex-direction: column; gap: 6px; align-self: stretch; }
+.ademo-proc-step { display: flex; align-items: center; gap: 8px; font-family: 'DM Sans',sans-serif; font-size: 12px; color: #bbb; }
+.ademo-proc-step--done   { color: #15803d; }
+.ademo-proc-step--active { color: #1e3a8a; font-weight: 600; }
+.ademo-proc-dot { width: 16px; text-align: center; font-size: 12px; }
+
+/* Certificate */
+.ademo-success-badge { display: inline-flex; align-items: center; gap: 6px; background: #dcfce7; color: #15803d; font-family: 'DM Sans',sans-serif; font-size: 13px; font-weight: 700; padding: 7px 18px; border-radius: 999px; opacity: 0; transition: opacity 0.4s; }
+.ademo-success-badge--visible { opacity: 1; }
+.ademo-cert { background: #fff; border: 1px solid #e8e6df; border-radius: 12px; overflow: hidden; width: 100%; box-shadow: 0 4px 16px rgba(0,0,0,0.07); opacity: 0; transform: translateY(8px); transition: opacity 0.4s, transform 0.4s; }
+.ademo-cert--visible { opacity: 1; transform: translateY(0); }
+.ademo-cert-stripe { height: 4px; background: linear-gradient(90deg,#1e3a8a,#3b5ccc); }
+.ademo-cert-body { padding: 16px; }
+.ademo-cert-eyebrow { font-family: 'DM Sans',sans-serif; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: #bbb; margin-bottom: 3px; }
+.ademo-cert-type  { font-family: 'DM Sans',sans-serif; font-size: 10px; font-weight: 700; color: #3b5ccc; margin-bottom: 6px; letter-spacing: 0.04em; }
+.ademo-cert-name  { font-family: 'DM Serif Display',serif; font-size: 18px; color: #13151f; margin-bottom: 12px; }
+.ademo-cert-rows  { display: flex; flex-direction: column; }
+.ademo-cert-row   { display: flex; justify-content: space-between; font-family: 'DM Sans',sans-serif; font-size: 11px; padding: 5px 0; border-bottom: 1px solid #f5f4f0; }
+.ademo-cert-row span:first-child { color: #999; }
+.ademo-cert-row span:last-child  { color: #13151f; font-weight: 600; }
+.ademo-cert-pass  { color: #15803d !important; }
+.ademo-cert-note  { font-family: 'DM Sans',sans-serif; font-size: 10px; color: #bbb; text-align: center; }
+
+/* WWCC form */
+.ademo-form-fields { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+.ademo-field { display: flex; flex-direction: column; gap: 4px; }
+.ademo-field label { font-family: 'DM Sans',sans-serif; font-size: 11px; font-weight: 600; color: #666; }
+.ademo-input { font-family: 'DM Sans',sans-serif; font-size: 13px; color: #bbb; background: #f7f8fc; border: 1px solid #dde3f0; border-radius: 8px; padding: 8px 12px; min-height: 36px; transition: color 0.3s, border-color 0.3s; }
+.ademo-input--filled { color: #13151f; border-color: #1e3a8a; }
+.ademo-input--select { display: flex; justify-content: space-between; }
+.ademo-alert-optin { font-family: 'DM Sans',sans-serif; font-size: 11px; color: #555; display: flex; gap: 6px; align-items: center; background: #f0f8ff; border: 1px solid #bee3f8; border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; }
+.ademo-submit-btn { background: #c0cadf; color: #fff; font-family: 'DM Sans',sans-serif; font-size: 13px; font-weight: 600; padding: 11px; border-radius: 10px; text-align: center; transition: background 0.3s; }
+.ademo-submit-btn--active { background: #1e3a8a; }
+
+/* Finished state */
+.ademo-finished { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding: 40px 24px; }
+.ademo-finished-icon { width: 60px; height: 60px; border-radius: 50%; background: #dcfce7; color: #15803d; font-size: 28px; display: flex; align-items: center; justify-content: center; }
+.ademo-finished h3 { font-family: 'DM Serif Display',serif; font-size: 22px; color: #13151f; }
+.ademo-finished p  { font-family: 'DM Sans',sans-serif; font-size: 14px; color: #666; line-height: 1.65; max-width: 340px; }
+.ademo-finished-actions { display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%; }
+.ademo-finished-btn { display: inline-block; background: #1e3a8a; color: #fff; text-decoration: none; font-family: 'DM Sans',sans-serif; font-size: 14px; font-weight: 600; padding: 12px 28px; border-radius: 50px; width: 100%; text-align: center; }
+.ademo-finished-ghost { background: none; border: 1px solid #dde3f0; color: #666; font-family: 'DM Sans',sans-serif; font-size: 13px; padding: 10px 24px; border-radius: 50px; cursor: pointer; transition: background 0.15s; }
+.ademo-finished-ghost:hover { background: #f5f4f0; }
+
+/* ── Access wall ── */
+.ademo-wall { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 32px; background: linear-gradient(135deg,#0f1a3d 0%,#1a2f6b 100%); }
+.ademo-wall-inner { max-width: 480px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.ademo-wall-icon { font-size: 48px; }
+.ademo-wall-h1 { font-family: 'DM Serif Display',serif; font-size: 36px; color: #fff; letter-spacing: -0.02em; }
+.ademo-wall-sub { font-family: 'DM Sans',sans-serif; font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.7; }
+.ademo-wall-btn { display: inline-block; background: #8bc34a; color: #0f1a3d; text-decoration: none; font-family: 'DM Sans',sans-serif; font-size: 15px; font-weight: 700; padding: 14px 32px; border-radius: 50px; transition: opacity 0.2s; }
+.ademo-wall-btn:hover { opacity: 0.88; }
+.ademo-wall-note { font-family: 'DM Sans',sans-serif; font-size: 13px; color: rgba(255,255,255,0.4); }
+.ademo-wall-link { color: rgba(255,255,255,0.7); }
+
+/* ── Footer CTA ── */
+.ademo-footer-cta { background: #0f1a3d; padding: 64px 32px; text-align: center; }
+.ademo-footer-cta-inner { max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.ademo-footer-cta h2 { font-family: 'DM Serif Display',serif; font-size: 32px; color: #fff; }
+.ademo-footer-cta p  { font-family: 'DM Sans',sans-serif; font-size: 15px; color: rgba(255,255,255,0.6); }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .ademo-layout { grid-template-columns: 1fr; }
+  .ademo-steps-nav { flex-direction: row; flex-wrap: wrap; }
+  .ademo-overall-progress, .ademo-controls { width: 100%; }
+  .ademo-page-header-inner { flex-direction: column; gap: 20px; }
+}
+@media (max-width: 600px) {
+  .ademo-content { padding: 24px 16px; }
+  .ademo-selector { overflow-x: auto; }
+}

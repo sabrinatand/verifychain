@@ -130,7 +130,7 @@ export default function LoginPage() {
         <p className="auth-switch">
           Don't have an account?{" "}
           <Link
-            to={`/register${redirectTo !== "/demonstration" ? `?redirect=${redirectTo}` : ""}`}
+            to={`/register${redirectTo !== "/dashboard" ? `?redirect=${redirectTo}` : ""}`}
             className="auth-switch-link"
           >
             Register

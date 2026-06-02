@@ -189,7 +189,7 @@ export default function UseCasesPage() {
               <div className="uc-cta-card">
                 <h4>Ready to see how this works?</h4>
                 <p>Run a live verification in under 5 minutes — no sign-up required.</p>
-                <Link to="/demonstration" className="uc-cta-btn">Try the demonstration →</Link>
+                <Link to="/contact?inquiry=demo" className="uc-cta-btn">Book a demo →</Link>
                 <Link to="/contact" className="uc-cta-link">Or talk to our team</Link>
               </div>
             </div>
@@ -222,7 +222,7 @@ export default function UseCasesPage() {
           <p>Our team can walk you through the right combination for your industry and compliance obligations.</p>
           <div className="uc-bottom-cta-btns">
             <Link to="/contact" className="uc-cta-btn">Talk to us →</Link>
-            <Link to="/demonstration" className="uc-cta-btn uc-cta-btn--ghost">Try the demo first</Link>
+            <Link to="/contact?inquiry=demo" className="uc-cta-btn uc-cta-btn--ghost">Learn more →</Link>
           </div>
         </div>
       </section>
