@@ -1,16 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./DemoPage.css";
-
-// ── Token gate ────────────────────────────────────────────────────
-// Option A: hardcoded tokens. Replace with Supabase later.
-const VALID_TOKENS = [
-  "vc-demo-2026",
-  "vc-demo-hormuz",
-  "vc-demo-client1",
-  "vc-demo-client2",
-  "vc-demo-client3",
-];
 
 // ── Animated demo content ─────────────────────────────────────────
 const DEMOS = [
@@ -402,40 +392,11 @@ function AnimatedDemo({ demo }) {
   );
 }
 
-// ── Access wall ───────────────────────────────────────────────────
-function AccessWall() {
-  return (
-    <div className="ademo-wall">
-      <div className="ademo-wall-inner">
-        <div className="ademo-wall-icon">🔒</div>
-        <h1 className="ademo-wall-h1">Demo access required</h1>
-        <p className="ademo-wall-sub">
-          This animated demo is available to prospective clients after a conversation with our team.
-          Fill out the form below and we'll be in touch within one business day.
-        </p>
-        <Link to="/contact?inquiry=demo" className="ademo-wall-btn">Request demo access →</Link>
-        <p className="ademo-wall-note">
-          Already have access?{" "}
-          <a href="/demo?token=vc-demo-2026" className="ademo-wall-link">Enter your access link</a>
-          {" "}sent to you by our team.
-        </p>
-      </div>
-    </div>
-  );
-}
-
 // ── Main page ─────────────────────────────────────────────────────
 export default function DemoPage() {
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const token = params.get("token");
-  const isValid = VALID_TOKENS.includes(token);
-
   const [activeDemo, setActiveDemo] = useState("identity");
   const [demoKey, setDemoKey]       = useState(0); // force remount on switch
   const demo = DEMOS.find(d => d.id === activeDemo);
-
-  if (!isValid) return <AccessWall />;
 
   return (
     <div className="ademo-page">

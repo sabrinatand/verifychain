@@ -148,17 +148,6 @@
 .ademo-finished-ghost { background: none; border: 1px solid #dde3f0; color: #666; font-family: 'DM Sans',sans-serif; font-size: 13px; padding: 10px 24px; border-radius: 50px; cursor: pointer; transition: background 0.15s; }
 .ademo-finished-ghost:hover { background: #f5f4f0; }
 
-/* ── Access wall ── */
-.ademo-wall { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 32px; background: linear-gradient(135deg,#0f1a3d 0%,#1a2f6b 100%); }
-.ademo-wall-inner { max-width: 480px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; }
-.ademo-wall-icon { font-size: 48px; }
-.ademo-wall-h1 { font-family: 'DM Serif Display',serif; font-size: 36px; color: #fff; letter-spacing: -0.02em; }
-.ademo-wall-sub { font-family: 'DM Sans',sans-serif; font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.7; }
-.ademo-wall-btn { display: inline-block; background: #8bc34a; color: #0f1a3d; text-decoration: none; font-family: 'DM Sans',sans-serif; font-size: 15px; font-weight: 700; padding: 14px 32px; border-radius: 50px; transition: opacity 0.2s; }
-.ademo-wall-btn:hover { opacity: 0.88; }
-.ademo-wall-note { font-family: 'DM Sans',sans-serif; font-size: 13px; color: rgba(255,255,255,0.4); }
-.ademo-wall-link { color: rgba(255,255,255,0.7); }
-
 /* ── Footer CTA ── */
 .ademo-footer-cta { background: #0f1a3d; padding: 64px 32px; text-align: center; }
 .ademo-footer-cta-inner { max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; align-items: center; }
