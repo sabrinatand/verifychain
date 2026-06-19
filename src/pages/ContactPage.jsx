@@ -6,7 +6,11 @@ import "./ContactPage.css";
 // ── EmailJS config ────────────────────────────────────────────────
 const EMAILJS_SERVICE_ID  = "service_wof9sbb";
 const EMAILJS_TEMPLATE_ID = "template_r8jkopj";
-const EMAILJS_PUBLIC_KEY  = "V6Cz6xFQihHiqjre3";
+const EMAILJS_PUBLIC_KEY       = "V6Cz6xFQihHiqjre3";
+const EMAILJS_AUTOREPLY_ID    = "template_j2qzuuq";
+
+// ── Zapier webhook — logs every submission to Google Sheet ────────
+const ZAPIER_WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/27807649/4brg2az/";
 
 const INQUIRY_LABELS = {
   demo:    "Book a demo",
@@ -53,12 +57,49 @@ export default function ContactPage() {
     };
 
     try {
+      // 1. Send notification to you/Hormuz
       await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         templateParams,
         EMAILJS_PUBLIC_KEY
       );
+
+      // 2. Send auto-reply confirmation to the visitor
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_AUTOREPLY_ID,
+        {
+          to_name:      form.name,
+          to_email:     form.email,
+          inquiry_type: INQUIRY_LABELS[form.inquiry] || form.inquiry,
+          organisation: form.organisation || "Not provided",
+          role:         form.role         || "Not provided",
+          message:      form.message      || "No message provided",
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+
+      // 3. Log to Google Sheet via Zapier webhook (fire and forget)
+      if (ZAPIER_WEBHOOK_URL !== "PASTE_YOUR_ZAPIER_WEBHOOK_URL_HERE") {
+        // Zapier webhooks work best with form-encoded data from the browser
+        const zapData = new FormData();
+        zapData.append("timestamp",    new Date().toLocaleString("en-AU"));
+        zapData.append("name",         form.name);
+        zapData.append("email",        form.email);
+        zapData.append("organisation", form.organisation || "");
+        zapData.append("role",         form.role         || "");
+        zapData.append("org_size",     form.size         || "");
+        zapData.append("inquiry_type", INQUIRY_LABELS[form.inquiry] || form.inquiry);
+        zapData.append("message",      form.message      || "");
+        zapData.append("status",       "Pending");
+        fetch(ZAPIER_WEBHOOK_URL, {
+          method: "POST",
+          mode:   "no-cors",
+          body:   zapData,
+        }).catch(err => console.warn("Zapier log failed:", err));
+      }
+
       setStatus("success");
     } catch (err) {
       console.error("EmailJS error:", err);

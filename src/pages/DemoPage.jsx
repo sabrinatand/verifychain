@@ -395,7 +395,7 @@ function AnimatedDemo({ demo }) {
 // ── Main page ─────────────────────────────────────────────────────
 export default function DemoPage() {
   const [activeDemo, setActiveDemo] = useState("identity");
-  const [demoKey, setDemoKey]       = useState(0); // force remount on switch
+  const [demoKey, setDemoKey]       = useState(0);
   const demo = DEMOS.find(d => d.id === activeDemo);
 
   return (
