@@ -50,32 +50,33 @@ const products = [
       </svg>
     ),
   },
-  {
-    num: "05", slug: "working-with-children-check",
-    name: "Working with children check",
-    desc: "Real-time clearance validation with automatic revocation alerts across multiple Australian jurisdictions.",
-    status: "dev", statusLabel: "In development",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-      </svg>
-    ),
-  },
-  {
-    num: "06", slug: "eseal-document-verification",
-    name: "eSeal document verification",
-    desc: "Tamper-proof digital notarisation. Cryptographic seals compliant with ESIGN and eIDAS regulations.",
-    status: "dev", statusLabel: "In development",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-        <polyline points="14 2 14 8 20 8"/>
-        <path d="M9 15l2 2 4-4"/>
-      </svg>
-    ),
-  },
+  // Hidden per Hormuz's feedback — re-add when confirmed:
+  // {
+  //   num: "05", slug: "working-with-children-check",
+  //   name: "Working with children check",
+  //   desc: "Real-time clearance validation with automatic revocation alerts across multiple Australian jurisdictions.",
+  //   status: "dev", statusLabel: "In development",
+  //   icon: (
+  //     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  //       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+  //       <circle cx="9" cy="7" r="4"/>
+  //       <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+  //     </svg>
+  //   ),
+  // },
+  // {
+  //   num: "06", slug: "eseal-document-verification",
+  //   name: "eSeal document verification",
+  //   desc: "Tamper-proof digital notarisation. Cryptographic seals compliant with ESIGN and eIDAS regulations.",
+  //   status: "dev", statusLabel: "In development",
+  //   icon: (
+  //     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  //       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+  //       <polyline points="14 2 14 8 20 8"/>
+  //       <path d="M9 15l2 2 4-4"/>
+  //     </svg>
+  //   ),
+  // },
 ];
 
 export default function Products() {

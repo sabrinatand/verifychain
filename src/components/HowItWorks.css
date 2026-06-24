@@ -1,7 +1,15 @@
 .hiw-section { background: linear-gradient(180deg, var(--bg-cool) 0%, var(--bg-warm) 100%); }
 .hiw-inner { max-width: var(--max-w); margin: 0 auto; padding: var(--section-py) var(--section-px); }
 .hiw-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 32px; position: relative; margin-top: 56px; }
-.hiw-line { position: absolute; top: 19px; left: calc(12.5% + 10px); right: calc(12.5% + 10px); height: 1px; background: var(--border); z-index: 0; }
+.hiw-line {
+  position: absolute;
+  top: 19px;
+  left: 19px;
+  right: calc(25% - 43px);
+  height: 1px;
+  background: var(--border);
+  z-index: 0;
+}
 .hiw-step { position: relative; z-index: 1; cursor: default; }
 .hiw-step:hover .hiw-circle--active { transform: scale(1.12); box-shadow: 0 4px 16px rgba(14,14,15,0.18); }
 .hiw-step:hover .hiw-title { color: #1e3a8a; }

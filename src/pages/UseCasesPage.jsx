@@ -107,8 +107,9 @@ const ALL_CHECKS = [
   { slug: "age-verification",            label: "Age verification",            icon: "🎂" },
   { slug: "qualification-verification",  label: "Qualification verification",  icon: "🎓" },
   { slug: "national-crime-check",        label: "National crime check",        icon: "🛡️" },
-  { slug: "working-with-children-check", label: "Working with Children Check", icon: "👶" },
-  { slug: "eseal-document-verification", label: "eSeal document verification", icon: "📄" },
+  // Hidden per Hormuz's feedback — re-add when confirmed:
+  // { slug: "working-with-children-check", label: "Working with Children Check", icon: "👶" },
+  // { slug: "eseal-document-verification", label: "eSeal document verification", icon: "📄" },
 ];
 
 export default function UseCasesPage() {

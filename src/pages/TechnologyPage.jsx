@@ -200,11 +200,11 @@ export default function TechnologyPage() {
       <section className="tech-section tech-platform">
         <div className="tech-section-inner">
           <p className="tech-section-label">Deployment</p>
-          <h2 className="tech-section-h2">No infrastructure required</h2>
-          <p className="tech-section-sub">VerifyChain is fully cloud-hosted. There is nothing to install, maintain, or manage on your side.</p>
+          <h2 className="tech-section-h2">Flexible cloud hosting</h2>
+          <p className="tech-section-sub">VerifyChain is currently hosted on AWS, with the flexibility to deploy on any major cloud provider based on your organisation's requirements.</p>
           <div className="tech-platform-grid">
             {[
-              { icon: "☁️", title: "Cloud-hosted on AWS and Azure",       desc: "Multi-cloud deployment with geographic redundancy. VerifyChain manages all hosting, uptime, and scaling — your team just connects." },
+              { icon: "☁️", title: "Hosted on AWS",       desc: "Currently deployed on Amazon Web Services. Can be hosted on Azure, GCP, or a provider of your choice if your organisation has specific requirements." },
               { icon: "📱", title: "Works on any device",                 desc: "Responsive web portal for HR and compliance teams. Progressive Web App (PWA) for individuals — download once, works like a native app on iOS or Android." },
               { icon: "🔌", title: "Plug into your existing systems",     desc: "REST and GraphQL APIs connect VerifyChain to your HR platform, CRM, or compliance tools. OpenAPI 3.0 documentation included." },
               { icon: "🌐", title: "Browser-compatible everywhere",        desc: "Chrome, Edge, Firefox, and Safari all supported. No proprietary plugins or software required for your team or your clients." },

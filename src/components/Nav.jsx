@@ -7,8 +7,9 @@ const PRODUCTS = [
   { slug: "age-verification",             label: "Age verification",             desc: "Confirm age without revealing a birth date — tested by the Australian Government." },
   { slug: "qualification-verification",   label: "Qualification verification",   desc: "Verify university degrees and trade qualifications." },
   { slug: "national-crime-check",         label: "National crime check",         desc: "Automated background screening via Australian law enforcement." },
-  { slug: "working-with-children-check",  label: "Working with Children Check",  desc: "Real-time clearance validation across all Australian jurisdictions." },
-  { slug: "eseal-document-verification",  label: "eSeal document verification",  desc: "Tamper-proof digital notarisation compliant with ESIGN and eIDAS." },
+  // Hidden per Hormuz's feedback — re-add when confirmed:
+  // { slug: "working-with-children-check",  label: "Working with Children Check",  desc: "Real-time clearance validation across all Australian jurisdictions." },
+  // { slug: "eseal-document-verification",  label: "eSeal document verification",  desc: "Tamper-proof digital notarisation compliant with ESIGN and eIDAS." },
 ];
 
 const COMPANY = [
@@ -86,7 +87,7 @@ export default function Nav() {
                   ))}
                 </div>
                 <div className="nav-dropdown-footer">
-                  <Link to="/#products" className="nav-dropdown-footer-link" onClick={() => setOpenDropdown(null)}>
+                  <Link to="/products/identity-verification" className="nav-dropdown-footer-link" onClick={() => setOpenDropdown(null)}>
                     See all products →
                   </Link>
                 </div>
