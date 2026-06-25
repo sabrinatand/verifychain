@@ -27,6 +27,7 @@ import AppDashboard from "./pages/AppDashboard";
 import TechnologyPage from "./pages/TechnologyPage";
 import DemoPage from "./pages/DemoPage";
 import UseCasesPage from "./pages/UseCasesPage";
+import Verabot from "./components/Verabot"
 import "./styles/global.css";
 
 function ScrollObserver() {
@@ -92,6 +93,7 @@ function AppInner() {
       </main>
       {!isDashboard && <Footer />}
       {/* ✗ REMOVE the bare <Footer /> below — it was rendering Footer twice */}
+      <Verabot />
     </div>
   );
   // ✗ REMOVE the stray "z" that was here — it causes a syntax error
