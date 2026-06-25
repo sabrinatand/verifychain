@@ -6,7 +6,9 @@ A clean, Persona-inspired marketing website for VerifyChain — built with React
 
 ```bash
 npm install
-npm run dev
+npm run dev:all 
+
+Note: instead of running npm run dev and node server.js on a separate terminal, run npm run dev:all
 ```
 
 Then open http://localhost:5173
