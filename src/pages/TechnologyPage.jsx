@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { Link } from "react-router-dom";
 import "./TechnologyPage.css";
 
@@ -122,21 +122,23 @@ export default function TechnologyPage() {
           <h2 className="tech-section-h2">How verification works</h2>
           <p className="tech-section-sub">From request to result in minutes — with zero raw data ever leaving the individual.</p>
           <div className="tech-steps">
-            {[
-              { n: "1", title: "Request is made",    desc: "An organisation requests a verification check via VerifyChain's platform or API. The individual is notified and consents to the specific check." },
-              { n: "2", title: "Proof is generated", desc: "VerifyChain queries the relevant authoritative data source — government database, educational registry, or law enforcement database — and generates a cryptographic proof of the result." },
-              { n: "3", title: "Result is delivered", desc: "The organisation receives a verified result and a tamper-proof certificate. No personal data is transmitted — only the cryptographic confirmation that the check passed or failed." },
-            ].map((s, i) => (
-              <div key={i} className="tech-step">
-                <div className="tech-step-num">{s.n}</div>
-                <div>
-                  <h3 className="tech-step-title">{s.title}</h3>
-                  <p className="tech-step-desc">{s.desc}</p>
-                </div>
-                {i < 2 && <div className="tech-step-arrow">→</div>}
-              </div>
-            ))}
-          </div>
+  {[
+    { n: "1", title: "Request is made",    desc: "An organisation requests a verification check via VerifyChain's platform or API. The individual is notified and consents to the specific check." },
+{ n: "2", title: "Proof is generated", desc: "VerifyChain queries the relevant authoritative data source — government database, educational registry, or law enforcement database — and generates a cryptographic proof of the result." },
+{ n: "3", title: "Result is delivered", desc: "The organisation receives a verified result and a tamper-proof certificate. No personal data is transmitted — only the cryptographic confirmation that the check passed or failed." },
+  ].map((s, i) => (
+    <Fragment key={i}>
+      <div className="tech-step">
+        <div className="tech-step-num">{s.n}</div>
+        <div>
+          <h3 className="tech-step-title">{s.title}</h3>
+          <p className="tech-step-desc">{s.desc}</p>
+        </div>
+      </div>
+      {i < 2 && <div className="tech-step-arrow">→</div>}
+    </Fragment>
+  ))}
+</div>
         </div>
       </section>
 
