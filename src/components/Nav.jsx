@@ -86,11 +86,7 @@ export default function Nav() {
                     </Link>
                   ))}
                 </div>
-                <div className="nav-dropdown-footer">
-                  <Link to="/products/identity-verification" className="nav-dropdown-footer-link" onClick={() => setOpenDropdown(null)}>
-                    See all products →
-                  </Link>
-                </div>
+             
               </div>
             )}
           </li>
