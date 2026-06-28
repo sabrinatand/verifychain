@@ -2,6 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./UseCasesPage.css";
 
+// FIX: Childcare and Community tab removed — it was built almost
+// entirely around Working with Children Check, which is deprioritised
+// and not yet live. Re-add once WWCC is confirmed ready.
+// FIX: WWCC and eSeal removed from every industry's "checks" list and
+// scenarios below, since both are not yet live products.
 const INDUSTRIES = [
   {
     id: "hr",
@@ -14,13 +19,13 @@ const INDUSTRIES = [
     ),
     headline: "Hire with confidence. Stay compliant.",
     intro: "Every hire carries risk. VerifyChain gives HR and recruitment teams a faster, more reliable way to complete the compliance checks that protect their organisation and the people they serve.",
-    checks: ["Identity verification", "National crime check", "Qualification verification", "Working with Children Check", "Age verification"],
+    checks: ["Identity verification", "National crime check", "Qualification verification", "Age verification"],
     scenarios: [
       { title: "Pre-employment screening", desc: "Run identity, criminal history, and qualification checks in one flow before a contract is signed — results in minutes, not days." },
-      { title: "Ongoing workforce compliance", desc: "Automate re-verification for expiring credentials. Get alerted when a Working with Children Check is revoked, before you find out the hard way." },
+      { title: "Ongoing workforce compliance", desc: "Automate re-verification for expiring credentials, so nothing relies on staff remembering to renew." },
       { title: "Contractor and volunteer onboarding", desc: "Bring the same compliance rigour to contractors and volunteers that you apply to permanent staff — with no extra administrative overhead." },
     ],
-    quote: "The Working with Children Check revocation alert alone is worth it. We used to find out weeks after the fact.",
+    quote: "We cut our pre-employment screening time from days to minutes. That's changed how fast we can make an offer.",
     quoteRole: "People and Culture Manager, Community Services Organisation",
   },
   {
@@ -32,11 +37,11 @@ const INDUSTRIES = [
       </svg>
     ),
     headline: "Verify who is in your classroom.",
-    intro: "From student admissions to staff compliance, education providers need to know the people on their campus are who they say they are — and have the clearances required by law.",
-    checks: ["Working with Children Check", "Identity verification", "Qualification verification", "National crime check"],
+    intro: "From student admissions to staff compliance, education providers need to know the people on their campus are who they say they are.",
+    checks: ["Identity verification", "Qualification verification", "National crime check"],
     scenarios: [
-      { title: "Staff and volunteer clearances", desc: "Verify Working with Children Checks for all staff, volunteers, and contractors who interact with students — with real-time revocation monitoring." },
-      { title: "Credential verification for admissions", desc: "Confirm prior qualifications and certifications from applicants. Directly integrated with educational institution databases." },
+      { title: "Staff and contractor screening", desc: "Verify identity and background checks for staff, contractors, and visitors who interact with students." },
+      { title: "Credential verification for admissions", desc: "Confirm prior qualifications and certifications from applicants against the USI registry or issuing institution." },
       { title: "International student identity verification", desc: "Verify government-issued photo ID across a wide range of countries — supporting both domestic and international enrolment processes." },
     ],
     quote: "We verify every person who walks through our door. VerifyChain makes that operationally possible.",
@@ -51,13 +56,13 @@ const INDUSTRIES = [
         <path d="M2 10h20"/>
       </svg>
     ),
-    headline: "KYC and AML compliance, built in.",
+    headline: "KYC compliance, built in.",
     intro: "Banks, fintechs, and financial institutions face the strictest identity verification obligations of any industry. VerifyChain was built with financial services compliance in mind from day one.",
-    checks: ["Identity verification", "Age verification", "National crime check", "eSeal document verification"],
+    checks: ["Identity verification", "Age verification", "National crime check"],
     scenarios: [
-      { title: "Know Your Customer (KYC)", desc: "Verify customer identity against government databases in real time — satisfying KYC obligations without requiring customers to attend in person or submit physical documents." },
-      { title: "Anti-Money Laundering (AML) checks", desc: "VerifyChain is preparing PEP (Politically Exposed Persons), sanctions screening, and adverse media checks ahead of Australia's expanded AML legislation taking effect July 2026." },
-      { title: "Document notarisation with eSeal", desc: "Issue cryptographically sealed documents for loan agreements, contracts, and compliance records — instantly verifiable by any authorised party." },
+      { title: "Know Your Customer (KYC)", desc: "Verify customer identity against government sources in real time — satisfying KYC obligations without requiring customers to attend in person." },
+      { title: "Anti-Money Laundering (AML) readiness", desc: "VerifyChain is preparing for expanded AML compliance ahead of Australia's legislation changes taking effect July 2026." },
+      { title: "Streamlined onboarding", desc: "Reduce account opening friction with a verification flow customers complete entirely from their phone or browser." },
     ],
     quote: "We cut our KYC turnaround from three days to under five minutes. That changes the product we can offer.",
     quoteRole: "Head of Compliance, Australian Fintech",
@@ -72,33 +77,14 @@ const INDUSTRIES = [
     ),
     headline: "Secure digital identity for citizen services.",
     intro: "Government agencies require verification that meets the highest standards of security, privacy, and accessibility. VerifyChain is designed and audited to meet Australian government compliance frameworks.",
-    checks: ["Identity verification", "National crime check", "Working with Children Check", "eSeal document verification", "Age verification"],
+    checks: ["Identity verification", "National crime check", "Age verification"],
     scenarios: [
-      { title: "Citizen identity verification", desc: "Verify identity for access to government services — without centralised storage of personal data. Privacy-by-design meets the Privacy Act 1988 and aligns with the ASD security blueprint." },
-      { title: "Licence and permit applications", desc: "Automate identity and background checks as part of licence application workflows — reducing manual processing time and eliminating document fraud." },
-      { title: "Inter-agency credential sharing", desc: "Issue and verify credentials that can be recognised across departments and jurisdictions using W3C Verifiable Credentials standards." },
+      { title: "Citizen identity verification", desc: "Verify identity for access to government services — without centralised storage of personal data. Privacy-by-design meets the Privacy Act 1988." },
+      { title: "Licence and permit applications", desc: "Automate identity and background checks as part of licence application workflows — reducing manual processing time and document fraud." },
+      { title: "Interoperable credentials", desc: "Issue and verify credentials using W3C Verifiable Credentials standards, recognised across departments and jurisdictions." },
     ],
     quote: "Meeting ISM and IRAP requirements while keeping the citizen experience simple — that's what we needed.",
     quoteRole: "Digital Transformation Lead, State Government Department",
-  },
-  {
-    id: "childcare",
-    label: "Childcare and Community",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
-      </svg>
-    ),
-    headline: "Every person working with children, verified.",
-    intro: "Childcare centres, sports clubs, disability services, and community organisations have a legal and moral obligation to verify the people who work with vulnerable individuals. VerifyChain makes that continuous, not a one-time checkbox.",
-    checks: ["Working with Children Check", "Identity verification", "National crime check"],
-    scenarios: [
-      { title: "Real-time clearance validation", desc: "Verify a Working with Children Check in real time against the state registry — not just on hire, but at any point you need confidence." },
-      { title: "Revocation alerts", desc: "When a clearance is revoked, suspended, or modified, VerifyChain notifies the organisation immediately — not weeks later when the paper system catches up." },
-      { title: "Multi-jurisdiction compliance", desc: "Staff who work across state lines carry clearances issued in different jurisdictions. VerifyChain maps and validates across all Australian states." },
-    ],
-    quote: "One of our volunteers had their WWCC revoked. We knew within the hour. That's what child safety looks like.",
-    quoteRole: "Operations Manager, Youth Services NFP",
   },
 ];
 
@@ -125,9 +111,9 @@ export default function UseCasesPage() {
           <span className="uc-eyebrow">Who uses VerifyChain</span>
           <h1 className="uc-h1">The right check<br /><em>for every industry.</em></h1>
           <p className="uc-hero-sub">
-            VerifyChain serves organisations across HR, financial services, education, government,
-            and community services — each with different checks, different obligations, and different
-            definitions of compliance. All on one platform.
+            VerifyChain serves organisations across HR, financial services, education, and government —
+            each with different checks, different obligations, and different definitions of compliance.
+            All on one platform.
           </p>
         </div>
       </section>
@@ -189,8 +175,8 @@ export default function UseCasesPage() {
               </div>
               <div className="uc-cta-card">
                 <h4>Ready to see how this works?</h4>
-                <p>Run a live verification in under 5 minutes — no sign-up required.</p>
-                <Link to="/contact?inquiry=demo" className="uc-cta-btn">Book a demo →</Link>
+                <p>Book a personalised walkthrough and we'll show you the full verification flow.</p>
+                <Link to="/contact?inquiry=demo" className="uc-cta-btn">Book a Personalised Walkthrough →</Link>
                 <Link to="/contact" className="uc-cta-link">Or talk to our team</Link>
               </div>
             </div>
@@ -222,8 +208,8 @@ export default function UseCasesPage() {
           <h2>Not sure which checks your organisation needs?</h2>
           <p>Our team can walk you through the right combination for your industry and compliance obligations.</p>
           <div className="uc-bottom-cta-btns">
-            <Link to="/contact" className="uc-cta-btn">Talk to us →</Link>
-            <Link to="/contact?inquiry=demo" className="uc-cta-btn uc-cta-btn--ghost">Learn more →</Link>
+            <Link to="/contact?inquiry=demo" className="uc-cta-btn">Book a Personalised Walkthrough →</Link>
+            <Link to="/contact" className="uc-cta-btn uc-cta-btn--ghost">Talk to us →</Link>
           </div>
         </div>
       </section>
