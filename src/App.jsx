@@ -1,18 +1,7 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Nav from "./components/Nav";
-import Hero from "./components/Hero";
-import Ticker from "./components/Ticker";
-import TrustBar from "./components/TrustBar";
-import Dashboard from "./components/Dashboard";
-import Products from "./components/Products";
-import HowItWorks from "./components/HowItWorks";
-import WhyVerifyChain from "./components/WhyVerifyChain";
-import UseCases from "./components/UseCases";
-import Technology from "./components/Technology";
-import Compliance from "./components/Compliance";
-import Simulator from "./components/Simulator";
-import CTA from "./components/CTA";
+import HomePage from "./pages/HomePage";
 import Footer from "./components/Footer";
 import AboutPage from "./pages/AboutPage";
 import RoadmapPage from "./pages/RoadmapPage";
@@ -45,25 +34,6 @@ function ScrollObserver() {
     return () => { clearTimeout(timer); observer.disconnect(); };
   }, [location.pathname]);
   return null;
-}
-
-function HomePage() {
-  return (
-    <>
-      <Hero />
-      <Ticker />
-      <TrustBar />
-      <Dashboard />
-      <Products />
-      <HowItWorks />
-      <WhyVerifyChain />
-      <UseCases />
-      <Technology />
-      <Compliance />
-      <Simulator />
-      <CTA />
-    </>
-  );
 }
 
 function AppInner() {
