@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom"; // ✓ keep useLocation here
-// import { useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import Ticker from "./components/Ticker";
@@ -26,6 +25,7 @@ import AppDashboard from "./pages/AppDashboard";
 import TechnologyPage from "./pages/TechnologyPage";
 import DemoPage from "./pages/DemoPage";
 import UseCasesPage from "./pages/UseCasesPage";
+import Verabot from "./components/Verabot";
 import "./styles/global.css";
 
 function ScrollObserver() {
@@ -89,6 +89,7 @@ function AppInner() {
         </Routes>
       </main>
       {!isDashboard && <Footer />}
+      <Verabot />
     </div>
   );
 }
