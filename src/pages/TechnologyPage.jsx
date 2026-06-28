@@ -5,15 +5,15 @@ import "./TechnologyPage.css";
 const STACK = [
   {
     num: "01",
-    title: "Secure distributed ledger",
+    title: "Secure distributed infrastructure",
     sub: "Infrastructure",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><path d="M12 12v3M10 14h4"/>
       </svg>
     ),
-    desc: "VerifyChain is built on enterprise-grade distributed ledger technology (Hyperledger Fabric, Aries, and Ursa) providing the scalability, security, and governance features required for large-scale verification. Once a credential is recorded, it cannot be altered — any tampering is immediately detectable.",
-    points: ["Permissioned architecture — only authorised parties can participate", "Multi-region nodes ensure no single point of failure", "Smart contracts automate verification logic with no manual steps"],
+    desc: "VerifyChain is built on enterprise-grade distributed infrastructure, providing the scalability, security, and governance features required for large-scale verification. Records are cryptographically hashed — any unauthorised change is detectable by any authorised party.",
+    points: ["Permissioned architecture — only authorised parties can participate", "Multi-region redundancy — no single point of failure", "Automated verification logic with no manual handling of personal data"],
   },
   {
     num: "02",
@@ -74,7 +74,7 @@ const STACK = [
       </svg>
     ),
     desc: "No user, device, or system component is automatically trusted — regardless of location or previous authentication. Every access request is continuously verified based on current context and risk. Role-based access control (RBAC) ensures users only see what they are permitted to see.",
-    points: ["Continuous verification — trust is never assumed", "Role-based access control for organisations and individuals", "Multi-factor authentication (MFA) with SMS and email today, biometrics in the roadmap"],
+    points: ["Continuous verification — trust is never assumed", "Role-based access control for organisations and individuals", "Multi-factor authentication (MFA) via SMS and email"],
   },
 ];
 
@@ -100,22 +100,22 @@ export default function TechnologyPage() {
           <h1 className="tech-h1">Built on security.<br /><em>Designed for trust.</em></h1>
           <p className="tech-hero-sub">
             VerifyChain combines internationally recognised credential standards with enterprise-grade
-            security to make verification fast, private, and tamper-proof — without exposing any
+            security to make verification fast, private, and tamper-evident — without exposing any
             personal data to the organisations requesting checks.
           </p>
           <div className="tech-hero-ctas">
-            <Link to="/contact?inquiry=demo" className="tech-cta-primary">Book a demo →</Link>
+            <Link to="/contact?inquiry=demo" className="tech-cta-primary">Book a Personalised Walkthrough →</Link>
             <Link to="/contact" className="tech-cta-ghost">Talk to our team</Link>
           </div>
         </div>
         <div className="tech-hero-badge-row">
-          {["Zero personal data transmitted", "Tamper-proof records", "Instant verification", "Globally recognised standards"].map(b => (
+          {["Zero personal data transmitted", "Tamper-evident records", "Real-time verification", "Globally recognised standards"].map(b => (
             <span key={b} className="tech-hero-badge">✓ {b}</span>
           ))}
         </div>
       </section>
 
-      {/* How it works — 3 steps */}
+  
       <section className="tech-section tech-how">
         <div className="tech-section-inner">
           <p className="tech-section-label">The process</p>
@@ -123,9 +123,9 @@ export default function TechnologyPage() {
           <p className="tech-section-sub">From request to result in minutes — with zero raw data ever leaving the individual.</p>
           <div className="tech-steps">
   {[
-    { n: "1", title: "Request is made",    desc: "An organisation requests a verification check via VerifyChain's platform or API. The individual is notified and consents to the specific check." },
-{ n: "2", title: "Proof is generated", desc: "VerifyChain queries the relevant authoritative data source — government database, educational registry, or law enforcement database — and generates a cryptographic proof of the result." },
-{ n: "3", title: "Result is delivered", desc: "The organisation receives a verified result and a tamper-proof certificate. No personal data is transmitted — only the cryptographic confirmation that the check passed or failed." },
+    { n: "1", title: "Request is made",    desc: "An organisation requests a verification check via VerifyChain's platform. The individual is notified and consents to the specific check." },
+{ n: "2", title: "Proof is generated", desc: "VerifyChain queries the relevant authoritative source — such as the Document Verification Service or an educational registry — and generates a cryptographic proof of the result." },
+{ n: "3", title: "Result is delivered", desc: "The organisation receives a verified result, and the individual's wallet is updated. No personal data is transmitted — only the cryptographic confirmation that the check passed or failed." },
   ].map((s, i) => (
     <Fragment key={i}>
       <div className="tech-step">
@@ -135,7 +135,6 @@ export default function TechnologyPage() {
           <p className="tech-step-desc">{s.desc}</p>
         </div>
       </div>
-      {i < 2 && <div className="tech-step-arrow">→</div>}
     </Fragment>
   ))}
 </div>
@@ -207,7 +206,7 @@ export default function TechnologyPage() {
           <div className="tech-platform-grid">
             {[
               { icon: "☁️", title: "Hosted on AWS",       desc: "Currently deployed on Amazon Web Services. Can be hosted on Azure, GCP, or a provider of your choice if your organisation has specific requirements." },
-              { icon: "📱", title: "Works on any device",                 desc: "Responsive web portal for HR and compliance teams. Progressive Web App (PWA) for individuals — download once, works like a native app on iOS or Android." },
+              { icon: "📱", title: "Works on any device",                 desc: "Responsive web portal for HR and compliance teams. Progressive Web App (PWA) for individuals — add to your home screen, works like a native app on iOS or Android." },
               { icon: "🔌", title: "Plug into your existing systems",     desc: "REST and GraphQL APIs connect VerifyChain to your HR platform, CRM, or compliance tools. OpenAPI 3.0 documentation included." },
               { icon: "🌐", title: "Browser-compatible everywhere",        desc: "Chrome, Edge, Firefox, and Safari all supported. No proprietary plugins or software required for your team or your clients." },
             ].map(p => (
@@ -221,13 +220,12 @@ export default function TechnologyPage() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="tech-cta-section">
         <div className="tech-cta-inner">
           <h2>Ready to see it in action?</h2>
-          <p>Run a live verification in under 5 minutes — no sign-up required.</p>
+          <p>Book a personalised walkthrough and we'll show you the full verification flow.</p>
           <div className="tech-hero-ctas">
-            <Link to="/contact?inquiry=demo" className="tech-cta-primary">Book a demo →</Link>
+            <Link to="/contact?inquiry=demo" className="tech-cta-primary">Book a Personalised Walkthrough →</Link>
             <Link to="/contact" className="tech-cta-ghost">Contact us</Link>
           </div>
         </div>
