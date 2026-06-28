@@ -2,11 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./UseCasesPage.css";
 
-// FIX: Childcare and Community tab removed — it was built almost
-// entirely around Working with Children Check, which is deprioritised
-// and not yet live. Re-add once WWCC is confirmed ready.
-// FIX: WWCC and eSeal removed from every industry's "checks" list and
-// scenarios below, since both are not yet live products.
 const INDUSTRIES = [
   {
     id: "hr",

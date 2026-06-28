@@ -88,7 +88,11 @@ export default function ContactPage() {
   return (
     <div className="contact-page">
 
-      <section className={`contact-demo-hero ${isDemo ? "contact-demo-hero--active" : ""}`}>
+      {/* FIX: removed the conditional "--active" class — the dark navy
+          background and white text are now the permanent style for
+          both /contact and /contact?inquiry=demo, so the two no longer
+          look inconsistent depending on how the visitor arrived. */}
+      <section className="contact-demo-hero">
         <div className="contact-demo-inner">
 
           {/* Left: context */}
