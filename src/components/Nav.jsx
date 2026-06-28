@@ -10,8 +10,8 @@ const PRODUCTS = [
 ];
 
 const COMPANY = [
-  { to: "/about",   label: "About us" },
-  { to: "/roadmap", label: "Roadmap" },
+  { to: "/about",   label: "About us",  desc: "Our mission and the team behind VerifyChain." },
+  { to: "/roadmap", label: "Roadmap",   desc: "What's live today and what's coming next." },
 ];
 
 export default function Nav() {
@@ -83,7 +83,6 @@ export default function Nav() {
                     </Link>
                   ))}
                 </div>
-             
               </div>
             )}
           </li>
@@ -102,7 +101,7 @@ export default function Nav() {
             </Link>
           </li>
 
-          {/* Company dropdown */}
+          {/* Company dropdown — now matches Products style */}
           <li className="nav-item nav-item--dropdown">
             <button
               className={`nav-link nav-link--btn ${openDropdown === "company" ? "nav-link--active" : ""}`}
@@ -114,17 +113,24 @@ export default function Nav() {
               </svg>
             </button>
             {openDropdown === "company" && (
-              <div className="nav-dropdown">
-                {COMPANY.map(c => (
-                  <Link
-                    key={c.to}
-                    to={c.to}
-                    className="nav-dropdown-item"
-                    onClick={() => setOpenDropdown(null)}
-                  >
-                    <span className="nav-dropdown-item-label">{c.label}</span>
-                  </Link>
-                ))}
+              <div className="nav-dropdown nav-dropdown--wide">
+                <div className="nav-dropdown-header">
+                  <p className="nav-dropdown-label">About VerifyChain</p>
+                  <p className="nav-dropdown-sub">Who we are and where we're headed.</p>
+                </div>
+                <div className="nav-dropdown-grid">
+                  {COMPANY.map(c => (
+                    <Link
+                      key={c.to}
+                      to={c.to}
+                      className="nav-dropdown-item"
+                      onClick={() => setOpenDropdown(null)}
+                    >
+                      <span className="nav-dropdown-item-label">{c.label}</span>
+                      <span className="nav-dropdown-item-desc">{c.desc}</span>
+                    </Link>
+                  ))}
+                </div>
               </div>
             )}
           </li>
