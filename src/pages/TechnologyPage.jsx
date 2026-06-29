@@ -1,7 +1,11 @@
-import { useState, Fragment } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./TechnologyPage.css";
 
+// FIX: removed explicit blockchain framework naming (Hyperledger Fabric, Aries, Ursa)
+// per direction to move architecture language away from blockchain specifics.
+// FIX: "tamper-proof"/immutability language softened to "tamper-evident".
+// FIX: MFA roadmap claim removed (biometrics not a confirmed roadmap item).
 const STACK = [
   {
     num: "01",
@@ -115,7 +119,10 @@ export default function TechnologyPage() {
         </div>
       </section>
 
-  
+      {/* How it works — 3 steps */}
+      {/* FIX: step 2 no longer claims a direct query to "law enforcement database" —
+          softened to "authoritative source" since National Crime Check is link-out only.
+          FIX: step 3 "certificate" -> "wallet". */}
       <section className="tech-section tech-how">
         <div className="tech-section-inner">
           <p className="tech-section-label">The process</p>
@@ -127,15 +134,13 @@ export default function TechnologyPage() {
 { n: "2", title: "Proof is generated", desc: "VerifyChain queries the relevant authoritative source — such as the Document Verification Service or an educational registry — and generates a cryptographic proof of the result." },
 { n: "3", title: "Result is delivered", desc: "The organisation receives a verified result, and the individual's wallet is updated. No personal data is transmitted — only the cryptographic confirmation that the check passed or failed." },
   ].map((s, i) => (
-    <Fragment key={i}>
-      <div className="tech-step">
+    <div className="tech-step" key={i}>
         <div className="tech-step-num">{s.n}</div>
         <div>
           <h3 className="tech-step-title">{s.title}</h3>
           <p className="tech-step-desc">{s.desc}</p>
         </div>
       </div>
-    </Fragment>
   ))}
 </div>
         </div>
@@ -205,10 +210,26 @@ export default function TechnologyPage() {
           <p className="tech-section-sub">VerifyChain is currently hosted on AWS, with the flexibility to deploy on any major cloud provider based on your organisation's requirements.</p>
           <div className="tech-platform-grid">
             {[
-              { icon: "☁️", title: "Hosted on AWS",       desc: "Currently deployed on Amazon Web Services. Can be hosted on Azure, GCP, or a provider of your choice if your organisation has specific requirements." },
-              { icon: "📱", title: "Works on any device",                 desc: "Responsive web portal for HR and compliance teams. Progressive Web App (PWA) for individuals — add to your home screen, works like a native app on iOS or Android." },
-              { icon: "🔌", title: "Plug into your existing systems",     desc: "REST and GraphQL APIs connect VerifyChain to your HR platform, CRM, or compliance tools. OpenAPI 3.0 documentation included." },
-              { icon: "🌐", title: "Browser-compatible everywhere",        desc: "Chrome, Edge, Firefox, and Safari all supported. No proprietary plugins or software required for your team or your clients." },
+              { icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 10h-1.26A8 8 0 109 20h9a4 4 0 000-8z"/>
+                  </svg>
+                ), title: "Hosted on AWS",       desc: "Currently deployed on Amazon Web Services. Can be hosted on Azure, GCP, or a provider of your choice if your organisation has specific requirements." },
+              { icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/>
+                  </svg>
+                ), title: "Works on any device",                 desc: "Responsive web portal for HR and compliance teams. Progressive Web App (PWA) for individuals — add to your home screen, works like a native app on iOS or Android." },
+              { icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M8 9l3 3-3 3M13 15h3"/><rect x="2" y="4" width="20" height="16" rx="2"/>
+                  </svg>
+                ), title: "Plug into your existing systems",     desc: "REST and GraphQL APIs connect VerifyChain to your HR platform, CRM, or compliance tools. OpenAPI 3.0 documentation included." },
+              { icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/>
+                  </svg>
+                ), title: "Browser-compatible everywhere",        desc: "Chrome, Edge, Firefox, and Safari all supported. No proprietary plugins or software required for your team or your clients." },
             ].map(p => (
               <div key={p.title} className="tech-platform-card">
                 <span className="tech-platform-icon">{p.icon}</span>
@@ -220,6 +241,9 @@ export default function TechnologyPage() {
         </div>
       </section>
 
+      {/* CTA */}
+      {/* FIX: removed "no sign-up required" claim — the real flow requires an
+          account, this overstated ease of access. */}
       <section className="tech-cta-section">
         <div className="tech-cta-inner">
           <h2>Ready to see it in action?</h2>

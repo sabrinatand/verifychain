@@ -117,7 +117,10 @@
 }
 .roadmap-tab--active:hover { background: var(--ink); }
 
-.roadmap-tab-icon { font-size: 16px; flex-shrink: 0; }
+/* FIX: tab and panel icons were sized with font-size for emoji text —
+   now sized/flexed to render SVGs cleanly instead. */
+.roadmap-tab-icon { width: 16px; height: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.roadmap-tab-icon svg { width: 16px; height: 16px; }
 .roadmap-tab-label { flex: 1; }
 
 .rm-live-dot {
@@ -149,7 +152,6 @@
 }
 
 .roadmap-panel-icon {
-  font-size: 32px;
   width: 56px;
   height: 56px;
   background: var(--bg-surface);
@@ -159,7 +161,9 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  color: var(--ink-2);
 }
+.roadmap-panel-icon svg { width: 24px; height: 24px; }
 
 .roadmap-panel-title {
   font-family: var(--font-display);

@@ -1,11 +1,47 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import "./RoadmapPage.css";
 
+// ── Category icon lookup — replaces emoji with consistent line-style SVGs ──
+const CATEGORY_ICONS = {
+  id: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M7 16h4M14 9h4M14 13h4"/>
+    </svg>
+  ),
+  business: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="9" width="18" height="12" rx="1"/><path d="M9 21V9M3 9l2.5-5h13L21 9"/>
+    </svg>
+  ),
+  lock: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+    </svg>
+  ),
+  qualification: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+    </svg>
+  ),
+  bolt: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+    </svg>
+  ),
+  institution: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 10v11M16 10v11M12 10v11"/>
+    </svg>
+  ),
+};
+
+// FIX: replaced emoji icons with CATEGORY_ICONS lookup defined above
 const categories = [
   {
     id: "identity",
     label: "Identity",
-    icon: "🪪",
+    icon: CATEGORY_ICONS.id,
     desc: "Global identity document coverage",
     items: [
       { text: "Australia", status: "live" },
@@ -18,7 +54,7 @@ const categories = [
   {
     id: "business",
     label: "Business",
-    icon: "🏢",
+    icon: CATEGORY_ICONS.business,
     desc: "Tools to help organisations verify and onboard",
     items: [
       { text: "New Zealand business verification", status: "soon" },
@@ -32,7 +68,7 @@ const categories = [
   {
     id: "privacy",
     label: "Privacy",
-    icon: "🔒",
+    icon: CATEGORY_ICONS.lock,
     desc: "Compliance and data protection",
     items: [
       { text: "GDPR compliance", status: "progress" },
@@ -43,7 +79,7 @@ const categories = [
   {
     id: "certificates",
     label: "Certificates",
-    icon: "🎓",
+    icon: CATEGORY_ICONS.qualification,
     desc: "Credential and qualification verification",
     items: [
       { text: "University qualifications", status: "live" },
@@ -55,7 +91,7 @@ const categories = [
   {
     id: "onboarding",
     label: "Onboarding",
-    icon: "⚡",
+    icon: CATEGORY_ICONS.bolt,
     desc: "Corporate and building access",
     items: [
       { text: "Corporate onboarding via single identity", status: "soon" },
@@ -65,7 +101,7 @@ const categories = [
   {
     id: "civic",
     label: "Civic",
-    icon: "🏛️",
+    icon: CATEGORY_ICONS.institution,
     desc: "Civic and electoral use cases",
     items: [
       { text: "Federal, state and council elections", status: "planned" },
@@ -154,9 +190,11 @@ export default function RoadmapPage() {
               ))}
             </div>
 
+            {/* FIX: "Contact our team" button had no link at all — now
+                routes to the contact page. */}
             <div className="roadmap-cta">
               <p>Interested in fast-tracking any of these?</p>
-              <button className="btn-dark">Contact our team →</button>
+              <Link to="/contact"><button className="btn-dark">Contact our team →</button></Link>
             </div>
           </div>
 

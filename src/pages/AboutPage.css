@@ -271,12 +271,21 @@
   box-shadow: 0 8px 28px rgba(42,82,201,0.08);
 }
 
+/* FIX: value-icon was sized with font-size for emoji text — now sized
+   and boxed to render an SVG, matching the icon style used elsewhere
+   on the site. */
 .value-icon {
-  display: block;
-  font-size: 28px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(42,82,201,0.07);
+  border-radius: var(--r-sm);
+  color: #2a52c9;
   margin-bottom: 16px;
-  line-height: 1;
 }
+.value-icon svg { width: 18px; height: 18px; }
 
 .value-title {
   font-size: 14px;

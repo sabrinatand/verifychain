@@ -73,12 +73,12 @@
 
 /* ── How it works ── */
 .tech-steps {
-  display: flex; align-items: flex-start; gap: 0;
-  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 32px;
 }
 .tech-step {
-  flex: 1; display: flex; flex-direction: column; gap: 12px;
-  position: relative; padding: 0 32px 0 0;
+  display: flex; flex-direction: column; gap: 12px;
 }
 .tech-step-num {
   width: 40px; height: 40px; border-radius: 50%;
@@ -92,10 +92,6 @@
 }
 .tech-step-desc {
   font-family: 'DM Sans', sans-serif; font-size: 14px; color: #666; line-height: 1.65;
-}
-.tech-step-arrow {
-  position: absolute; top: 16px; right: -4px;
-  font-size: 22px; color: #c0c8df;
 }
 
 /* ── Stack interactive ── */
@@ -150,7 +146,13 @@
   background: #f7f6f2; border: 1px solid #e8e6df;
   border-radius: 14px; padding: 24px 28px;
 }
-.tech-platform-icon { font-size: 28px; display: block; margin-bottom: 12px; }
+.tech-platform-icon {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  background: #edf0f8; border-radius: 10px;
+  color: #1e3a8a; margin-bottom: 14px;
+}
+.tech-platform-icon svg { width: 19px; height: 19px; }
 .tech-platform-title { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: #13151f; margin-bottom: 8px; }
 .tech-platform-desc { font-family: 'DM Sans', sans-serif; font-size: 13px; color: #666; line-height: 1.65; }
 
@@ -164,8 +166,7 @@
 @media (max-width: 900px) {
   .tech-stack-layout { grid-template-columns: 1fr; }
   .tech-compliance-grid { grid-template-columns: 1fr 1fr; }
-  .tech-steps { flex-direction: column; gap: 32px; }
-  .tech-step-arrow { display: none; }
+  .tech-steps { grid-template-columns: 1fr; gap: 32px; }
 }
 @media (max-width: 600px) {
   .tech-compliance-grid, .tech-platform-grid { grid-template-columns: 1fr; }

@@ -9,11 +9,107 @@ const EMAILJS_TEMPLATE_ID = "template_r8jkopj";
 const EMAILJS_PUBLIC_KEY       = "V6Cz6xFQihHiqjre3";
 const EMAILJS_AUTOREPLY_ID    = "template_j2qzuuq";
 
+// ── Icon lookup — replaces emoji with consistent line-style SVGs ──
+const ICONS = {
+  calendar: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+    </svg>
+  ),
+  message: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 11.5a8.5 8.5 0 11-3.8-7.1L21 3l-1.2 3.8a8.46 8.46 0 011.2 4.7z"/>
+    </svg>
+  ),
+  handshake: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+  ),
+  tool: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+    </svg>
+  ),
+  warning: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+  ),
+  mail: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/>
+    </svg>
+  ),
+  pin: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/>
+    </svg>
+  ),
+  lock: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+    </svg>
+  ),
+};
+
 const INQUIRY_LABELS = {
   demo:    "Book a demo",
   general: "General enquiry",
   partner: "Partnership",
   support: "Technical support",
+};
+
+// FIX: left-side hero copy now keyed off form.inquiry (which updates
+// live when the tabs are clicked) instead of the one-time isDemo flag
+// from the URL — so clicking a different tab actually updates the
+// headline/subtitle/points, not just the form itself.
+const INQUIRY_HERO = {
+  demo: {
+    eyebrow: "Book a demo",
+    headline: <>See VerifyChain<br /><em>in person.</em></>,
+    sub: "Book a personalised walkthrough with our team. We'll show you how VerifyChain works for your specific industry, compliance obligations, and use case — and answer any questions.",
+    points: [
+      "30-minute personalised walkthrough",
+      "Tailored to your industry and use case",
+      "No commitment — just clarity",
+      "Live Q&A with our team",
+    ],
+  },
+  general: {
+    eyebrow: "Get in touch",
+    headline: <>Talk to<br /><em>our team.</em></>,
+    sub: "Whether you want to book a demo, discuss integration, or find out which checks your organisation needs — we're here to help.",
+    points: [
+      "Response within one business day",
+      "Talk to a real person, not a bot",
+      "No obligation, just answers",
+      "Happy to point you elsewhere if we're not the right fit",
+    ],
+  },
+  partner: {
+    eyebrow: "Partnership",
+    headline: <>Let's build<br /><em>something together.</em></>,
+    sub: "Integrating VerifyChain into your platform, exploring a reseller relationship, or co-building a solution for your industry — we'd love to hear what you have in mind.",
+    points: [
+      "Integration and API partnership options",
+      "Reseller and white-label conversations welcome",
+      "Tell us about your use case and audience",
+      "Direct line to our founding team",
+    ],
+  },
+  support: {
+    eyebrow: "Technical support",
+    headline: <>Get help<br /><em>from our team.</em></>,
+    sub: "Running into an issue with integration, the API, or your account? Tell us what's happening and we'll help you sort it out.",
+    points: [
+      "Response within one business day",
+      "Direct access to the team who built it",
+      "Bring logs, error messages, or screenshots",
+      "No issue too small to ask about",
+    ],
+  },
 };
 
 export default function ContactPage() {
@@ -35,6 +131,10 @@ export default function ContactPage() {
   }, [isDemo]);
 
   const onChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+
+  // FIX: hero content now derived from form.inquiry every render,
+  // so it updates live as the person clicks between tabs.
+  const hero = INQUIRY_HERO[form.inquiry] || INQUIRY_HERO.general;
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -88,35 +188,16 @@ export default function ContactPage() {
   return (
     <div className="contact-page">
 
-      {/* FIX: removed the conditional "--active" class — the dark navy
-          background and white text are now the permanent style for
-          both /contact and /contact?inquiry=demo, so the two no longer
-          look inconsistent depending on how the visitor arrived. */}
       <section className="contact-demo-hero">
         <div className="contact-demo-inner">
 
-          {/* Left: context */}
+          {/* Left: context — now reactive to form.inquiry */}
           <div className="contact-demo-left">
-            <span className="contact-eyebrow">
-              {isDemo ? "Book a demo" : "Get in touch"}
-            </span>
-            <h1 className="contact-h1">
-              {isDemo
-                ? <>See VerifyChain<br /><em>in person.</em></>
-                : <>Talk to<br /><em>our team.</em></>}
-            </h1>
-            <p className="contact-hero-sub">
-              {isDemo
-                ? "Book a personalised walkthrough with our team. We'll show you how VerifyChain works for your specific industry, compliance obligations, and use case — and answer any questions."
-                : "Whether you want to book a demo, discuss integration, or find out which checks your organisation needs — we're here to help."}
-            </p>
+            <span className="contact-eyebrow">{hero.eyebrow}</span>
+            <h1 className="contact-h1">{hero.headline}</h1>
+            <p className="contact-hero-sub">{hero.sub}</p>
             <div className="contact-demo-points">
-              {[
-                "30-minute personalised walkthrough",
-                "Tailored to your industry and use case",
-                "No commitment — just clarity",
-                "Live Q&A with our team",
-              ].map(p => (
+              {hero.points.map(p => (
                 <div key={p} className="contact-demo-point">
                   <span>✓</span>{p}
                 </div>
@@ -146,16 +227,16 @@ export default function ContactPage() {
             ) : (
               <form ref={formRef} className="contact-form" onSubmit={handleSubmit}>
                 <h3 className="contact-form-title">
-                  {isDemo ? "Book a demo" : "Get in touch"}
+                  {form.inquiry === "demo" ? "Book a demo" : "Get in touch"}
                 </h3>
 
                 {/* Inquiry type tabs */}
                 <div className="contact-inquiry-tabs">
                   {[
-                    { val: "demo",    label: "📅 Book a demo" },
-                    { val: "general", label: "💬 General enquiry" },
-                    { val: "partner", label: "🤝 Partnership" },
-                    { val: "support", label: "🛠️ Technical support" },
+                    { val: "demo",    label: "Book a demo",        icon: ICONS.calendar },
+                    { val: "general", label: "General enquiry",    icon: ICONS.message },
+                    { val: "partner", label: "Partnership",        icon: ICONS.handshake },
+                    { val: "support", label: "Technical support",  icon: ICONS.tool },
                   ].map(t => (
                     <button
                       key={t.val}
@@ -163,6 +244,7 @@ export default function ContactPage() {
                       className={`contact-inquiry-tab ${form.inquiry === t.val ? "contact-inquiry-tab--active" : ""}`}
                       onClick={() => setForm(f => ({ ...f, inquiry: t.val }))}
                     >
+                      <span className="contact-inquiry-tab-icon">{t.icon}</span>
                       {t.label}
                     </button>
                   ))}
@@ -227,7 +309,7 @@ export default function ContactPage() {
                       rows={4}
                       placeholder={
                         form.inquiry === "demo"
-                          ? "e.g. We need to run WWCC and identity checks for school staff across Victoria…"
+                          ? "e.g. We need to run identity and qualification checks for school staff across Victoria…"
                           : "How can we help?"
                       }
                     />
@@ -237,7 +319,7 @@ export default function ContactPage() {
                 {/* Error message */}
                 {status === "error" && (
                   <div className="contact-error">
-                    <span>⚠️</span> {errorMsg}
+                    <span className="contact-error-icon">{ICONS.warning}</span> {errorMsg}
                   </div>
                 )}
 
@@ -270,9 +352,9 @@ export default function ContactPage() {
           <h2 className="contact-options-h2">Other ways to connect</h2>
           <div className="contact-options-grid">
             {[
-              { icon: "📧", label: "Email us",          value: "hello@verifychain.io",    sub: "We respond within one business day" },
-              { icon: "📍", label: "Based in",           value: "Melbourne, Australia",    sub: "Serving customers across Australia and New Zealand" },
-              { icon: "🔒", label: "Privacy & security", value: "Privacy Act 1988 compliant", sub: "Zero data retained after any check" },
+              { icon: ICONS.mail, label: "Email us",          value: "hello@verifychain.io",    sub: "We respond within one business day" },
+              { icon: ICONS.pin,  label: "Based in",           value: "Melbourne, Australia",    sub: "Serving customers across Australia and New Zealand" },
+              { icon: ICONS.lock, label: "Privacy & security", value: "Privacy Act 1988 compliant", sub: "Zero data retained after any check" },
             ].map(o => (
               <div key={o.label} className="contact-option-card">
                 <span className="contact-option-icon">{o.icon}</span>

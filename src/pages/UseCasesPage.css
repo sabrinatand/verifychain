@@ -57,12 +57,15 @@
 }
 .uc-checks-pills { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 32px; }
 .uc-check-pill {
+  display: inline-flex; align-items: center; gap: 6px;
   font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
   color: #1a2f6b; background: rgba(26,47,107,0.07); border: 1px solid rgba(26,47,107,0.14);
   padding: 5px 12px; border-radius: 999px; text-decoration: none;
   transition: background 0.15s;
 }
 .uc-check-pill:hover { background: rgba(26,47,107,0.13); }
+.uc-check-pill-icon { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.uc-check-pill-icon svg { width: 13px; height: 13px; }
 
 .uc-scenarios { display: flex; flex-direction: column; gap: 20px; }
 .uc-scenario { display: flex; gap: 16px; align-items: flex-start; }
@@ -120,7 +123,13 @@
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .uc-product-card:hover { border-color: #1a2f6b; box-shadow: 0 4px 16px rgba(26,47,107,0.08); }
-.uc-product-icon { font-size: 20px; flex-shrink: 0; }
+.uc-product-icon {
+  width: 32px; height: 32px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 1px solid #e8e6df; border-radius: 8px;
+  color: #1a2f6b;
+}
+.uc-product-icon svg { width: 16px; height: 16px; }
 .uc-product-label { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: #13151f; flex: 1; }
 .uc-product-arrow { font-size: 16px; color: #bbb; }
 .uc-product-card:hover .uc-product-arrow { color: #1a2f6b; }

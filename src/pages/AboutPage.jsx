@@ -1,6 +1,31 @@
 import { useState, useEffect, useRef } from "react";
 import "./AboutPage.css";
 
+// ── Value icon lookup — replaces emoji with consistent line-style SVGs ──
+const VALUE_ICONS = {
+  lock: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+    </svg>
+  ),
+  bolt: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+    </svg>
+  ),
+  globe: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/>
+    </svg>
+  ),
+  handshake: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+  ),
+};
+
 const team = [
   {
     id: "hormuz",
@@ -36,17 +61,26 @@ const team = [
     initials: "ZR",
     color: "#6b3a8a",
     photo: "/images/team/zuben.png",
-    bio: "Zuben is a Senior Managing Consultant at IBM Consulting focusing on strategy, ventures and unlocking high performing teams within organisations. Fast-tracked through IBM to play leading strategic advisory roles, his work has spanned corporate strategy for a $X00 million business, coordinated market diligence and prioritisation during M&A events and consults with external clients on technology operating model and cyber security policy. He is a recreational pianist, national karate champion ’15- ’19 and achieved his black belt in karate in 2021.",
+    bio: "Zuben is a Senior Managing Consultant at IBM Consulting focusing on strategy, ventures and unlocking high performing teams within organisations. Fast-tracked through IBM to play leading strategic advisory roles, his work has spanned corporate strategy for a $X00 million business, coordinated market diligence and prioritisation during M&A events and consults with external clients on technology operating model and cyber security policy. He is a recreational pianist, national karate champion '15- '19 and achieved his black belt in karate in 2021.",
   },
 ];
 
+// FIX: replaced emoji icons with VALUE_ICONS lookup.
+// FIX: card 4 — "Blockchain immutability means every verified credential
+// carries a proof that can't be faked or altered" removed in line with
+// moving product language away from blockchain-specific claims.
 const values = [
-  { icon: "🔒", title: "Privacy by design", desc: "Personal data is never stored off-chain. Users own and control every credential they hold." },
-  { icon: "⚡", title: "Speed matters", desc: "We turned weeks of verification into minutes — without cutting corners on accuracy or security." },
-  { icon: "🌏", title: "Built for Australia, ready for the world", desc: "Compliant with Australian Digital ID Act, GDPR, and eIDAS 2.0. Designed to scale globally." },
-  { icon: "🤝", title: "Trust is earned", desc: "Blockchain immutability means every verified credential carries a proof that can't be faked or altered." },
+  { icon: VALUE_ICONS.lock, title: "Privacy by design", desc: "Personal data is never stored off-chain. Users own and control every credential they hold." },
+  { icon: VALUE_ICONS.bolt, title: "Speed matters", desc: "We turned weeks of verification into minutes — without cutting corners on accuracy or security." },
+  { icon: VALUE_ICONS.globe, title: "Built for Australia, ready for the world", desc: "Compliant with Australian Digital ID Act, GDPR, and eIDAS 2.0. Designed to scale globally." },
+  { icon: VALUE_ICONS.handshake, title: "Trust is earned", desc: "Every verified credential carries a tamper-evident proof that can't be faked or altered." },
 ];
 
+// NOTE: timeline entries below still reference blockchain explicitly
+// (2019 "Architecture defined", 2022 "Ready for launch"). These describe
+// the company's founding/historical decisions rather than current product
+// marketing claims, so left untouched pending your call on whether to
+// revise the founding story alongside the product language change.
 const timeline = [
   {
     year: "March 2018",
@@ -128,7 +162,7 @@ export default function AboutPage() {
           </h1>
           <p className="about-hero-sub">
             A Melbourne-based startup on a mission to make digital verification
-            instant, private, and tamper-proof — for everyone.
+            instant, private, and tamper-evident — for everyone.
           </p>
         </div>
       </div>
@@ -145,8 +179,8 @@ export default function AboutPage() {
           <p className="about-mission-sub">
             Founded in Melbourne, VerifyChain started in identity management
             and has grown into a full verification platform — covering age,
-            qualifications, criminal history, and more. Blockchain-powered,
-            privacy-first, built for the real world.
+            qualifications, criminal history, and more. Privacy-first,
+            built for the real world.
           </p>
         </div>
       </section>

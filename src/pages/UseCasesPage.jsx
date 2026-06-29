@@ -2,6 +2,30 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./UseCasesPage.css";
 
+// ── Check icon lookup — replaces emoji with consistent line-style SVGs ──
+const CHECK_ICONS = {
+  id: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M7 16h4M14 9h4M14 13h4"/>
+    </svg>
+  ),
+  age: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="7" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+    </svg>
+  ),
+  qualification: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+    </svg>
+  ),
+  shield: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>
+    </svg>
+  ),
+};
+
 const INDUSTRIES = [
   {
     id: "hr",
@@ -83,14 +107,15 @@ const INDUSTRIES = [
   },
 ];
 
+// FIX: replaced emoji icons with the CHECK_ICONS lookup defined above
 const ALL_CHECKS = [
-  { slug: "identity-verification",       label: "Identity verification",       icon: "🪪" },
-  { slug: "age-verification",            label: "Age verification",            icon: "🎂" },
-  { slug: "qualification-verification",  label: "Qualification verification",  icon: "🎓" },
-  { slug: "national-crime-check",        label: "National crime check",        icon: "🛡️" },
+  { slug: "identity-verification",       label: "Identity verification",       icon: CHECK_ICONS.id },
+  { slug: "age-verification",            label: "Age verification",            icon: CHECK_ICONS.age },
+  { slug: "qualification-verification",  label: "Qualification verification",  icon: CHECK_ICONS.qualification },
+  { slug: "national-crime-check",        label: "National crime check",        icon: CHECK_ICONS.shield },
   // Hidden per Hormuz's feedback — re-add when confirmed:
-  // { slug: "working-with-children-check", label: "Working with Children Check", icon: "👶" },
-  // { slug: "eseal-document-verification", label: "eSeal document verification", icon: "📄" },
+  // { slug: "working-with-children-check", label: "Working with Children Check", icon: CHECK_ICONS.child },
+  // { slug: "eseal-document-verification", label: "eSeal document verification", icon: CHECK_ICONS.document },
 ];
 
 export default function UseCasesPage() {
@@ -137,15 +162,19 @@ export default function UseCasesPage() {
               <div className="uc-checks-used">
                 <p className="uc-checks-label">Checks commonly used</p>
                 <div className="uc-checks-pills">
-                  {current.checks.map(c => (
-                    <Link
-                      key={c}
-                      to={`/products/${ALL_CHECKS.find(a => a.label === c)?.slug || ""}`}
-                      className="uc-check-pill"
-                    >
-                      {ALL_CHECKS.find(a => a.label === c)?.icon} {c}
-                    </Link>
-                  ))}
+                  {current.checks.map(c => {
+                    const match = ALL_CHECKS.find(a => a.label === c);
+                    return (
+                      <Link
+                        key={c}
+                        to={`/products/${match?.slug || ""}`}
+                        className="uc-check-pill"
+                      >
+                        <span className="uc-check-pill-icon">{match?.icon}</span>
+                        {c}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
 
