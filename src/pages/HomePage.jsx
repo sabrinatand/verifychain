@@ -67,8 +67,8 @@ function Hero() {
             <div className="phone-screen">
               <div className="app-header">
                 <div className="app-header-logo">
-                  <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="white" strokeWidth="1.2"/><path d="M5 7l1.5 1.5L9.5 5.5" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                </div>
+  <img src="/VC-Logo-Blue-01.png" alt="VerifyChain" style={{ height: "14px", width: "auto" }} />
+</div>
                 <span>VerifyChain</span>
                 <div className="app-header-badge">LIVE</div>
               </div>

@@ -47,7 +47,7 @@ export default function Nav() {
 
         {/* Logo */}
         <Link to="/" className="nav-logo" onClick={() => setOpenDropdown(null)}>
-          <img src="/verifychain-logo.png" alt="VerifyChain" className="nav-logo-img" />
+          <img src="/VC-Blue-Vertical-01-01.png" alt="VerifyChain" className="nav-logo-img" />
         </Link>
 
         {/* Links */}
